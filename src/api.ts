@@ -32,37 +32,55 @@ export async function checkBackendHealthApi(): Promise<{ online: boolean; messag
 }
 
 export async function analyzeContractApi(file?: File | null, text?: string, fileName?: string): Promise<any> {
-  try {
-    if (file) {
-      const formData = new FormData()
-      formData.append('file', file)
-      const res = await fetch(`${API_BASE_URL}/contracts/analyze`, {
-        method: 'POST',
-        headers: {
-          ...buildAuthHeaders(),
-        },
-        body: formData,
-      })
-      const json = await res.json()
-      if (json.success && json.data) return json.data
-      throw new Error(json.error || 'Analysis failed')
-    } else if (text) {
-      const res = await fetch(`${API_BASE_URL}/contracts/analyze`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...buildAuthHeaders(),
-        },
-        body: JSON.stringify({ text, fileName: fileName || 'Pasted-Contract.txt' }),
-      })
-      const json = await res.json()
-      if (json.success && json.data) return json.data
-      throw new Error(json.error || 'Analysis failed')
-    }
-  } catch (err: any) {
-    console.warn('Backend API connection warning, using fallback response:', err.message)
+  const apiUrl = `${API_BASE_URL}/contracts/analyze`
+  const docName = file ? file.name : (fileName || 'Pasted-Contract.txt')
+  const docType = file ? (file.type || 'application/octet-stream') : 'text/plain'
+  const docSize = file ? `${file.size} bytes` : `${(text || '').length} characters`
+
+  console.log('[Frontend Upload] Contract Analysis Request:')
+  console.log('  1. File Name:', docName)
+  console.log('  2. File Type:', docType)
+  console.log('  3. File Size:', docSize)
+  console.log('  4. API URL:', apiUrl)
+  console.log('  5. HTTP Method: POST')
+
+  let res: Response
+  if (file) {
+    const formData = new FormData()
+    formData.append('file', file)
+    res = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        ...buildAuthHeaders(),
+      },
+      body: formData,
+    })
+  } else if (text) {
+    res = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
+      body: JSON.stringify({ text, fileName: fileName || 'Pasted-Contract.txt' }),
+    })
+  } else {
+    throw new Error('No contract file or text provided')
   }
-  return null
+
+  console.log('  6. HTTP Status:', res.status)
+  const json = await res.json()
+  console.log('  7. Response Body:', json)
+
+  if (json.success && json.data) {
+    const clauses = json.data.clauses || []
+    const riskyClauses = clauses.filter((c: any) => c.riskLevel === 'high' || c.riskLevel === 'critical' || (c.riskScore && c.riskScore >= 60))
+    console.log('  8. Number of clauses returned:', clauses.length)
+    console.log('  9. Number of risks returned:', riskyClauses.length)
+    return json.data
+  }
+
+  throw new Error(json.error || 'Contract analysis failed. Please try again.')
 }
 
 export async function generateContractApi(payload: {

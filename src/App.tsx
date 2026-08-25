@@ -589,38 +589,58 @@ export default function App() {
       return
     }
 
+    const currentFile = selectedFile
+    const currentText = pastedText
+    const currentName = selectedFile ? selectedFile.name : 'Pasted-Contract.txt'
+
+    // Reset previous contract state to guarantee fresh analysis
+    setClausesList([])
+    setSelectedClause(null)
+    setHealthScore(0)
+    setSummary(null)
+    setMissingProtections([])
+    setObligations({ yours: [], theirs: [], balanceNote: '' })
+    setTimeline([])
     setUploadModalOpen(false)
     setCurrentView('processing')
     setIsProcessing(true)
 
-    // Stage progression animation
-    const stages = [0, 1, 2, 3, 4, 5]
-    for (let i = 0; i < stages.length; i++) {
-      setProcessingStage(i)
-      await new Promise((r) => setTimeout(r, 600))
+    try {
+      // Stage progression animation
+      const stages = [0, 1, 2, 3, 4, 5]
+      for (let i = 0; i < stages.length; i++) {
+        setProcessingStage(i)
+        await new Promise((r) => setTimeout(r, 400))
+      }
+
+      const data = await analyzeContractApi(currentFile, currentText, currentName)
+
+      if (data && data.clauses && data.clauses.length > 0) {
+        setDocumentId(data.id)
+        setDocumentName(data.fileName || currentName)
+        setClausesList(data.clauses || [])
+        setSelectedClause(data.clauses?.[0] || null)
+        setHealthScore(data.summary?.overallHealthScore ?? 50)
+        setSummary(data.summary)
+        if (data.collaborators?.length) setCollaboratorsCount(data.collaborators.length)
+        if (data.summary?.missingProtections) setMissingProtections(data.summary.missingProtections)
+        if (data.summary?.obligations) setObligations(data.summary.obligations)
+        if (data.summary?.timeline) setTimeline(data.summary.timeline)
+        setSelectedFile(null)
+        setPastedText('')
+        showToast('Contract analyzed successfully!')
+        setCurrentView('dashboard')
+        loadInitialData()
+      } else {
+        throw new Error('Contract analysis failed. Please try again.')
+      }
+    } catch (err: any) {
+      console.error('[Upload & Analyze Error]:', err)
+      showToast(err.message || 'Contract analysis failed. Please try again.')
+      setCurrentView('dashboard')
+    } finally {
+      setIsProcessing(false)
     }
-
-    const data = await analyzeContractApi(selectedFile, pastedText, selectedFile?.name)
-
-    if (data) {
-      setDocumentId(data.id)
-      setDocumentName(data.fileName)
-      setClausesList(data.clauses || [])
-      setSelectedClause(data.clauses?.[0] || null)
-      setHealthScore(data.summary?.overallHealthScore ?? 50)
-      setSummary(data.summary)
-      if (data.collaborators?.length) setCollaboratorsCount(data.collaborators.length)
-      if (data.summary?.missingProtections) setMissingProtections(data.summary.missingProtections)
-      if (data.summary?.obligations) setObligations(data.summary.obligations)
-      if (data.summary?.timeline) setTimeline(data.summary.timeline)
-      showToast('Contract analyzed successfully!')
-    } else {
-      showToast('Analysis completed')
-    }
-
-    setIsProcessing(false)
-    setCurrentView('dashboard')
-    loadInitialData()
   }
 
   // --- Handlers: AI Agreement Generator ---
@@ -1357,7 +1377,9 @@ export default function App() {
                   }}
                 >
                   <div className="flex justify-between items-center">
-                    <span className="font-mono text-xs text-slate-400">Page {clause.page}</span>
+                    <span className="font-mono text-xs text-slate-400">
+                      {clause.page && clause.page > 0 ? `Page ${clause.page}` : 'Clause'}
+                    </span>
                     <span className={`risk-pill risk-${clause.riskLevel}`}>
                       {riskMeta[clause.riskLevel].label}
                     </span>
