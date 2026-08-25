@@ -462,6 +462,35 @@ export async function forgotPasswordApi(email: string) {
   }
 }
 
+export async function socialLoginApi(provider: 'google' | 'apple', email?: string, name?: string, avatarUrl?: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/social-login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider, email, name, avatarUrl }),
+    })
+    return await res.json()
+  } catch (err) {
+    return { success: false, error: 'Unable to reach auth server for social login' }
+  }
+}
+
+export async function changePasswordApi(currentPassword: string, newPassword: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/change-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    })
+    return await res.json()
+  } catch (err) {
+    return { success: false, error: 'Unable to process password change' }
+  }
+}
+
 export async function fetchCurrentUserApi(token?: string) {
   try {
     const res = await fetch(`${API_BASE_URL}/auth/me`, {
@@ -474,3 +503,4 @@ export async function fetchCurrentUserApi(token?: string) {
     return { success: false, error: 'Unable to reach auth server' }
   }
 }
+

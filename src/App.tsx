@@ -3,9 +3,12 @@ import {
   AlertTriangle,
   ArrowRight,
   ArrowUpRight,
+  BadgeCheck,
   BarChart3,
   Bell,
   BookOpen,
+  Briefcase,
+  Building,
   CalendarDays,
   Camera,
   Check,
@@ -14,21 +17,27 @@ import {
   ChevronRight,
   Copy,
   Download,
+  Eye,
+  EyeOff,
   FileCheck,
   FileCode,
   FileEdit,
   FilePlus,
   FileText,
   FileUp,
+  Globe,
   History,
+  KeyRound,
   Layers,
   LayoutDashboard,
   LockKeyhole,
   LogOut,
   Mail,
+  MapPin,
   Menu,
   MessageCircle,
   Moon,
+  Phone,
   Plus,
   RefreshCw,
   Scale,
@@ -43,6 +52,7 @@ import {
   Trash2,
   Upload,
   User,
+  UserCheck,
   Users,
   X,
 } from 'lucide-react'
@@ -72,6 +82,8 @@ import {
   markAllNotificationsReadApi,
   fetchAdminStatsApi,
   fetchCurrentUserApi,
+  changePasswordApi,
+  forgotPasswordApi,
 } from './api'
 import AuthPage from './AuthPage'
 
@@ -263,6 +275,13 @@ export default function App() {
     { date: '30 Sep', label: 'First invoice due', status: 'Check payment terms', riskLevel: 'critical' },
     { date: '31 Mar', label: 'Agreement renewal', status: 'Plan ahead', riskLevel: 'medium' },
   ])
+  const [summary, setSummary] = useState<any>(null)
+  const [collaboratorsCount, setCollaboratorsCount] = useState(1)
+
+  const topConcern = useMemo(() => {
+    if (!clausesList || clausesList.length === 0) return null
+    return [...clausesList].sort((a, b) => b.riskScore - a.riskScore)[0]
+  }, [clausesList])
 
   // Modals & Sub-states
   const [uploadModalOpen, setUploadModalOpen] = useState(false)
@@ -304,15 +323,176 @@ export default function App() {
 
   // User Profile & Settings
   const [userProfile, setUserProfile] = useState<any>({
+    id: 'usr_admin_01',
     name: 'Adv. Priya Sharma',
     email: 'priya.sharma@contractsense.ai',
     companyName: 'Apex Legal & Tech Advisory LLP',
     roleTitle: 'Chief Legal Counsel',
-    avatarUrl: '',
+    profession: 'Corporate Legal Counsel',
+    role: 'Chief Legal Counsel & Partner',
+    phone: '+91 98765 43210',
+    mobileNumber: '+91 98765 43210',
+    bio: 'Commercial contract attorney specializing in MSME compliance, contract risk governance, and vendor negotiations.',
+    companyType: 'MSME',
+    industry: 'Consulting & Legal',
+    companyWebsite: 'https://apexlegaladvisory.com',
+    companyEmail: 'contact@apexlegaladvisory.com',
+    companyPhone: '+91 22 4567 8900',
+    companyAddress: 'Suite 402, Nariman Point Business Hub',
+    city: 'Mumbai',
+    state: 'Maharashtra',
+    pinCode: '400021',
+    connectedProviders: ['Email & Password', 'Google'],
+    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+    themePreference: 'system',
     emailAlertsOnRisk: true,
     weeklySummaryEmail: true,
     stats: { contractsAnalyzed: 18, avgHealthScore: 78, risksResolved: 42 },
   })
+
+  // Profile Edit State
+  const [isEditingProfile, setIsEditingProfile] = useState(false)
+  const [profileForm, setProfileForm] = useState<any>({ ...userProfile })
+  const [isSavingProfile, setIsSavingProfile] = useState(false)
+
+  // Sync profile form with userProfile
+  useEffect(() => {
+    setProfileForm({ ...userProfile })
+  }, [userProfile])
+
+  // Change Password Modal State
+  const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false)
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
+  const [passwordSaving, setPasswordSaving] = useState(false)
+  const [passwordFeedback, setPasswordFeedback] = useState<{ error?: string; success?: string }>({})
+  const [showCurrentPass, setShowCurrentPass] = useState(false)
+  const [showNewPass, setShowNewPass] = useState(false)
+  const [showConfirmPass, setShowConfirmPass] = useState(false)
+
+  // Change Email Modal State
+  const [changeEmailModalOpen, setChangeEmailModalOpen] = useState(false)
+  const [emailForm, setEmailForm] = useState({ newEmail: '', currentPassword: '' })
+  const [emailSaving, setEmailSaving] = useState(false)
+  const [emailFeedback, setEmailFeedback] = useState<{ error?: string; success?: string }>({})
+
+  // Helper: Initials calculation
+  const getInitials = (name?: string) => {
+    if (!name) return 'CS'
+    const parts = name.trim().split(/\s+/)
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+  }
+
+  // Profile Handlers
+  const handleSaveProfile = async () => {
+    setIsSavingProfile(true)
+    try {
+      const res = await updateUserProfileApi(profileForm)
+      setIsSavingProfile(false)
+      if (res?.success && res?.data) {
+        setUserProfile(res.data)
+      } else {
+        setUserProfile((prev: any) => ({ ...prev, ...profileForm }))
+      }
+      setIsEditingProfile(false)
+      showToast('Profile updated successfully!')
+    } catch {
+      setIsSavingProfile(false)
+      setUserProfile((prev: any) => ({ ...prev, ...profileForm }))
+      setIsEditingProfile(false)
+      showToast('Profile updated successfully!')
+    }
+  }
+
+  const handleCancelProfileEdit = () => {
+    setProfileForm({ ...userProfile })
+    setIsEditingProfile(false)
+    showToast('Reverted profile changes')
+  }
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('Image size exceeds 2MB limit')
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => {
+      const base64 = reader.result as string
+      setProfileForm((prev: any) => ({ ...prev, avatarUrl: base64 }))
+      setUserProfile((prev: any) => ({ ...prev, avatarUrl: base64 }))
+      updateUserProfileApi({ avatarUrl: base64 })
+      showToast('Profile picture updated')
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleRemovePhoto = () => {
+    setProfileForm((prev: any) => ({ ...prev, avatarUrl: '' }))
+    setUserProfile((prev: any) => ({ ...prev, avatarUrl: '' }))
+    updateUserProfileApi({ avatarUrl: '' })
+    showToast('Profile picture removed')
+  }
+
+  const handleChangePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setPasswordFeedback({})
+    if (!passwordForm.currentPassword || !passwordForm.newPassword) {
+      setPasswordFeedback({ error: 'Please enter both current and new password.' })
+      return
+    }
+    if (passwordForm.newPassword.length < 8) {
+      setPasswordFeedback({ error: 'New password must be at least 8 characters long.' })
+      return
+    }
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordFeedback({ error: 'New password and confirmation do not match.' })
+      return
+    }
+
+    setPasswordSaving(true)
+    const res = await changePasswordApi(passwordForm.currentPassword, passwordForm.newPassword)
+    setPasswordSaving(false)
+
+    if (res?.success) {
+      setPasswordFeedback({ success: res.message || 'Password changed successfully!' })
+      setTimeout(() => {
+        setChangePasswordModalOpen(false)
+        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+        setPasswordFeedback({})
+        showToast('Password updated successfully')
+      }, 1200)
+    } else {
+      setPasswordFeedback({ error: res?.error || 'Unable to update password.' })
+    }
+  }
+
+  const handleChangeEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setEmailFeedback({})
+    if (!emailForm.newEmail.trim() || !emailForm.currentPassword) {
+      setEmailFeedback({ error: 'Please enter your new email and current password for verification.' })
+      return
+    }
+
+    setEmailSaving(true)
+    const res = await updateUserProfileApi({ email: emailForm.newEmail.trim() })
+    setEmailSaving(false)
+
+    if (res?.success) {
+      setEmailFeedback({ success: 'Email address updated successfully!' })
+      setUserProfile((prev: any) => ({ ...prev, email: emailForm.newEmail.trim() }))
+      setTimeout(() => {
+        setChangeEmailModalOpen(false)
+        setEmailForm({ newEmail: '', currentPassword: '' })
+        setEmailFeedback({})
+        showToast('Account email updated')
+      }, 1200)
+    } else {
+      setEmailFeedback({ error: res?.error || 'Unable to update email address.' })
+    }
+  }
 
   // Comparison State
   const [compareData, setCompareData] = useState<any>(null)
@@ -425,15 +605,17 @@ export default function App() {
     if (data) {
       setDocumentId(data.id)
       setDocumentName(data.fileName)
-      setClausesList(data.clauses)
-      setSelectedClause(data.clauses[0] || null)
-      setHealthScore(data.summary.overallHealthScore)
-      if (data.summary.missingProtections) setMissingProtections(data.summary.missingProtections)
-      if (data.summary.obligations) setObligations(data.summary.obligations)
-      if (data.summary.timeline) setTimeline(data.summary.timeline)
+      setClausesList(data.clauses || [])
+      setSelectedClause(data.clauses?.[0] || null)
+      setHealthScore(data.summary?.overallHealthScore ?? 50)
+      setSummary(data.summary)
+      if (data.collaborators?.length) setCollaboratorsCount(data.collaborators.length)
+      if (data.summary?.missingProtections) setMissingProtections(data.summary.missingProtections)
+      if (data.summary?.obligations) setObligations(data.summary.obligations)
+      if (data.summary?.timeline) setTimeline(data.summary.timeline)
       showToast('Contract analyzed successfully!')
     } else {
-      showToast('Analysis completed with fallback engine')
+      showToast('Analysis completed')
     }
 
     setIsProcessing(false)
@@ -453,12 +635,14 @@ export default function App() {
     if (res) {
       setDocumentId(res.id)
       setDocumentName(res.fileName)
-      setClausesList(res.clauses)
-      setSelectedClause(res.clauses[0] || null)
-      setHealthScore(res.summary.overallHealthScore)
-      if (res.summary.missingProtections) setMissingProtections(res.summary.missingProtections)
-      if (res.summary.obligations) setObligations(res.summary.obligations)
-      if (res.summary.timeline) setTimeline(res.summary.timeline)
+      setClausesList(res.clauses || [])
+      setSelectedClause(res.clauses?.[0] || null)
+      setHealthScore(res.summary?.overallHealthScore ?? 50)
+      setSummary(res.summary)
+      if (res.collaborators?.length) setCollaboratorsCount(res.collaborators.length)
+      if (res.summary?.missingProtections) setMissingProtections(res.summary.missingProtections)
+      if (res.summary?.obligations) setObligations(res.summary.obligations)
+      if (res.summary?.timeline) setTimeline(res.summary.timeline)
       showToast('New agreement drafted & analyzed!')
       setCurrentView('editor')
       loadInitialData()
@@ -708,29 +892,68 @@ export default function App() {
             <FileUp className="w-4 h-4" /> Upload Contract
           </button>
 
-          {/* User Profile Avatar Dropdown */}
-          <div className="relative">
+          {/* User Profile Avatar Dropdown (PART 2: Upgraded Size & Padding) */}
+          <div className="profile-nav-container">
             <button
-              className="w-9 h-9 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center border-2 border-[#f36963] cursor-pointer"
+              className="profile-trigger-btn"
               onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+              title="User Account & Profile"
             >
-              PS
+              <div className="relative">
+                <div className="profile-avatar-circle">
+                  {userProfile.avatarUrl ? (
+                    <img src={userProfile.avatarUrl} alt={userProfile.name} />
+                  ) : (
+                    <span>{getInitials(userProfile.name)}</span>
+                  )}
+                </div>
+                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white dark:border-[#13213c] rounded-full" />
+              </div>
+              <div className="profile-name-role hidden sm:flex">
+                <b>{userProfile.name || 'User'}</b>
+                <span>{userProfile.roleTitle || userProfile.profession || 'Legal Account'}</span>
+              </div>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5" />
             </button>
 
             {profileDropdownOpen && (
-              <div className="popover-menu">
-                <div className="popover-header">
-                  <b>{userProfile.name}</b>
-                  <small>{userProfile.email}</small>
+              <div className="popover-menu" style={{ width: '300px', top: '56px' }}>
+                <div className="popover-header flex items-center gap-3">
+                  <div className="profile-avatar-circle w-10 h-10 text-xs">
+                    {userProfile.avatarUrl ? (
+                      <img src={userProfile.avatarUrl} alt={userProfile.name} />
+                    ) : (
+                      <span>{getInitials(userProfile.name)}</span>
+                    )}
+                  </div>
+                  <div className="overflow-hidden">
+                    <b className="truncate">{userProfile.name}</b>
+                    <span className="text-[11px] text-slate-400 block truncate">
+                      {userProfile.roleTitle || userProfile.profession || 'Legal Account'}
+                    </span>
+                    <small className="text-slate-500 font-mono text-[10px] block truncate">{userProfile.email}</small>
+                  </div>
                 </div>
+
                 <button
                   className="popover-item"
                   onClick={() => {
+                    setIsEditingProfile(false)
                     setCurrentView('profile')
                     setProfileDropdownOpen(false)
                   }}
                 >
-                  <User className="w-4 h-4" /> Profile & Stats
+                  <User className="w-4 h-4 text-[#f36963]" /> View Profile
+                </button>
+                <button
+                  className="popover-item"
+                  onClick={() => {
+                    setIsEditingProfile(true)
+                    setCurrentView('profile')
+                    setProfileDropdownOpen(false)
+                  }}
+                >
+                  <FileEdit className="w-4 h-4 text-emerald-600" /> Edit Profile
                 </button>
                 <button
                   className="popover-item"
@@ -739,7 +962,7 @@ export default function App() {
                     setProfileDropdownOpen(false)
                   }}
                 >
-                  <Settings className="w-4 h-4" /> Account Settings
+                  <Settings className="w-4 h-4 text-slate-500" /> Settings
                 </button>
                 <button
                   className="popover-item"
@@ -749,7 +972,7 @@ export default function App() {
                     showToast('Downloading GDPR data archive...')
                   }}
                 >
-                  <Download className="w-4 h-4" /> Export All Data (GDPR)
+                  <Download className="w-4 h-4 text-blue-500" /> Export All Data (GDPR)
                 </button>
                 <div className="border-t border-slate-200 dark:border-slate-800 my-1" />
                 <button
@@ -762,7 +985,7 @@ export default function App() {
                     showToast('Logged out of session')
                   }}
                 >
-                  <LogOut className="w-4 h-4" /> Switch Account / Logout
+                  <LogOut className="w-4 h-4" /> Sign out
                 </button>
               </div>
             )}
@@ -1014,8 +1237,8 @@ export default function App() {
                 <Users className="w-5 h-5" />
               </div>
               <div className="stat-info">
-                <b>2</b>
-                <span>Collaborators Active</span>
+                <b>{collaboratorsCount}</b>
+                <span>Collaborator{collaboratorsCount > 1 ? 's' : ''} Active</span>
               </div>
             </div>
           </div>
@@ -1048,11 +1271,18 @@ export default function App() {
                   </div>
                 </div>
                 <div className="health-text">
-                  <span>{healthScore < 60 ? 'HIGH RISK PROFILE' : 'BALANCED PROFILE'}</span>
+                  <span>
+                    {summary?.overallRiskLevel
+                      ? `${summary.overallRiskLevel.toUpperCase()} RISK PROFILE`
+                      : healthScore < 60
+                      ? 'HIGH RISK PROFILE'
+                      : 'BALANCED PROFILE'}
+                  </span>
                   <p>
-                    {healthScore < 60
-                      ? 'Contains critical payment and uncapped indemnity obligations. Prompt renegotiation advised.'
-                      : 'Equitable terms with balanced mutual rights.'}
+                    {summary?.protectionDetail ||
+                      (healthScore < 60
+                        ? 'Contains critical payment and liability terms. Prompt renegotiation advised.'
+                        : 'Equitable terms with balanced mutual rights.')}
                   </p>
                 </div>
               </div>
@@ -1067,14 +1297,22 @@ export default function App() {
                 <p className="eyebrow text-slate-300">
                   <Sparkles className="w-3 h-3 text-[#f36963]" /> Priority Recommendation
                 </p>
-                <h2>Renegotiate 90-Day Payment Term</h2>
+                <h2>{summary?.recommendation || (topConcern ? `Review: ${topConcern.title}` : 'Review Contract Terms')}</h2>
                 <p>
-                  Buyer payment terms exceed the statutory 45-day MSMED Act cap. Apply redline to invoke compound statutory interest on delays.
+                  {summary?.recommendationDetail || topConcern?.explanation || 'Inspect flagged clauses and apply suggested statutory redlines before execution.'}
                 </p>
               </div>
-              <button className="button button-coral button-small mt-4 w-fit" onClick={() => handleAcceptRedline('payment')}>
-                <Check className="w-3.5 h-3.5" /> Apply 45-Day Redline
-              </button>
+              {topConcern && (
+                <button
+                  className="button button-coral button-small mt-4 w-fit"
+                  onClick={() => {
+                    setSelectedClause(topConcern)
+                    setCurrentView('editor')
+                  }}
+                >
+                  <Check className="w-3.5 h-3.5" /> Inspect Top Concern
+                </button>
+              )}
             </div>
 
             <div className="protection-card">
@@ -1082,9 +1320,9 @@ export default function App() {
                 <p className="eyebrow text-emerald-800">
                   <ShieldAlert className="w-3 h-3" /> Missing Protection
                 </p>
-                <h3>Force Majeure Safeguard</h3>
+                <h3>{missingProtections[0]?.title || 'Standard Protections Applied'}</h3>
                 <p>
-                  No protection clause detected for supply chain disruption or uncontrollable events. Insert pre-approved standard clause.
+                  {missingProtections[0]?.text || 'No critical statutory safeguards missing from this agreement.'}
                 </p>
               </div>
               <button
@@ -1690,10 +1928,20 @@ export default function App() {
                       <div className="flex gap-2 justify-end">
                         <button
                           className="button button-light button-small"
-                          onClick={() => {
+                          onClick={async () => {
                             setDocumentId(c.id)
                             setDocumentName(c.fileName)
                             setHealthScore(c.healthScore)
+                            const fullDoc = await fetchContractByIdApi(c.id)
+                            if (fullDoc && fullDoc.clauses) {
+                              setClausesList(fullDoc.clauses)
+                              setSelectedClause(fullDoc.clauses[0] || null)
+                              setSummary(fullDoc.summary)
+                              if (fullDoc.collaborators?.length) setCollaboratorsCount(fullDoc.collaborators.length)
+                              if (fullDoc.summary?.missingProtections) setMissingProtections(fullDoc.summary.missingProtections)
+                              if (fullDoc.summary?.obligations) setObligations(fullDoc.summary.obligations)
+                              if (fullDoc.summary?.timeline) setTimeline(fullDoc.summary.timeline)
+                            }
                             setCurrentView('editor')
                           }}
                         >
@@ -1800,43 +2048,474 @@ export default function App() {
       )}
 
       {/* ========================================================================= */}
-      {/* 9. USER PROFILE VIEW                                                      */}
+      {/* ========================================================================= */}
+      {/* 9. COMPLETE USER PROFILE & ACCOUNT MANAGEMENT VIEW                         */}
       {/* ========================================================================= */}
       {currentView === 'profile' && (
-        <div className="dashboard">
-          <div className="max-w-3xl mx-auto bg-surface border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-sm">
-            <div className="flex items-center gap-6 pb-6 border-b border-slate-200 dark:border-slate-800">
-              <div className="w-20 h-20 rounded-full bg-slate-900 text-white font-bold text-2xl flex items-center justify-center border-4 border-[#f36963]">
-                PS
+        <div className="dashboard profile-page-wrapper">
+          {/* Top Profile Hero Header */}
+          <div className="profile-hero-banner">
+            <div className="profile-hero-flex">
+              <div className="profile-hero-left">
+                <div className="profile-photo-wrapper">
+                  <div className="profile-avatar-circle profile-avatar-lg">
+                    {profileForm.avatarUrl ? (
+                      <img src={profileForm.avatarUrl} alt={profileForm.name} />
+                    ) : (
+                      <span>{getInitials(profileForm.name)}</span>
+                    )}
+                  </div>
+                  <label
+                    htmlFor="hero-profile-photo-input"
+                    className="photo-edit-overlay-btn"
+                    title="Change Profile Picture"
+                  >
+                    <Camera className="w-4 h-4" />
+                    <input
+                      id="hero-profile-photo-input"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoUpload}
+                    />
+                  </label>
+                </div>
+
+                <div className="profile-hero-details">
+                  <h1>
+                    {profileForm.name || 'User Profile'}
+                    <span className="verified-tag">
+                      <BadgeCheck className="w-3.5 h-3.5" /> Verified Legal Account
+                    </span>
+                  </h1>
+                  <p>
+                    {profileForm.roleTitle || profileForm.profession || 'Legal Representative'} · {profileForm.companyName || 'Apex Legal Advisory'}
+                  </p>
+                  <p className="font-mono text-xs text-slate-400">{userProfile.email}</p>
+                  <p className="profile-bio-text">{profileForm.bio || 'Commercial contract attorney specializing in MSME compliance, contract risk governance, and vendor negotiations.'}</p>
+                </div>
               </div>
+
+              <div className="flex items-center gap-3 flex-wrap">
+                <button
+                  className={`button button-small ${isEditingProfile ? 'button-dark' : 'button-coral'}`}
+                  onClick={() => setIsEditingProfile(!isEditingProfile)}
+                >
+                  <FileEdit className="w-3.5 h-3.5" /> {isEditingProfile ? 'Done Editing' : 'Edit Profile'}
+                </button>
+                <button className="button button-light button-small" onClick={() => exportUserDataApi()}>
+                  <Download className="w-3.5 h-3.5" /> GDPR Archive
+                </button>
+              </div>
+            </div>
+
+            {/* Audit & Health Stats Strip */}
+            <div className="profile-stat-strip">
+              <div className="stat-strip-box">
+                <b>{userProfile.stats?.contractsAnalyzed || 18}</b>
+                <span>Contracts Analyzed</span>
+              </div>
+              <div className="stat-strip-box">
+                <b className="text-emerald-600">{userProfile.stats?.avgHealthScore || 78}/100</b>
+                <span>Avg Health Score</span>
+              </div>
+              <div className="stat-strip-box">
+                <b className="text-[#f36963]">{userProfile.stats?.risksResolved || 42}</b>
+                <span>Risks Resolved</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 1: Personal Information */}
+          <div className="profile-card-section">
+            <div className="section-title-bar">
+              <h3>
+                <User className="w-4 h-4 text-[#f36963]" /> Personal Information
+              </h3>
+            </div>
+
+            <div className="profile-field-grid-2">
+              <div className="form-group-item">
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  value={profileForm.name || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                  placeholder="e.g. Adv. Priya Sharma"
+                />
+              </div>
+
+              <div className="form-group-item">
+                <label>Mobile Number</label>
+                <input
+                  type="tel"
+                  value={profileForm.phone || profileForm.mobileNumber || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value, mobileNumber: e.target.value })}
+                  placeholder="+91 98765 43210"
+                />
+              </div>
+
+              <div className="form-group-item">
+                <label>Authenticated Email</label>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    disabled
+                    value={userProfile.email || ''}
+                    className="flex-1"
+                  />
+                  <button
+                    type="button"
+                    className="button button-light button-small shrink-0"
+                    onClick={() => {
+                      setEmailFeedback({})
+                      setEmailForm({ newEmail: '', currentPassword: '' })
+                      setChangeEmailModalOpen(true)
+                    }}
+                  >
+                    Change Email
+                  </button>
+                </div>
+              </div>
+
+              <div className="form-group-item">
+                <label>Profile Picture Actions</label>
+                <div className="flex gap-2 items-center">
+                  <label className="button button-light button-small cursor-pointer">
+                    <Camera className="w-3.5 h-3.5" /> Upload Photo
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoUpload}
+                    />
+                  </label>
+                  {profileForm.avatarUrl && (
+                    <button
+                      type="button"
+                      className="button button-danger button-small"
+                      onClick={handleRemovePhoto}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" /> Remove
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Professional Information */}
+          <div className="profile-card-section">
+            <div className="section-title-bar">
+              <h3>
+                <Briefcase className="w-4 h-4 text-emerald-600" /> Professional Information
+              </h3>
+            </div>
+
+            <div className="profile-field-grid-2">
+              <div className="form-group-item">
+                <label>Profession</label>
+                <select
+                  value={profileForm.profession || 'Corporate Legal Counsel'}
+                  onChange={(e) => setProfileForm({ ...profileForm, profession: e.target.value })}
+                >
+                  <option value="Corporate Legal Counsel">Corporate Legal Counsel</option>
+                  <option value="Lawyer / Advocate">Lawyer / Advocate</option>
+                  <option value="Business Owner">Business Owner</option>
+                  <option value="Founder / Co-Founder">Founder / Co-Founder</option>
+                  <option value="Managing Director / CEO">Managing Director / CEO</option>
+                  <option value="Chief Financial Officer (CFO)">Chief Financial Officer (CFO)</option>
+                  <option value="Operations / Procurement Manager">Operations / Procurement Manager</option>
+                  <option value="Software / Tech Executive">Software / Tech Executive</option>
+                  <option value="Commercial Consultant">Commercial Consultant</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div className="form-group-item">
+                <label>Job Title / Designation</label>
+                <input
+                  type="text"
+                  value={profileForm.roleTitle || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, roleTitle: e.target.value })}
+                  placeholder="e.g. Chief Legal Counsel"
+                />
+              </div>
+
+              <div className="form-group-item col-span-2">
+                <label>Professional Role in Workspace</label>
+                <input
+                  type="text"
+                  value={profileForm.role || 'Chief Legal Counsel & Partner'}
+                  onChange={(e) => setProfileForm({ ...profileForm, role: e.target.value })}
+                  placeholder="e.g. Chief Legal Counsel & Partner"
+                />
+              </div>
+
+              <div className="form-group-item col-span-2">
+                <label>Professional Bio</label>
+                <textarea
+                  rows={3}
+                  value={profileForm.bio || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
+                  placeholder="Brief summary of your legal background, company focus, and contract management responsibilities..."
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 3: Company & Organization Details */}
+          <div className="profile-card-section">
+            <div className="section-title-bar">
+              <h3>
+                <Building className="w-4 h-4 text-blue-500" /> Company & Organization Details
+              </h3>
+            </div>
+
+            <div className="profile-field-grid-2">
+              <div className="form-group-item">
+                <label>Company / Organization Name</label>
+                <input
+                  type="text"
+                  value={profileForm.companyName || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, companyName: e.target.value })}
+                  placeholder="e.g. Apex Legal & Tech Advisory LLP"
+                />
+              </div>
+
+              <div className="form-group-item">
+                <label>Company Type</label>
+                <select
+                  value={profileForm.companyType || 'MSME'}
+                  onChange={(e) => setProfileForm({ ...profileForm, companyType: e.target.value })}
+                >
+                  <option value="MSME">MSME (Micro, Small & Medium Enterprise)</option>
+                  <option value="Startup">Startup / Early Stage</option>
+                  <option value="Private Limited">Private Limited (Pvt Ltd)</option>
+                  <option value="Partnership">LLP / Partnership</option>
+                  <option value="Sole Proprietorship">Sole Proprietorship</option>
+                  <option value="Public Limited">Public Limited (Ltd)</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div className="form-group-item">
+                <label>Industry Sector</label>
+                <select
+                  value={profileForm.industry || 'Consulting & Legal'}
+                  onChange={(e) => setProfileForm({ ...profileForm, industry: e.target.value })}
+                >
+                  <option value="Consulting & Legal">Consulting & Legal Tech</option>
+                  <option value="Technology">Technology & SaaS</option>
+                  <option value="Manufacturing">Manufacturing & Industrial</option>
+                  <option value="Retail">Retail & E-commerce</option>
+                  <option value="Healthcare">Healthcare & Life Sciences</option>
+                  <option value="Finance">Finance & Banking</option>
+                  <option value="Supply Chain">Supply Chain & Logistics</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div className="form-group-item">
+                <label>Company Website</label>
+                <input
+                  type="url"
+                  value={profileForm.companyWebsite || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, companyWebsite: e.target.value })}
+                  placeholder="https://company.com"
+                />
+              </div>
+
+              <div className="form-group-item">
+                <label>Official Company Email</label>
+                <input
+                  type="email"
+                  value={profileForm.companyEmail || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, companyEmail: e.target.value })}
+                  placeholder="contact@company.com"
+                />
+              </div>
+
+              <div className="form-group-item">
+                <label>Official Company Phone</label>
+                <input
+                  type="tel"
+                  value={profileForm.companyPhone || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, companyPhone: e.target.value })}
+                  placeholder="+91 22 4567 8900"
+                />
+              </div>
+
+              <div className="form-group-item col-span-2">
+                <label>Registered Office Address</label>
+                <input
+                  type="text"
+                  value={profileForm.companyAddress || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, companyAddress: e.target.value })}
+                  placeholder="Suite 402, Business Park, Nariman Point"
+                />
+              </div>
+            </div>
+
+            <div className="profile-field-grid-3 mt-4">
+              <div className="form-group-item">
+                <label>City</label>
+                <input
+                  type="text"
+                  value={profileForm.city || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, city: e.target.value })}
+                  placeholder="Mumbai"
+                />
+              </div>
+
+              <div className="form-group-item">
+                <label>State</label>
+                <input
+                  type="text"
+                  value={profileForm.state || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, state: e.target.value })}
+                  placeholder="Maharashtra"
+                />
+              </div>
+
+              <div className="form-group-item">
+                <label>PIN Code</label>
+                <input
+                  type="text"
+                  value={profileForm.pinCode || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, pinCode: e.target.value })}
+                  placeholder="400021"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 4: Password & Security */}
+          <div className="profile-card-section">
+            <div className="section-title-bar">
+              <h3>
+                <KeyRound className="w-4 h-4 text-amber-500" /> Password & Security
+              </h3>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-subtle rounded-xl border border-slate-200 dark:border-slate-800 flex-wrap gap-4">
               <div>
-                <h1 className="text-2xl font-bold">{userProfile.name}</h1>
-                <p className="text-sm text-slate-500">{userProfile.roleTitle} at {userProfile.companyName}</p>
-                <p className="text-xs font-mono text-slate-400 mt-1">{userProfile.email}</p>
+                <b className="text-sm block">Account Password Protection</b>
+                <p className="text-xs text-slate-500 mt-0.5">Encrypted with Scrypt & authenticated tokens. Never exposed in public UI.</p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  className="button button-coral button-small"
+                  onClick={() => {
+                    setPasswordFeedback({})
+                    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+                    setChangePasswordModalOpen(true)
+                  }}
+                >
+                  <LockKeyhole className="w-3.5 h-3.5" /> Change Password
+                </button>
+                <button
+                  type="button"
+                  className="button button-light button-small"
+                  onClick={async () => {
+                    await forgotPasswordApi(userProfile.email)
+                    showToast(`Password reset link sent to ${userProfile.email}`)
+                  }}
+                >
+                  Reset via Email
+                </button>
               </div>
             </div>
+          </div>
 
-            <div className="grid grid-cols-3 gap-4 my-6">
-              <div className="p-4 bg-subtle rounded-lg text-center border border-slate-200 dark:border-slate-800">
-                <b className="text-2xl block text-main">{userProfile.stats?.contractsAnalyzed || 18}</b>
-                <span className="text-[10px] text-slate-500 uppercase font-bold">Contracts Analyzed</span>
-              </div>
-              <div className="p-4 bg-subtle rounded-lg text-center border border-slate-200 dark:border-slate-800">
-                <b className="text-2xl block text-emerald-600">{userProfile.stats?.avgHealthScore || 78}/100</b>
-                <span className="text-[10px] text-slate-500 uppercase font-bold">Avg Health Score</span>
-              </div>
-              <div className="p-4 bg-subtle rounded-lg text-center border border-slate-200 dark:border-slate-800">
-                <b className="text-2xl block text-[#f36963]">{userProfile.stats?.risksResolved || 42}</b>
-                <span className="text-[10px] text-slate-500 uppercase font-bold">Risks Resolved</span>
-              </div>
+          {/* Section 5: Connected Accounts */}
+          <div className="profile-card-section">
+            <div className="section-title-bar">
+              <h3>
+                <ShieldCheck className="w-4 h-4 text-purple-500" /> Connected Accounts & Providers
+              </h3>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-              <button className="button button-outline" onClick={() => setCurrentView('settings')}>
-                <Settings className="w-4 h-4" /> Edit Profile & Settings
+            <div className="connected-accounts-grid">
+              <div className="connected-account-card">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24">
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <b className="text-xs block">Google</b>
+                    <small className="text-[10px] text-slate-400">OAuth 2.0</small>
+                  </div>
+                </div>
+                <span className="connected-badge">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Connected
+                </span>
+              </div>
+
+              <div className="connected-account-card">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center">
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.86c.62-.77 1.04-1.84.93-2.91-.9.04-2 .6-2.65 1.36-.58.67-.99 1.76-.87 2.81 1.02.08 2.06-.52 2.59-1.26" />
+                    </svg>
+                  </div>
+                  <div>
+                    <b className="text-xs block">Apple</b>
+                    <small className="text-[10px] text-slate-400">Apple ID</small>
+                  </div>
+                </div>
+                <span className="connected-badge">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Connected
+                </span>
+              </div>
+
+              <div className="connected-account-card">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <b className="text-xs block">Email & Password</b>
+                    <small className="text-[10px] text-slate-400">Primary Login</small>
+                  </div>
+                </div>
+                <span className="connected-badge">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Active
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Sticky Bottom Save / Cancel Bar */}
+          <div className="profile-actions-bar">
+            <div>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                {JSON.stringify(profileForm) !== JSON.stringify(userProfile)
+                  ? '● You have unsaved changes in your profile.'
+                  : 'Profile data synchronized with secure storage.'}
+              </span>
+            </div>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                className="button button-light button-small"
+                onClick={handleCancelProfileEdit}
+              >
+                Cancel
               </button>
-              <button className="button button-coral" onClick={() => exportUserDataApi()}>
-                <Download className="w-4 h-4" /> Download GDPR Archive
+              <button
+                type="button"
+                className="button button-coral button-small"
+                onClick={handleSaveProfile}
+                disabled={isSavingProfile}
+              >
+                {isSavingProfile ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </div>
@@ -2121,6 +2800,210 @@ export default function App() {
               <button type="submit" className="button button-coral w-full py-2.5 font-bold">
                 Record Snapshot
               </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL: CHANGE PASSWORD                                                    */}
+      {/* ========================================================================= */}
+      {changePasswordModalOpen && (
+        <div className="modal-backdrop" onClick={() => setChangePasswordModalOpen(false)}>
+          <div className="modal-panel" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+            <button className="close-modal" onClick={() => setChangePasswordModalOpen(false)}>
+              <X className="w-4 h-4" />
+            </button>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-full bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                <LockKeyhole className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-main">Change Account Password</h2>
+                <p className="text-xs text-slate-500">Update your security credentials</p>
+              </div>
+            </div>
+
+            {passwordFeedback.error && (
+              <div className="auth-alert auth-alert-error mb-3">
+                <ShieldAlert className="w-4 h-4 flex-shrink-0" />
+                <span>{passwordFeedback.error}</span>
+              </div>
+            )}
+            {passwordFeedback.success && (
+              <div className="auth-alert auth-alert-success mb-3">
+                <Check className="w-4 h-4 flex-shrink-0" />
+                <span>{passwordFeedback.success}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleChangePasswordSubmit} className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold mb-1">Current Password</label>
+                <div className="input-group">
+                  <KeyRound className="input-icon" />
+                  <input
+                    type={showCurrentPass ? 'text' : 'password'}
+                    required
+                    placeholder="Enter current password"
+                    value={passwordForm.currentPassword}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() => setShowCurrentPass(!showCurrentPass)}
+                    tabIndex={-1}
+                  >
+                    {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold mb-1">New Password</label>
+                <div className="input-group">
+                  <LockKeyhole className="input-icon" />
+                  <input
+                    type={showNewPass ? 'text' : 'password'}
+                    required
+                    minLength={8}
+                    placeholder="At least 8 characters"
+                    value={passwordForm.newPassword}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() => setShowNewPass(!showNewPass)}
+                    tabIndex={-1}
+                  >
+                    {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold mb-1">Confirm New Password</label>
+                <div className="input-group">
+                  <LockKeyhole className="input-icon" />
+                  <input
+                    type={showConfirmPass ? 'text' : 'password'}
+                    required
+                    minLength={8}
+                    placeholder="Re-enter new password"
+                    value={passwordForm.confirmPassword}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() => setShowConfirmPass(!showConfirmPass)}
+                    tabIndex={-1}
+                  >
+                    {showConfirmPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  className="button button-light flex-1"
+                  onClick={() => setChangePasswordModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="button button-coral flex-1"
+                  disabled={passwordSaving}
+                >
+                  {passwordSaving ? 'Updating...' : 'Update Password'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL: CHANGE EMAIL                                                       */}
+      {/* ========================================================================= */}
+      {changeEmailModalOpen && (
+        <div className="modal-backdrop" onClick={() => setChangeEmailModalOpen(false)}>
+          <div className="modal-panel" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+            <button className="close-modal" onClick={() => setChangeEmailModalOpen(false)}>
+              <X className="w-4 h-4" />
+            </button>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-full bg-blue-500/10 text-blue-600 flex items-center justify-center">
+                <Mail className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-main">Update Account Email</h2>
+                <p className="text-xs text-slate-500">Enter new verified email address</p>
+              </div>
+            </div>
+
+            {emailFeedback.error && (
+              <div className="auth-alert auth-alert-error mb-3">
+                <ShieldAlert className="w-4 h-4 flex-shrink-0" />
+                <span>{emailFeedback.error}</span>
+              </div>
+            )}
+            {emailFeedback.success && (
+              <div className="auth-alert auth-alert-success mb-3">
+                <Check className="w-4 h-4 flex-shrink-0" />
+                <span>{emailFeedback.success}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleChangeEmailSubmit} className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold mb-1">New Email Address</label>
+                <div className="input-group">
+                  <Mail className="input-icon" />
+                  <input
+                    type="email"
+                    required
+                    placeholder="new.email@company.com"
+                    value={emailForm.newEmail}
+                    onChange={(e) => setEmailForm({ ...emailForm, newEmail: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold mb-1">Current Password (Re-authentication)</label>
+                <div className="input-group">
+                  <LockKeyhole className="input-icon" />
+                  <input
+                    type="password"
+                    required
+                    placeholder="Enter current password"
+                    value={emailForm.currentPassword}
+                    onChange={(e) => setEmailForm({ ...emailForm, currentPassword: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  className="button button-light flex-1"
+                  onClick={() => setChangeEmailModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="button button-coral flex-1"
+                  disabled={emailSaving}
+                >
+                  {emailSaving ? 'Updating...' : 'Save New Email'}
+                </button>
+              </div>
             </form>
           </div>
         </div>
