@@ -86,6 +86,7 @@ import {
   forgotPasswordApi,
 } from './api'
 import AuthPage from './AuthPage'
+import { auth, onAuthStateChanged, logoutUser } from './firebase'
 
 type ViewType =
   | 'welcome'
@@ -323,31 +324,31 @@ export default function App() {
 
   // User Profile & Settings
   const [userProfile, setUserProfile] = useState<any>({
-    id: 'usr_admin_01',
-    name: 'Adv. Priya Sharma',
-    email: 'priya.sharma@contractsense.ai',
-    companyName: 'Apex Legal & Tech Advisory LLP',
-    roleTitle: 'Chief Legal Counsel',
-    profession: 'Corporate Legal Counsel',
-    role: 'Chief Legal Counsel & Partner',
-    phone: '+91 98765 43210',
-    mobileNumber: '+91 98765 43210',
-    bio: 'Commercial contract attorney specializing in MSME compliance, contract risk governance, and vendor negotiations.',
+    id: '',
+    name: '',
+    email: '',
+    companyName: 'My Enterprise',
+    roleTitle: 'Legal & Commercial Reviewer',
+    profession: 'Commercial Reviewer',
+    role: 'Reviewer',
+    phone: '',
+    mobileNumber: '',
+    bio: 'Contract intelligence workspace.',
     companyType: 'MSME',
-    industry: 'Consulting & Legal',
-    companyWebsite: 'https://apexlegaladvisory.com',
-    companyEmail: 'contact@apexlegaladvisory.com',
-    companyPhone: '+91 22 4567 8900',
-    companyAddress: 'Suite 402, Nariman Point Business Hub',
+    industry: 'Technology & Legal',
+    companyWebsite: '',
+    companyEmail: '',
+    companyPhone: '',
+    companyAddress: '',
     city: 'Mumbai',
     state: 'Maharashtra',
-    pinCode: '400021',
-    connectedProviders: ['Email & Password', 'Google'],
-    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+    pinCode: '400001',
+    connectedProviders: ['Email & Password'],
+    avatarUrl: '',
     themePreference: 'system',
     emailAlertsOnRisk: true,
     weeklySummaryEmail: true,
-    stats: { contractsAnalyzed: 18, avgHealthScore: 78, risksResolved: 42 },
+    stats: { contractsAnalyzed: 0, avgHealthScore: 0, risksResolved: 0 },
   })
 
   // Profile Edit State
@@ -519,38 +520,91 @@ export default function App() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingStage, setProcessingStage] = useState(0)
 
-  // Initialize Theme and Data
+  // Initialize Theme and Listen for Firebase Auth State Changes
   useEffect(() => {
-    const initializeApp = async () => {
-      const savedTheme = localStorage.getItem('contractsense_theme') as 'light' | 'dark' | null
-      if (savedTheme) {
-        setTheme(savedTheme)
-        document.documentElement.classList.toggle('dark', savedTheme === 'dark')
-      }
-
-      const token = localStorage.getItem('contractsense_auth_token')
-      if (!token) return
-
-      const me = await fetchCurrentUserApi(token)
-      if (!me?.success || !me?.user) {
-        localStorage.removeItem('contractsense_auth_token')
-        return
-      }
-
-      setUserProfile((prev: any) => ({ ...prev, ...me.user }))
-      setIsLoggedIn(true)
-      loadInitialData()
+    const savedTheme = localStorage.getItem('contractsense_theme') as 'light' | 'dark' | null
+    if (savedTheme) {
+      setTheme(savedTheme)
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark')
     }
 
-    initializeApp()
+    console.log('[Auth] Initializing Firebase Auth observer...')
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        console.log('[Auth] onAuthStateChanged: Authenticated user detected:', firebaseUser.email, 'UID:', firebaseUser.uid)
+        try {
+          const token = await firebaseUser.getIdToken()
+          localStorage.setItem('contractsense_auth_token', token)
+
+          const displayName = firebaseUser.displayName || (firebaseUser.email ? firebaseUser.email.split('@')[0] : 'User')
+          const providers = firebaseUser.providerData.map((p) =>
+            p.providerId === 'google.com' ? 'Google' : p.providerId === 'apple.com' ? 'Apple' : 'Email & Password'
+          )
+
+          setUserProfile((prev: any) => ({
+            ...prev,
+            id: firebaseUser.uid,
+            name: displayName,
+            email: firebaseUser.email || '',
+            avatarUrl: firebaseUser.photoURL || prev.avatarUrl || '',
+            connectedProviders: providers.length > 0 ? Array.from(new Set(providers)) : ['Email & Password'],
+          }))
+
+          setIsLoggedIn(true)
+          loadInitialData()
+        } catch (err: any) {
+          console.error('[Auth] Error getting user token:', err)
+        }
+      } else {
+        console.log('[Auth] onAuthStateChanged: No authenticated user session found')
+        setIsLoggedIn(false)
+        localStorage.removeItem('contractsense_auth_token')
+        setUserProfile({
+          id: '',
+          name: '',
+          email: '',
+          companyName: '',
+          roleTitle: '',
+          profession: '',
+          role: '',
+          phone: '',
+          mobileNumber: '',
+          bio: '',
+          companyType: 'MSME',
+          industry: '',
+          companyWebsite: '',
+          companyEmail: '',
+          companyPhone: '',
+          companyAddress: '',
+          city: '',
+          state: '',
+          pinCode: '',
+          connectedProviders: [],
+          avatarUrl: '',
+          themePreference: 'system',
+          emailAlertsOnRisk: true,
+          weeklySummaryEmail: true,
+          stats: { contractsAnalyzed: 0, avgHealthScore: 0, risksResolved: 0 },
+        })
+      }
+    })
+
+    return () => unsubscribe()
   }, [])
 
   const handleAuthenticated = (user: any, token: string) => {
     localStorage.setItem('contractsense_auth_token', token)
-    setUserProfile((prev: any) => ({ ...prev, ...user }))
+    const displayName = user.displayName || user.name || (user.email ? user.email.split('@')[0] : 'User')
+    setUserProfile((prev: any) => ({
+      ...prev,
+      id: user.uid || user.id || prev.id,
+      name: displayName,
+      email: user.email || prev.email,
+      avatarUrl: user.photoURL || user.avatarUrl || prev.avatarUrl,
+    }))
     setIsLoggedIn(true)
     setCurrentView('dashboard')
-    showToast(`Welcome, ${user.name || 'User'}!`)
+    showToast(`Welcome, ${displayName}!`)
     loadInitialData()
   }
 
@@ -997,11 +1051,11 @@ export default function App() {
                 <div className="border-t border-slate-200 dark:border-slate-800 my-1" />
                 <button
                   className="popover-item danger-item"
-                  onClick={() => {
-                    localStorage.removeItem('contractsense_auth_token')
-                    setIsLoggedIn(false)
+                  onClick={async () => {
                     setProfileDropdownOpen(false)
-                    setCurrentView('welcome')
+                    await logoutUser()
+                    setIsLoggedIn(false)
+                    setCurrentView('dashboard')
                     showToast('Logged out of session')
                   }}
                 >
@@ -2163,7 +2217,7 @@ export default function App() {
                   type="text"
                   value={profileForm.name || ''}
                   onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                  placeholder="e.g. Adv. Priya Sharma"
+                  placeholder="e.g. Rajesh Mehta"
                 />
               </div>
 

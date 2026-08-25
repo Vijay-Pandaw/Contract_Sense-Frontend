@@ -6,7 +6,6 @@ import {
   Check,
   Eye,
   EyeOff,
-  FileCheck2,
   LockKeyhole,
   Mail,
   Scale,
@@ -15,10 +14,17 @@ import {
   Sparkles,
   User,
 } from 'lucide-react'
-import { forgotPasswordApi, loginApi, signupApi, socialLoginApi } from './api'
+import {
+  loginWithGoogle,
+  loginWithApple,
+  loginWithEmail,
+  signupWithEmail,
+  resetPassword,
+  FirebaseUser,
+} from './firebase'
 
 type AuthPageProps = {
-  onAuthenticated: (user: any, token: string) => void
+  onAuthenticated: (user: FirebaseUser, token: string) => void
 }
 
 type AuthMode = 'login' | 'signup' | 'forgot'
@@ -26,7 +32,7 @@ type AuthMode = 'login' | 'signup' | 'forgot'
 export default function AuthPage({ onAuthenticated }: AuthPageProps) {
   const [mode, setMode] = useState<AuthMode>('login')
   const [submitting, setSubmitting] = useState(false)
-  const [socialLoading, setSocialLoading] = useState<string | null>(null)
+  const [socialLoading, setSocialLoading] = useState<'google' | 'apple' | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [authError, setAuthError] = useState('')
   const [authMessage, setAuthMessage] = useState('')
@@ -40,31 +46,39 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
     setAuthMessage('')
   }
 
+  // --- 1. Real Firebase Email & Password Login ---
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     clearFeedback()
     if (!loginForm.email.trim() || !loginForm.password) {
-      setAuthError('Please enter both your email and password.')
+      setAuthError('Please enter both your email address and password.')
       return
     }
     setSubmitting(true)
 
-    const res = await loginApi(loginForm.email.trim(), loginForm.password)
-    setSubmitting(false)
+    try {
+      const res = await loginWithEmail(loginForm.email.trim(), loginForm.password)
+      setSubmitting(false)
 
-    if (!res?.success || !res?.token || !res?.user) {
-      setAuthError(res?.error || 'Invalid email or password. Please try again.')
-      return
+      if (!res.success || !res.user) {
+        setAuthError(res.error || 'Invalid email or password. Please try again.')
+        return
+      }
+
+      const token = await res.user.getIdToken()
+      onAuthenticated(res.user, token)
+    } catch (err: any) {
+      setSubmitting(false)
+      setAuthError(err.message || 'Authentication error. Please try again.')
     }
-
-    onAuthenticated(res.user, res.token)
   }
 
+  // --- 2. Real Firebase Registration ---
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     clearFeedback()
     if (!signupForm.name.trim() || !signupForm.email.trim() || !signupForm.password) {
-      setAuthError('Please fill in all required fields.')
+      setAuthError('Please fill in your name, email, and password.')
       return
     }
     if (signupForm.password.length < 8) {
@@ -73,22 +87,28 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
     }
     setSubmitting(true)
 
-    const res = await signupApi({
-      name: signupForm.name.trim(),
-      email: signupForm.email.trim(),
-      password: signupForm.password,
-      companyName: signupForm.companyName.trim() || undefined,
-    })
-    setSubmitting(false)
+    try {
+      const res = await signupWithEmail(
+        signupForm.name.trim(),
+        signupForm.email.trim(),
+        signupForm.password
+      )
+      setSubmitting(false)
 
-    if (!res?.success || !res?.token || !res?.user) {
-      setAuthError(res?.error || 'Unable to create account right now. Please try again.')
-      return
+      if (!res.success || !res.user) {
+        setAuthError(res.error || 'Unable to create account right now. Please try again.')
+        return
+      }
+
+      const token = await res.user.getIdToken()
+      onAuthenticated(res.user, token)
+    } catch (err: any) {
+      setSubmitting(false)
+      setAuthError(err.message || 'Account registration error. Please try again.')
     }
-
-    onAuthenticated(res.user, res.token)
   }
 
+  // --- 3. Real Firebase Forgot Password (Password Reset Email) ---
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault()
     clearFeedback()
@@ -98,30 +118,38 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
     }
     setSubmitting(true)
 
-    const res = await forgotPasswordApi(forgotEmail.trim())
-    setSubmitting(false)
+    try {
+      const res = await resetPassword(forgotEmail.trim())
+      setSubmitting(false)
 
-    if (!res?.success) {
-      setAuthError(res?.error || 'Unable to process password reset request.')
-      return
+      if (!res.success) {
+        setAuthError(res.error || 'Unable to process password reset request.')
+        return
+      }
+
+      setAuthMessage(res.message || `Password reset instructions have been sent to ${forgotEmail.trim()}.`)
+    } catch (err: any) {
+      setSubmitting(false)
+      setAuthError(err.message || 'Failed to dispatch password reset email.')
     }
-
-    setAuthMessage(res.message || `Password reset instructions have been sent to ${forgotEmail.trim()}.`)
   }
 
+  // --- 4. Real Firebase Social Login (Google & Apple) ---
   const handleSocialLogin = async (provider: 'google' | 'apple') => {
     clearFeedback()
     setSocialLoading(provider)
 
     try {
-      const res = await socialLoginApi(provider)
+      const res = provider === 'google' ? await loginWithGoogle() : await loginWithApple()
       setSocialLoading(null)
 
-      if (res?.success && res?.token && res?.user) {
-        onAuthenticated(res.user, res.token)
-      } else {
-        setAuthError(res?.error || `Unable to authenticate with ${provider === 'google' ? 'Google' : 'Apple'}.`)
+      if (!res.success || !res.user) {
+        setAuthError(res.error || `Unable to authenticate with ${provider === 'google' ? 'Google' : 'Apple'}.`)
+        return
       }
+
+      const token = await res.user.getIdToken()
+      onAuthenticated(res.user, token)
     } catch (err: any) {
       setSocialLoading(null)
       setAuthError(`Unable to complete ${provider === 'google' ? 'Google' : 'Apple'} authentication.`)
@@ -132,7 +160,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
     <div className="auth-page">
       <div className="auth-backdrop" />
       <div className="auth-layout">
-        {/* Left Side: Premium Brand Experience */}
+        {/* Left Side: Brand & Product Value */}
         <section className="auth-panel auth-panel-brand">
           <div className="auth-brand-top">
             <div className="brand">
@@ -154,7 +182,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
               <em>Negotiate from strength.</em>
             </h1>
             <p className="hero-description">
-              AI-powered contract intelligence that helps businesses identify risks, understand clauses and negotiate with confidence.
+              AI-powered contract intelligence that helps businesses identify risks, understand complex clauses, and negotiate with confidence.
             </p>
 
             <div className="auth-benefit-list">
@@ -184,7 +212,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
                 </div>
                 <div>
                   <strong>Get actionable negotiation insights</strong>
-                  <p>One-click pre-approved statutory redlines tailored to protect MSME vendors.</p>
+                  <p>One-click pre-approved statutory redlines tailored to protect enterprise & MSME vendors.</p>
                 </div>
               </div>
             </div>
@@ -197,12 +225,12 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
             </div>
             <div className="trust-indicator">
               <LockKeyhole className="w-4 h-4 text-slate-500" />
-              <span>256-bit Encrypted Private Workspace</span>
+              <span>Firebase Authenticated Private Workspace</span>
             </div>
           </div>
         </section>
 
-        {/* Right Side: Authentication Card */}
+        {/* Right Side: Firebase Authentication Card */}
         <section className="auth-panel auth-panel-form">
           <div className="auth-card-inner">
             <div className="auth-header-block">
@@ -221,12 +249,12 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
               {mode === 'forgot' && (
                 <>
                   <h2>Reset password</h2>
-                  <p>Enter your verified email address to receive reset instructions.</p>
+                  <p>Enter your verified email address to receive reset instructions via Firebase.</p>
                 </>
               )}
             </div>
 
-            {/* Social Authentication Buttons */}
+            {/* Social Authentication: Google & Apple */}
             {mode !== 'forgot' && (
               <div className="social-auth-grid">
                 <button
@@ -253,7 +281,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                     />
                   </svg>
-                  <span>{socialLoading === 'google' ? 'Connecting...' : 'Continue with Google'}</span>
+                  <span>{socialLoading === 'google' ? 'Connecting to Google...' : 'Continue with Google'}</span>
                 </button>
 
                 <button
@@ -265,7 +293,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                     <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.86c.62-.77 1.04-1.84.93-2.91-.9.04-2 .6-2.65 1.36-.58.67-.99 1.76-.87 2.81 1.02.08 2.06-.52 2.59-1.26" />
                   </svg>
-                  <span>{socialLoading === 'apple' ? 'Connecting...' : 'Continue with Apple'}</span>
+                  <span>{socialLoading === 'apple' ? 'Connecting to Apple...' : 'Continue with Apple'}</span>
                 </button>
               </div>
             )}
@@ -276,6 +304,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
               </div>
             )}
 
+            {/* Feedback Alerts */}
             {authError && (
               <div className="auth-alert auth-alert-error">
                 <ShieldAlert className="w-4 h-4 flex-shrink-0" />
@@ -289,7 +318,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
               </div>
             )}
 
-            {/* Login Form */}
+            {/* Email/Password Login Form */}
             {mode === 'login' && (
               <form className="auth-form-body" onSubmit={handleLogin}>
                 <div className="form-field">
@@ -365,7 +394,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
               </form>
             )}
 
-            {/* Signup Form */}
+            {/* Email/Password Signup Form */}
             {mode === 'signup' && (
               <form className="auth-form-body" onSubmit={handleSignup}>
                 <div className="form-field">
@@ -379,7 +408,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
                       autoComplete="name"
                       value={signupForm.name}
                       onChange={(e) => setSignupForm({ ...signupForm, name: e.target.value })}
-                      placeholder="e.g. Adv. Priya Sharma"
+                      placeholder="e.g. Rajesh Mehta"
                     />
                   </div>
                 </div>
@@ -455,17 +484,17 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
                       setMode('login')
                     }}
                   >
-                    Sign in
+                    Sign in instead
                   </button>
                 </div>
               </form>
             )}
 
-            {/* Forgot Password Form */}
+            {/* Forgot Password Reset Form */}
             {mode === 'forgot' && (
               <form className="auth-form-body" onSubmit={handleForgotPassword}>
                 <div className="form-field">
-                  <label htmlFor="forgot-email">Account Email</label>
+                  <label htmlFor="forgot-email">Account Email Address</label>
                   <div className="input-group">
                     <Mail className="input-icon" />
                     <input
@@ -481,19 +510,20 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
                 </div>
 
                 <button type="submit" className="button button-coral w-full submit-btn" disabled={submitting}>
-                  {submitting ? 'Sending instructions...' : 'Send Password Reset Link'}
+                  {submitting ? 'Sending instructions...' : 'Send Reset Instructions'}
+                  {!submitting && <ArrowRight className="w-4 h-4" />}
                 </button>
 
                 <div className="auth-switch-footer">
                   <button
                     type="button"
-                    className="back-signin-btn"
+                    className="switch-action-btn flex items-center justify-center gap-1.5 w-full"
                     onClick={() => {
                       clearFeedback()
                       setMode('login')
                     }}
                   >
-                    <ArrowLeft className="w-3.5 h-3.5" /> Back to sign in
+                    <ArrowLeft className="w-4 h-4" /> Back to sign in
                   </button>
                 </div>
               </form>
