@@ -1,8 +1,30 @@
-const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5001').replace(/\/$/, '') + '/api'
+// Base API URL resolution with robust path normalization
+const rawBase = (import.meta.env.VITE_API_URL || 'http://localhost:5001').trim().replace(/\/$/, '')
+const API_BASE_URL = rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`
+
+export function getApiBaseUrl(): string {
+  return API_BASE_URL
+}
 
 function buildAuthHeaders(token?: string): Record<string, string> {
   const resolvedToken = token || localStorage.getItem('contractsense_auth_token') || ''
   return resolvedToken ? { Authorization: `Bearer ${resolvedToken}` } : {}
+}
+
+export async function checkBackendHealthApi(): Promise<{ online: boolean; message?: string }> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/health`, {
+      method: 'GET',
+      headers: { ...buildAuthHeaders() },
+    })
+    if (res.ok) {
+      const data = await res.json()
+      return { online: true, message: data.status || 'operational' }
+    }
+    return { online: false, message: `Status code ${res.status}` }
+  } catch (err: any) {
+    return { online: false, message: err.message || 'Backend unreachable' }
+  }
 }
 
 export async function analyzeContractApi(file?: File | null, text?: string, fileName?: string): Promise<any> {
@@ -12,6 +34,9 @@ export async function analyzeContractApi(file?: File | null, text?: string, file
       formData.append('file', file)
       const res = await fetch(`${API_BASE_URL}/contracts/analyze`, {
         method: 'POST',
+        headers: {
+          ...buildAuthHeaders(),
+        },
         body: formData,
       })
       const json = await res.json()
@@ -20,7 +45,10 @@ export async function analyzeContractApi(file?: File | null, text?: string, file
     } else if (text) {
       const res = await fetch(`${API_BASE_URL}/contracts/analyze`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...buildAuthHeaders(),
+        },
         body: JSON.stringify({ text, fileName: fileName || 'Pasted-Contract.txt' }),
       })
       const json = await res.json()
@@ -45,7 +73,10 @@ export async function generateContractApi(payload: {
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/generate`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
       body: JSON.stringify(payload),
     })
     const json = await res.json()
@@ -69,7 +100,11 @@ export async function fetchContractHistoryApi(params?: {
     if (params?.status && params.status !== 'all') query.append('status', params.status)
     if (params?.sort) query.append('sort', params.sort)
 
-    const res = await fetch(`${API_BASE_URL}/contracts?${query.toString()}`)
+    const res = await fetch(`${API_BASE_URL}/contracts?${query.toString()}`, {
+      headers: {
+        ...buildAuthHeaders(),
+      },
+    })
     const json = await res.json()
     if (json.success && Array.isArray(json.data)) return json.data
   } catch (err: any) {
@@ -80,7 +115,11 @@ export async function fetchContractHistoryApi(params?: {
 
 export async function fetchContractByIdApi(id: string): Promise<any> {
   try {
-    const res = await fetch(`${API_BASE_URL}/contracts/${id}`)
+    const res = await fetch(`${API_BASE_URL}/contracts/${id}`, {
+      headers: {
+        ...buildAuthHeaders(),
+      },
+    })
     const json = await res.json()
     if (json.success && json.data) return json.data
   } catch (err: any) {
@@ -93,7 +132,10 @@ export async function updateClauseApi(documentId: string, clauseId: string, text
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${documentId}/clauses/${clauseId}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
       body: JSON.stringify({ text }),
     })
     return await res.json()
@@ -106,7 +148,10 @@ export async function acceptRedlineApi(documentId: string, clauseId: string, act
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${documentId}/clauses/${clauseId}/redline`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
       body: JSON.stringify({ action, customText }),
     })
     return await res.json()
@@ -119,7 +164,10 @@ export async function createVersionApi(documentId: string, summary: string) {
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${documentId}/versions`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
       body: JSON.stringify({ summary }),
     })
     return await res.json()
@@ -132,7 +180,10 @@ export async function shareContractApi(documentId: string, email: string, role =
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${documentId}/share`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
       body: JSON.stringify({ email, role }),
     })
     return await res.json()
@@ -145,7 +196,10 @@ export async function addCommentApi(documentId: string, content: string, clauseI
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${documentId}/comments`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
       body: JSON.stringify({ content, clauseId }),
     })
     return await res.json()
@@ -158,6 +212,9 @@ export async function resolveCommentApi(documentId: string, commentId: string) {
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${documentId}/comments/${commentId}/resolve`, {
       method: 'PATCH',
+      headers: {
+        ...buildAuthHeaders(),
+      },
     })
     return await res.json()
   } catch (err) {
@@ -169,7 +226,10 @@ export async function compareContractsApi(v1Id?: string, v2Id?: string) {
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/compare`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
       body: JSON.stringify({ version1Id: v1Id, version2Id: v2Id }),
     })
     const json = await res.json()
@@ -188,7 +248,10 @@ export async function bulkContractActionApi(contractIds: string[], action: 'dele
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/bulk`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
       body: JSON.stringify({ contractIds, action, status }),
     })
     return await res.json()
@@ -199,7 +262,12 @@ export async function bulkContractActionApi(contractIds: string[], action: 'dele
 
 export async function deleteContractApi(id: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/contracts/${id}`, { method: 'DELETE' })
+    const res = await fetch(`${API_BASE_URL}/contracts/${id}`, {
+      method: 'DELETE',
+      headers: {
+        ...buildAuthHeaders(),
+      },
+    })
     return await res.json()
   } catch (err) {
     return null
@@ -208,7 +276,11 @@ export async function deleteContractApi(id: string) {
 
 export async function fetchTemplatesApi(): Promise<any[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/contracts/templates`)
+    const res = await fetch(`${API_BASE_URL}/contracts/templates`, {
+      headers: {
+        ...buildAuthHeaders(),
+      },
+    })
     const json = await res.json()
     if (json.success && Array.isArray(json.data)) return json.data
   } catch (err) {
@@ -220,7 +292,11 @@ export async function fetchTemplatesApi(): Promise<any[]> {
 export async function fetchClauseLibraryApi(category?: string): Promise<any[]> {
   try {
     const url = category ? `${API_BASE_URL}/contracts/clause-library?category=${encodeURIComponent(category)}` : `${API_BASE_URL}/contracts/clause-library`
-    const res = await fetch(url)
+    const res = await fetch(url, {
+      headers: {
+        ...buildAuthHeaders(),
+      },
+    })
     const json = await res.json()
     if (json.success && Array.isArray(json.data)) return json.data
   } catch (err) {
@@ -231,7 +307,11 @@ export async function fetchClauseLibraryApi(category?: string): Promise<any[]> {
 
 export async function fetchUserProfileApi() {
   try {
-    const res = await fetch(`${API_BASE_URL}/user/profile`)
+    const res = await fetch(`${API_BASE_URL}/user/profile`, {
+      headers: {
+        ...buildAuthHeaders(),
+      },
+    })
     const json = await res.json()
     if (json.success && json.data) return json.data
   } catch (err) {
@@ -244,7 +324,10 @@ export async function updateUserProfileApi(updates: any) {
   try {
     const res = await fetch(`${API_BASE_URL}/user/profile`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
       body: JSON.stringify(updates),
     })
     return await res.json()
@@ -259,7 +342,11 @@ export async function exportUserDataApi() {
 
 export async function fetchNotificationsApi(): Promise<any[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/notifications`)
+    const res = await fetch(`${API_BASE_URL}/notifications`, {
+      headers: {
+        ...buildAuthHeaders(),
+      },
+    })
     const json = await res.json()
     if (json.success && Array.isArray(json.data)) return json.data
   } catch (err) {
@@ -270,7 +357,12 @@ export async function fetchNotificationsApi(): Promise<any[]> {
 
 export async function markNotificationReadApi(id: string) {
   try {
-    await fetch(`${API_BASE_URL}/notifications/${id}/read`, { method: 'PATCH' })
+    await fetch(`${API_BASE_URL}/notifications/${id}/read`, {
+      method: 'PATCH',
+      headers: {
+        ...buildAuthHeaders(),
+      },
+    })
   } catch (err) {
     // Ignore
   }
@@ -278,7 +370,12 @@ export async function markNotificationReadApi(id: string) {
 
 export async function markAllNotificationsReadApi() {
   try {
-    await fetch(`${API_BASE_URL}/notifications/read-all`, { method: 'PATCH' })
+    await fetch(`${API_BASE_URL}/notifications/read-all`, {
+      method: 'PATCH',
+      headers: {
+        ...buildAuthHeaders(),
+      },
+    })
   } catch (err) {
     // Ignore
   }
@@ -286,7 +383,11 @@ export async function markAllNotificationsReadApi() {
 
 export async function fetchAdminStatsApi() {
   try {
-    const res = await fetch(`${API_BASE_URL}/admin/stats`)
+    const res = await fetch(`${API_BASE_URL}/admin/stats`, {
+      headers: {
+        ...buildAuthHeaders(),
+      },
+    })
     const json = await res.json()
     if (json.success && json.data) return json.data
   } catch (err) {
@@ -299,7 +400,10 @@ export async function askContractChatApi(documentId: string, question: string, h
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${documentId}/chat`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...buildAuthHeaders(),
+      },
       body: JSON.stringify({ question, history }),
     })
     const json = await res.json()
