@@ -1,5 +1,9 @@
 // Base API URL resolution with robust path normalization
-const rawBase = (import.meta.env.VITE_API_URL || 'http://localhost:5001').trim().replace(/\/$/, '')
+const rawBase = (
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  'http://localhost:5001'
+).trim().replace(/\/$/, '')
 const API_BASE_URL = rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`
 
 export function getApiBaseUrl(): string {
