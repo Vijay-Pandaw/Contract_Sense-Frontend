@@ -71,10 +71,9 @@ import {
   markNotificationReadApi,
   markAllNotificationsReadApi,
   fetchAdminStatsApi,
-  loginApi,
-  signupApi,
-  forgotPasswordApi,
+  fetchCurrentUserApi,
 } from './api'
+import AuthPage from './AuthPage'
 
 type ViewType =
   | 'welcome'
@@ -239,10 +238,7 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Auth State & Modals
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
-  const [loginModalOpen, setLoginModalOpen] = useState(false)
-  const [signupModalOpen, setSignupModalOpen] = useState(false)
-  const [forgotModalOpen, setForgotModalOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false)
 
@@ -345,13 +341,38 @@ export default function App() {
 
   // Initialize Theme and Data
   useEffect(() => {
-    const savedTheme = localStorage.getItem('contractsense_theme') as 'light' | 'dark' | null
-    if (savedTheme) {
-      setTheme(savedTheme)
-      document.documentElement.classList.toggle('dark', savedTheme === 'dark')
+    const initializeApp = async () => {
+      const savedTheme = localStorage.getItem('contractsense_theme') as 'light' | 'dark' | null
+      if (savedTheme) {
+        setTheme(savedTheme)
+        document.documentElement.classList.toggle('dark', savedTheme === 'dark')
+      }
+
+      const token = localStorage.getItem('contractsense_auth_token')
+      if (!token) return
+
+      const me = await fetchCurrentUserApi(token)
+      if (!me?.success || !me?.user) {
+        localStorage.removeItem('contractsense_auth_token')
+        return
+      }
+
+      setUserProfile((prev: any) => ({ ...prev, ...me.user }))
+      setIsLoggedIn(true)
+      loadInitialData()
     }
-    loadInitialData()
+
+    initializeApp()
   }, [])
+
+  const handleAuthenticated = (user: any, token: string) => {
+    localStorage.setItem('contractsense_auth_token', token)
+    setUserProfile((prev: any) => ({ ...prev, ...user }))
+    setIsLoggedIn(true)
+    setCurrentView('dashboard')
+    showToast(`Welcome, ${user.name || 'User'}!`)
+    loadInitialData()
+  }
 
   const loadInitialData = async () => {
     const [history, library, notifs, profile, stats] = await Promise.all([
@@ -576,6 +597,10 @@ export default function App() {
     })
   }, [contractsList, tableSearch, tableRiskFilter, tableStatusFilter])
 
+  if (!isLoggedIn) {
+    return <AuthPage onAuthenticated={handleAuthenticated} />
+  }
+
   return (
     <div className="app-shell">
       {/* Toast Notification */}
@@ -730,9 +755,10 @@ export default function App() {
                 <button
                   className="popover-item danger-item"
                   onClick={() => {
+                    localStorage.removeItem('contractsense_auth_token')
                     setIsLoggedIn(false)
                     setProfileDropdownOpen(false)
-                    setLoginModalOpen(true)
+                    setCurrentView('welcome')
                     showToast('Logged out of session')
                   }}
                 >

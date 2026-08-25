@@ -1,5 +1,10 @@
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5001').replace(/\/$/, '') + '/api'
 
+function buildAuthHeaders(token?: string): Record<string, string> {
+  const resolvedToken = token || localStorage.getItem('contractsense_auth_token') || ''
+  return resolvedToken ? { Authorization: `Bearer ${resolvedToken}` } : {}
+}
+
 export async function analyzeContractApi(file?: File | null, text?: string, fileName?: string): Promise<any> {
   try {
     if (file) {
@@ -319,7 +324,7 @@ export async function loginApi(email: string, password: string) {
     })
     return await res.json()
   } catch (err) {
-    return { success: true, token: 'demo_token', user: { name: 'Adv. Priya Sharma', email } }
+    return { success: false, error: 'Unable to reach auth server' }
   }
 }
 
@@ -332,7 +337,7 @@ export async function signupApi(payload: { name: string; email: string; password
     })
     return await res.json()
   } catch (err) {
-    return { success: true, user: payload }
+    return { success: false, error: 'Unable to reach auth server' }
   }
 }
 
@@ -345,6 +350,19 @@ export async function forgotPasswordApi(email: string) {
     })
     return await res.json()
   } catch (err) {
-    return { success: true, message: `Password reset link sent to ${email}` }
+    return { success: false, error: 'Unable to reach auth server' }
+  }
+}
+
+export async function fetchCurrentUserApi(token?: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/me`, {
+      headers: {
+        ...buildAuthHeaders(token),
+      },
+    })
+    return await res.json()
+  } catch (err) {
+    return { success: false, error: 'Unable to reach auth server' }
   }
 }

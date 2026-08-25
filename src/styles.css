@@ -315,6 +315,170 @@ h1 em, h2 em { font-family: "Playfair Display", Georgia, serif; font-weight: 600
 .footer-links a:hover, .footer-links button:hover { color: white; }
 .footer-bottom { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 25px; margin-top: 35px; font-size: 11px; flex-wrap: wrap; gap: 12px; }
 
+/* Auth Page */
+.auth-page {
+  min-height: 100vh;
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(120deg, #f6f3ee 0%, #efe9df 40%, #f8f6f1 100%);
+}
+
+.auth-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(243, 105, 99, 0.16), transparent 34%),
+    radial-gradient(circle at 85% 82%, rgba(19, 33, 60, 0.14), transparent 32%);
+  pointer-events: none;
+}
+
+.auth-layout {
+  width: min(1080px, 100%);
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: 1;
+}
+
+.auth-panel {
+  padding: 34px;
+}
+
+.auth-panel-brand {
+  background: linear-gradient(150deg, #fffdf9 0%, #f6f1e8 100%);
+  border-right: 1px solid var(--border-color);
+}
+
+.auth-panel-brand h1 {
+  margin: 14px 0;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -.05em;
+}
+
+.auth-feature-list {
+  margin-top: 28px;
+  display: grid;
+  gap: 14px;
+}
+
+.auth-feature-list > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.auth-panel-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--bg-surface);
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.auth-tabs button {
+  border-radius: 99px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 12px;
+}
+
+.auth-tabs button.active {
+  color: #fff;
+  background: var(--bg-dark);
+  border-color: var(--bg-dark);
+}
+
+.auth-form {
+  display: grid;
+  gap: 13px;
+}
+
+.auth-form label {
+  font-size: 12px;
+  color: var(--text-main);
+  font-weight: 700;
+  display: grid;
+  gap: 6px;
+}
+
+.auth-form input {
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  outline: 0;
+}
+
+.auth-form input:focus {
+  border-color: var(--coral-accent);
+}
+
+.auth-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-subtle);
+}
+
+.auth-input-wrap svg {
+  color: var(--text-muted);
+}
+
+.auth-input-wrap input {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.auth-feedback {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.auth-feedback-error {
+  background: var(--danger-bg);
+  color: var(--danger-color);
+}
+
+.auth-feedback-success {
+  background: var(--success-bg);
+  color: var(--success-color);
+}
+
+.auth-helper-text {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
 /* Animations */
 @keyframes halo { 0% { transform: scale(.95); opacity: .6; } 100% { transform: scale(1.06); opacity: 1; } }
 @keyframes sheet-float { 0%, 100% { transform: rotate(4deg) translateY(0); } 50% { transform: rotate(2.8deg) translateY(-10px); } }
@@ -357,6 +521,9 @@ h1 em, h2 em { font-family: "Playfair Display", Georgia, serif; font-weight: 600
     width: 100%;
     border-radius: 8px;
   }
+
+  .auth-layout { grid-template-columns: 1fr; }
+  .auth-panel-brand { border-right: 0; border-bottom: 1px solid var(--border-color); }
 }
 
 @media (max-width: 640px) {
@@ -374,4 +541,7 @@ h1 em, h2 em { font-family: "Playfair Display", Georgia, serif; font-weight: 600
   .editor-canvas { padding: 20px 16px; }
   .side-panel { padding: 20px 16px; }
   .contracts-section { padding: 16px 12px; }
+  .auth-page { padding: 14px; }
+  .auth-panel { padding: 22px 18px; }
+  .auth-tabs button { font-size: 11px; }
 }
