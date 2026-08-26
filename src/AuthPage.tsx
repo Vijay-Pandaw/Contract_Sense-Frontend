@@ -172,7 +172,7 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
               </span>
             </div>
             <span className="auth-badge-pill">
-              <Sparkles className="w-3 h-3 text-[#f36963]" /> CONTRACT INTELLIGENCE PLATFORM
+              <Sparkles className="w-3 h-3 text-indigo-400" /> CONTRACT INTELLIGENCE PLATFORM
             </span>
           </div>
 

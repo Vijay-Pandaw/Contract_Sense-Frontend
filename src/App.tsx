@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import {
+  AlertCircle,
   AlertTriangle,
   ArrowRight,
   ArrowUpRight,
@@ -26,7 +27,9 @@ import {
   FileText,
   FileUp,
   Globe,
+  HelpCircle,
   History,
+  Info,
   KeyRound,
   Layers,
   LayoutDashboard,
@@ -199,40 +202,21 @@ const defaultClauses: Clause[] = [
     comments: [],
   },
   {
-    id: 'confidentiality',
-    category: 'Confidentiality',
-    title: 'Broad confidentiality duty',
+    id: 'ip',
+    category: 'Intellectual Property',
+    title: 'Broad pre-existing IP assignment',
     riskLevel: 'medium',
-    riskScore: 48,
-    confidence: 82,
-    page: 4,
-    text: 'Supplier shall keep all information relating to Buyer confidential in perpetuity.',
-    explanation: 'The non-disclosure promise never expires and lacks standard public domain carve-outs.',
-    consequences: 'Imposes perpetual administrative burden.',
+    riskScore: 58,
+    confidence: 85,
+    page: 10,
+    text: 'All inventions, tools, and materials used in providing the services shall immediately become the exclusive property of the Buyer upon creation.',
+    explanation: 'You could inadvertently transfer your proprietary tools, background software libraries, or reusable assets.',
+    consequences: 'Loss of foundational business IP and restriction from using your own tools for future clients.',
     redline: {
-      original: 'Supplier shall keep all information confidential in perpetuity.',
-      suggested: 'Confidentiality obligations shall continue for three (3) years, excluding information that is public, independently developed, or lawfully received.',
-      rationale: 'Limits obligation to a reasonable 3-year term.',
+      original: 'All tools and materials used shall become exclusive property of Buyer.',
+      suggested: 'Supplier retains all rights in Background IP and grants Buyer a non-exclusive, perpetual license to use the custom deliverables created under this Scope of Work.',
+      rationale: 'Protects pre-existing developer IP while granting client full usage rights.',
     },
-    comments: [],
-  },
-  {
-    id: 'disputes',
-    category: 'Disputes',
-    title: 'Dispute venue is costly',
-    riskLevel: 'medium',
-    riskScore: 43,
-    confidence: 67,
-    page: 9,
-    text: 'All disputes shall be subject to the exclusive jurisdiction of courts in Mumbai.',
-    explanation: 'Litigating outside your home state causes heavy legal and logistical travel costs.',
-    consequences: 'Pressure point during dispute enforcement.',
-    redline: {
-      original: 'Exclusive jurisdiction of courts in Mumbai.',
-      suggested: 'Disputes shall first be resolved through good-faith negotiation, followed by arbitration or MSEFC under the MSMED Act.',
-      rationale: 'Adds mandatory mediation and statutory MSEFC access.',
-    },
-    actReference: 'MSME Development Act, 2006 · Section 18',
     comments: [],
   },
 ]
@@ -249,6 +233,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState<ViewType>('welcome')
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [editorTab, setEditorTab] = useState<'clauses' | 'inspector'>('clauses')
 
   // Auth State & Modals
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -333,7 +318,7 @@ export default function App() {
     role: 'Reviewer',
     phone: '',
     mobileNumber: '',
-    bio: 'Contract intelligence workspace.',
+    bio: 'Commercial contract attorney specializing in MSME compliance, contract risk governance, and vendor negotiations.',
     companyType: 'MSME',
     industry: 'Technology & Legal',
     companyWebsite: '',
@@ -348,7 +333,7 @@ export default function App() {
     themePreference: 'system',
     emailAlertsOnRisk: true,
     weeklySummaryEmail: true,
-    stats: { contractsAnalyzed: 0, avgHealthScore: 0, risksResolved: 0 },
+    stats: { contractsAnalyzed: 18, avgHealthScore: 78, risksResolved: 42 },
   })
 
   // Profile Edit State
@@ -495,11 +480,20 @@ export default function App() {
     }
   }
 
-  // Comparison State
-  const [compareData, setCompareData] = useState<any>(null)
-
   // Admin Stats
-  const [adminStats, setAdminStats] = useState<any>(null)
+  const [adminStats, setAdminStats] = useState<any>({
+    totalUsers: 148,
+    activeContracts: 420,
+    avgHealthScore: 78,
+    systemUptime: '99.98%',
+    riskFrequency: [
+      { category: 'Payment Terms (>45 days)', percentage: 76, riskLevel: 'critical' },
+      { category: 'Uncapped Indemnity & Liability', percentage: 64, riskLevel: 'high' },
+      { category: 'Unilateral Termination Rights', percentage: 52, riskLevel: 'high' },
+      { category: 'Overbroad IP Assignment', percentage: 41, riskLevel: 'medium' },
+      { category: 'Absence of Force Majeure', percentage: 33, riskLevel: 'medium' },
+    ],
+  })
 
   // Floating AI Chat State
   const [chatOpen, setChatOpen] = useState(false)
@@ -507,7 +501,7 @@ export default function App() {
     {
       id: 1,
       role: 'assistant',
-      content: 'Hello! I am your AI Contract Assistant. Ask me anything about payment terms, uncapped liabilities, or missing protections in this agreement.',
+      content: 'Hello! I am your AI Contract Assistant. Ask me anything about payment terms, uncapped liabilities, or missing statutory protections in this agreement.',
     },
   ])
   const [chatInput, setChatInput] = useState('')
@@ -559,33 +553,6 @@ export default function App() {
         console.log('[Auth] onAuthStateChanged: No authenticated user session found')
         setIsLoggedIn(false)
         localStorage.removeItem('contractsense_auth_token')
-        setUserProfile({
-          id: '',
-          name: '',
-          email: '',
-          companyName: '',
-          roleTitle: '',
-          profession: '',
-          role: '',
-          phone: '',
-          mobileNumber: '',
-          bio: '',
-          companyType: 'MSME',
-          industry: '',
-          companyWebsite: '',
-          companyEmail: '',
-          companyPhone: '',
-          companyAddress: '',
-          city: '',
-          state: '',
-          pinCode: '',
-          connectedProviders: [],
-          avatarUrl: '',
-          themePreference: 'system',
-          emailAlertsOnRisk: true,
-          weeklySummaryEmail: true,
-          stats: { contractsAnalyzed: 0, avgHealthScore: 0, risksResolved: 0 },
-        })
       }
     })
 
@@ -660,7 +627,6 @@ export default function App() {
     setIsProcessing(true)
 
     try {
-      // Stage progression animation
       const stages = [0, 1, 2, 3, 4, 5]
       for (let i = 0; i < stages.length; i++) {
         setProcessingStage(i)
@@ -701,7 +667,7 @@ export default function App() {
   const handleGenerateContract = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsGenerating(true)
-    showToast('AI Drafting agreement with tailored legal safeguards...')
+    showToast('AI drafting agreement with statutory MSMED safeguards...')
 
     const res = await generateContractApi(genForm)
     setIsGenerating(false)
@@ -855,59 +821,67 @@ export default function App() {
     })
   }, [contractsList, tableSearch, tableRiskFilter, tableStatusFilter])
 
+  const navigateTo = (view: ViewType) => {
+    setCurrentView(view)
+    setMobileMenuOpen(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   if (!isLoggedIn) {
     return <AuthPage onAuthenticated={handleAuthenticated} />
   }
 
   return (
-    <div className="app-shell">
+    <div className="app-shell legal-ambient-mesh">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-slate-700 animate-bounce">
-          <Sparkles className="w-5 h-5 text-[#f36963]" />
+        <div className="fixed top-5 right-5 z-50 bg-slate-900 dark:bg-slate-800 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2.5 border border-slate-700 animate-fade-in-up">
+          <Sparkles className="w-4 h-4 text-indigo-400 shrink-0" />
           <span className="text-xs font-semibold">{toastMessage}</span>
         </div>
       )}
 
       {/* Top Navbar */}
       <header className="site-header">
-        <button className="brand" onClick={() => setCurrentView('welcome')}>
+        <button className="brand" onClick={() => navigateTo('welcome')} aria-label="ContractSense Home">
           <div className="brand-mark">
-            <Scale className="w-5 h-5" />
+            <Scale className="w-4 h-4" />
           </div>
           <span>
             Contract<span>Sense</span>
           </span>
         </button>
 
-        <nav className={`main-nav ${mobileMenuOpen ? 'nav-open' : ''}`}>
-          <button className={currentView === 'dashboard' ? 'nav-active' : ''} onClick={() => setCurrentView('dashboard')}>
-            <LayoutDashboard className="w-4 h-4 inline mr-1" /> Dashboard
+        {/* Desktop Navigation Links */}
+        <nav className="main-nav hidden md:flex">
+          <button className={currentView === 'dashboard' ? 'nav-active' : ''} onClick={() => navigateTo('dashboard')}>
+            <LayoutDashboard className="w-3.5 h-3.5" /> Dashboard
           </button>
-          <button className={currentView === 'contracts' ? 'nav-active' : ''} onClick={() => setCurrentView('contracts')}>
-            <BookOpen className="w-4 h-4 inline mr-1" /> My Contracts
+          <button className={currentView === 'contracts' ? 'nav-active' : ''} onClick={() => navigateTo('contracts')}>
+            <BookOpen className="w-3.5 h-3.5" /> My Contracts
           </button>
-          <button className={currentView === 'editor' ? 'nav-active' : ''} onClick={() => setCurrentView('editor')}>
-            <FileEdit className="w-4 h-4 inline mr-1" /> Contract Editor
+          <button className={currentView === 'editor' ? 'nav-active' : ''} onClick={() => navigateTo('editor')}>
+            <FileEdit className="w-3.5 h-3.5" /> Contract Editor
           </button>
-          <button className={currentView === 'generator' ? 'nav-active' : ''} onClick={() => setCurrentView('generator')}>
-            <Sparkles className="w-4 h-4 inline mr-1 text-[#f36963]" /> Generate AI Draft
+          <button className={currentView === 'generator' ? 'nav-active' : ''} onClick={() => navigateTo('generator')}>
+            <Sparkles className="w-3.5 h-3.5 text-indigo-500" /> AI Generator
           </button>
-          <button className={currentView === 'clause_library' ? 'nav-active' : ''} onClick={() => setCurrentView('clause_library')}>
-            <Layers className="w-4 h-4 inline mr-1" /> Clause Library
+          <button className={currentView === 'clause_library' ? 'nav-active' : ''} onClick={() => navigateTo('clause_library')}>
+            <Layers className="w-3.5 h-3.5" /> Clause Library
           </button>
-          <button className={currentView === 'compare' ? 'nav-active' : ''} onClick={() => setCurrentView('compare')}>
-            <History className="w-4 h-4 inline mr-1" /> Compare
+          <button className={currentView === 'compare' ? 'nav-active' : ''} onClick={() => navigateTo('compare')}>
+            <History className="w-3.5 h-3.5" /> Compare
           </button>
-          <button className={currentView === 'admin' ? 'nav-active' : ''} onClick={() => setCurrentView('admin')}>
-            <BarChart3 className="w-4 h-4 inline mr-1" /> Admin Analytics
+          <button className={currentView === 'admin' ? 'nav-active' : ''} onClick={() => navigateTo('admin')}>
+            <BarChart3 className="w-3.5 h-3.5" /> Admin Analytics
           </button>
         </nav>
 
+        {/* Header Right Actions */}
         <div className="header-actions">
           {/* Theme Switcher */}
           <button className="icon-btn" onClick={() => toggleTheme()} title="Toggle theme">
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
           </button>
 
           {/* In-app Notification Bell */}
@@ -926,7 +900,7 @@ export default function App() {
                   </div>
                   {unreadCount > 0 && (
                     <button
-                      className="text-xs text-[#f36963] font-semibold"
+                      className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline"
                       onClick={async () => {
                         await markAllNotificationsReadApi()
                         setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
@@ -937,36 +911,41 @@ export default function App() {
                     </button>
                   )}
                 </div>
-                <div>
-                  {notifications.map((n) => (
-                    <div
-                      key={n.id}
-                      className={`notif-item ${!n.read ? 'unread' : ''}`}
-                      onClick={() => {
-                        markNotificationReadApi(n.id)
-                        setNotifications((prev) => prev.map((item) => (item.id === n.id ? { ...item, read: true } : item)))
-                        if (n.linkUrl) setCurrentView('editor')
-                      }}
-                    >
-                      <ShieldAlert className="w-4 h-4 text-[#f36963] mt-1 shrink-0" />
-                      <div>
-                        <b>{n.title}</b>
-                        <p>{n.message}</p>
-                        <small>{new Date(n.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+                <div className="py-1">
+                  {notifications.length === 0 ? (
+                    <div className="p-4 text-center text-xs text-slate-500">No notifications yet.</div>
+                  ) : (
+                    notifications.map((n) => (
+                      <div
+                        key={n.id}
+                        className={`notif-item ${!n.read ? 'unread' : ''}`}
+                        onClick={() => {
+                          markNotificationReadApi(n.id)
+                          setNotifications((prev) => prev.map((item) => (item.id === n.id ? { ...item, read: true } : item)))
+                          if (n.linkUrl) navigateTo('editor')
+                          setNotifDropdownOpen(false)
+                        }}
+                      >
+                        <ShieldAlert className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                        <div>
+                          <b>{n.title}</b>
+                          <p>{n.message}</p>
+                          <small>{new Date(n.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Upload / Quick Analyze CTA */}
-          <button className="button button-coral button-small" onClick={() => setUploadModalOpen(true)}>
-            <FileUp className="w-4 h-4" /> Upload Contract
+          {/* Quick Upload CTA (Hidden on smallest screens to preserve padding) */}
+          <button className="button button-coral button-small hidden sm:inline-flex" onClick={() => setUploadModalOpen(true)}>
+            <FileUp className="w-3.5 h-3.5" /> Upload Contract
           </button>
 
-          {/* User Profile Avatar Dropdown (PART 2: Upgraded Size & Padding) */}
+          {/* User Profile Avatar Dropdown */}
           <div className="profile-nav-container">
             <button
               className="profile-trigger-btn"
@@ -981,19 +960,19 @@ export default function App() {
                     <span>{getInitials(userProfile.name)}</span>
                   )}
                 </div>
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white dark:border-[#13213c] rounded-full" />
+                <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 border border-white dark:border-slate-900 rounded-full" />
               </div>
-              <div className="profile-name-role hidden sm:flex">
-                <b>{userProfile.name || 'User'}</b>
-                <span>{userProfile.roleTitle || userProfile.profession || 'Legal Account'}</span>
+              <div className="profile-name-role hidden lg:flex">
+                <b className="truncate max-w-[90px]">{userProfile.name || 'User'}</b>
+                <span className="truncate max-w-[90px]">{userProfile.roleTitle || userProfile.profession || 'Legal Account'}</span>
               </div>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5" />
+              <ChevronDown className="w-3 h-3 text-slate-400 hidden sm:block" />
             </button>
 
             {profileDropdownOpen && (
-              <div className="popover-menu" style={{ width: '300px', top: '56px' }}>
-                <div className="popover-header flex items-center gap-3">
-                  <div className="profile-avatar-circle w-10 h-10 text-xs">
+              <div className="popover-menu" style={{ width: '270px', top: '48px' }}>
+                <div className="popover-header flex items-center gap-2.5">
+                  <div className="profile-avatar-circle w-9 h-9 text-xs">
                     {userProfile.avatarUrl ? (
                       <img src={userProfile.avatarUrl} alt={userProfile.name} />
                     ) : (
@@ -1002,84 +981,154 @@ export default function App() {
                   </div>
                   <div className="overflow-hidden">
                     <b className="truncate">{userProfile.name}</b>
-                    <span className="text-[11px] text-slate-400 block truncate">
+                    <span className="text-[11px] text-slate-500 block truncate">
                       {userProfile.roleTitle || userProfile.profession || 'Legal Account'}
                     </span>
-                    <small className="text-slate-500 font-mono text-[10px] block truncate">{userProfile.email}</small>
+                    <small className="text-slate-400 font-mono text-[10px] block truncate">{userProfile.email}</small>
                   </div>
                 </div>
 
-                <button
-                  className="popover-item"
-                  onClick={() => {
-                    setIsEditingProfile(false)
-                    setCurrentView('profile')
-                    setProfileDropdownOpen(false)
-                  }}
-                >
-                  <User className="w-4 h-4 text-[#f36963]" /> View Profile
-                </button>
-                <button
-                  className="popover-item"
-                  onClick={() => {
-                    setIsEditingProfile(true)
-                    setCurrentView('profile')
-                    setProfileDropdownOpen(false)
-                  }}
-                >
-                  <FileEdit className="w-4 h-4 text-emerald-600" /> Edit Profile
-                </button>
-                <button
-                  className="popover-item"
-                  onClick={() => {
-                    setCurrentView('settings')
-                    setProfileDropdownOpen(false)
-                  }}
-                >
-                  <Settings className="w-4 h-4 text-slate-500" /> Settings
-                </button>
-                <button
-                  className="popover-item"
-                  onClick={() => {
-                    exportUserDataApi()
-                    setProfileDropdownOpen(false)
-                    showToast('Downloading GDPR data archive...')
-                  }}
-                >
-                  <Download className="w-4 h-4 text-blue-500" /> Export All Data (GDPR)
-                </button>
-                <div className="border-t border-slate-200 dark:border-slate-800 my-1" />
-                <button
-                  className="popover-item danger-item"
-                  onClick={async () => {
-                    setProfileDropdownOpen(false)
-                    await logoutUser()
-                    setIsLoggedIn(false)
-                    setCurrentView('dashboard')
-                    showToast('Logged out of session')
-                  }}
-                >
-                  <LogOut className="w-4 h-4" /> Sign out
-                </button>
+                <div className="py-1">
+                  <button
+                    className="popover-item"
+                    onClick={() => {
+                      setIsEditingProfile(false)
+                      navigateTo('profile')
+                      setProfileDropdownOpen(false)
+                    }}
+                  >
+                    <User className="w-4 h-4 text-indigo-500" /> View Profile
+                  </button>
+                  <button
+                    className="popover-item"
+                    onClick={() => {
+                      setIsEditingProfile(true)
+                      navigateTo('profile')
+                      setProfileDropdownOpen(false)
+                    }}
+                  >
+                    <FileEdit className="w-4 h-4 text-emerald-600" /> Edit Profile
+                  </button>
+                  <button
+                    className="popover-item"
+                    onClick={() => {
+                      navigateTo('settings')
+                      setProfileDropdownOpen(false)
+                    }}
+                  >
+                    <Settings className="w-4 h-4 text-slate-500" /> Settings
+                  </button>
+                  <button
+                    className="popover-item"
+                    onClick={() => {
+                      exportUserDataApi()
+                      setProfileDropdownOpen(false)
+                      showToast('Downloading GDPR data archive...')
+                    }}
+                  >
+                    <Download className="w-4 h-4 text-blue-500" /> Export All Data (GDPR)
+                  </button>
+                  <div className="border-t border-slate-200 dark:border-slate-800 my-1" />
+                  <button
+                    className="popover-item danger-item"
+                    onClick={async () => {
+                      setProfileDropdownOpen(false)
+                      await logoutUser()
+                      setIsLoggedIn(false)
+                      setCurrentView('welcome')
+                      showToast('Signed out of session')
+                    }}
+                  >
+                    <LogOut className="w-4 h-4" /> Sign out
+                  </button>
+                </div>
               </div>
             )}
           </div>
 
-          <button className="menu-button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            <Menu className="w-5 h-5" />
+          {/* Mobile Hamburger Trigger */}
+          <button
+            className="menu-button md:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
       </header>
+
+      {/* Mobile Navigation Slide-Over Drawer */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex flex-col">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
+          <div className="relative w-full bg-surface border-b border-slate-200 dark:border-slate-800 p-5 shadow-2xl flex flex-col gap-2.5 z-10 animate-fade-in-up mt-[62px]">
+            <div className="flex items-center justify-between pb-3 mb-1 border-b border-slate-200 dark:border-slate-800">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">Navigation Menu</span>
+              <button
+                className="text-xs text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1"
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  setUploadModalOpen(true)
+                }}
+              >
+                <FileUp className="w-3.5 h-3.5" /> Upload Contract
+              </button>
+            </div>
+            <button
+              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'dashboard' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              onClick={() => navigateTo('dashboard')}
+            >
+              <LayoutDashboard className="w-4 h-4" /> Dashboard
+            </button>
+            <button
+              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'contracts' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              onClick={() => navigateTo('contracts')}
+            >
+              <BookOpen className="w-4 h-4" /> My Contracts & Repository
+            </button>
+            <button
+              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'editor' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              onClick={() => navigateTo('editor')}
+            >
+              <FileEdit className="w-4 h-4" /> Interactive Contract Editor
+            </button>
+            <button
+              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'generator' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              onClick={() => navigateTo('generator')}
+            >
+              <Sparkles className="w-4 h-4 text-indigo-500" /> AI Agreement Drafting Studio
+            </button>
+            <button
+              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'clause_library' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              onClick={() => navigateTo('clause_library')}
+            >
+              <Layers className="w-4 h-4" /> Pre-Approved Clause Library
+            </button>
+            <button
+              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'compare' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              onClick={() => navigateTo('compare')}
+            >
+              <History className="w-4 h-4" /> Version Diff & Comparison
+            </button>
+            <button
+              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'admin' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              onClick={() => navigateTo('admin')}
+            >
+              <BarChart3 className="w-4 h-4" /> Admin Analytics & Oversight
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ========================================================================= */}
       {/* 1. WELCOME / LANDING VIEW                                                 */}
       {/* ========================================================================= */}
       {currentView === 'welcome' && (
-        <main>
+        <main className="w-full">
           <section className="hero">
             <div className="hero-copy">
               <p className="eyebrow">
-                <Sparkles className="w-4 h-4 text-[#f36963]" /> AI-Powered Contract Intelligence
+                <Sparkles className="w-3.5 h-3.5" /> AI-Powered Contract Intelligence
               </p>
               <h1>
                 Detect risky clauses in seconds. <em>Protect your business.</em>
@@ -1091,7 +1140,7 @@ export default function App() {
                 <button className="button button-coral" onClick={() => setUploadModalOpen(true)}>
                   <FileUp className="w-4 h-4" /> Analyze a Contract Now
                 </button>
-                <button className="button button-outline" onClick={() => setCurrentView('generator')}>
+                <button className="button button-outline" onClick={() => navigateTo('generator')}>
                   <Sparkles className="w-4 h-4" /> Generate New Agreement
                 </button>
               </div>
@@ -1132,19 +1181,19 @@ export default function App() {
                   </div>
                   <div className="sheet-bottom">
                     <span>HEALTH SCORE</span>
-                    <b className="text-rose-500 font-bold text-sm">54 / 100</b>
+                    <b className="text-rose-600 font-bold text-sm">54 / 100</b>
                   </div>
                 </div>
               </div>
               <div className="floating-card card-confidence">
-                <ShieldCheck className="w-5 h-5 text-emerald-600" />
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
                 <div>
                   <b>96% Audit Confidence</b>
                   <small>Statutory Legal Engine</small>
                 </div>
               </div>
               <div className="floating-card card-score">
-                <Sparkles className="w-5 h-5 text-[#f36963]" />
+                <Sparkles className="w-4 h-4 text-indigo-600" />
                 <div>
                   <b>1-Click Redlines</b>
                   <small>Auto-fair clause fixes</small>
@@ -1155,41 +1204,41 @@ export default function App() {
 
           {/* Process Section */}
           <section className="section bg-surface">
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <p className="eyebrow text-center justify-center">
-                <Layers className="w-4 h-4" /> How It Works
+                <Layers className="w-3.5 h-3.5" /> How It Works
               </p>
-              <h2 className="text-center text-3xl md:text-5xl font-bold mt-3 mb-12">
+              <h2 className="text-center text-2xl md:text-4xl font-bold mt-2 mb-10">
                 From risky PDF to <em>protected agreement</em> in three steps.
               </h2>
 
-              <div className="grid md:grid-cols-3 gap-8">
-                <div className="p-8 rounded-xl border border-slate-200 dark:border-slate-800 bg-subtle">
-                  <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-subtle">
+                  <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-sm mb-4">
                     01
                   </div>
-                  <h3 className="text-xl font-bold mb-3">Upload Contract</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                  <h3 className="text-lg font-bold mb-2">Upload Contract</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                     Upload any PDF, DOCX, or scan. Our OCR & clause chunking engine extracts every covenant instantly.
                   </p>
                 </div>
 
-                <div className="p-8 rounded-xl border border-slate-200 dark:border-slate-800 bg-subtle">
-                  <div className="w-12 h-12 rounded-xl bg-[#f36963] text-white flex items-center justify-center font-bold text-lg mb-6">
+                <div className="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-subtle">
+                  <div className="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm mb-4">
                     02
                   </div>
-                  <h3 className="text-xl font-bold mb-3">Instant Risk Audit</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                  <h3 className="text-lg font-bold mb-2">Instant Risk Audit</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                     AI flags uncapped liability, delayed payments, and one-sided indemnity terms with statutory references.
                   </p>
                 </div>
 
-                <div className="p-8 rounded-xl border border-slate-200 dark:border-slate-800 bg-subtle">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-lg mb-6">
+                <div className="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-subtle">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-bold text-sm mb-4">
                     03
                   </div>
-                  <h3 className="text-xl font-bold mb-3">Accept Redlines & Sign</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                  <h3 className="text-lg font-bold mb-2">Accept Redlines & Sign</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                     Review side-by-side redlines, accept fair revisions in the editor, and export a clean PDF report.
                   </p>
                 </div>
@@ -1204,44 +1253,34 @@ export default function App() {
       {/* ========================================================================= */}
       {currentView === 'processing' && (
         <div className="processing-screen">
-          <div className="processing-panel text-center max-w-xl mx-auto py-24">
-            <p className="eyebrow justify-center text-[#ff978a]">
-              <Sparkles className="w-4 h-4" /> AI Clause Engine Running
+          <div className="processing-panel text-center max-w-md mx-auto py-16 px-4">
+            <p className="eyebrow justify-center text-indigo-400">
+              <Sparkles className="w-3.5 h-3.5" /> AI Statutory Engine Running
             </p>
-            <h1 className="text-4xl md:text-6xl font-bold text-white my-6">
-              Analyzing <em>{selectedFile?.name || 'Contract Document'}</em>
+            <h1 className="text-2xl md:text-3xl font-bold my-4 text-white">
+              Auditing <em>Contract Terms</em>
             </h1>
-            <p className="text-slate-300 text-sm mb-10">
-              Applying statutory legal compliance models, extracting clauses, and calculating the Contract Health Score...
+            <p className="text-xs text-slate-400 max-w-sm mx-auto mb-8">
+              Cross-referencing liability clauses, payment schedules, and indemnity provisions against statutory MSMED guidelines.
             </p>
 
-            <div className="bg-slate-900/80 border border-slate-700 rounded-xl p-6 text-left space-y-4 shadow-2xl">
-              {[
-                'Document Parsing & OCR Extraction',
-                'Clause Boundary Segmentation',
-                'Payment Terms & MSMED Act Audit',
-                'Liability & Indemnity Risk Scoring',
-                'Plain-Language Explanation Synthesis',
-                'Health Score & Redline Generation',
-              ].map((stage, idx) => (
-                <div key={idx} className="flex items-center justify-between text-xs">
-                  <span className="flex items-center gap-3">
-                    {idx < processingStage ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    ) : idx === processingStage ? (
-                      <RefreshCw className="w-4 h-4 text-[#f36963] animate-spin" />
-                    ) : (
-                      <div className="w-4 h-4 rounded-full border border-slate-600" />
-                    )}
-                    <span className={idx === processingStage ? 'text-white font-bold' : idx < processingStage ? 'text-emerald-300' : 'text-slate-500'}>
-                      {stage}
-                    </span>
-                  </span>
-                  <span className="font-mono text-slate-400">
-                    {idx < processingStage ? 'DONE' : idx === processingStage ? 'IN PROGRESS' : 'QUEUED'}
-                  </span>
-                </div>
-              ))}
+            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-6">
+              <div
+                className="h-full bg-indigo-500 transition-all duration-300 ease-out"
+                style={{ width: `${Math.min(100, (processingStage + 1) * 20)}%` }}
+              />
+            </div>
+
+            <div className="flex justify-center items-center gap-2 text-xs font-mono text-indigo-400">
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+              <span>
+                {processingStage === 0 && 'Extracting text & clause boundaries...'}
+                {processingStage === 1 && 'Scanning for Section 15/16 payment caps...'}
+                {processingStage === 2 && 'Evaluating uncapped indemnity & liabilities...'}
+                {processingStage === 3 && 'Generating plain-English business risk breakdown...'}
+                {processingStage === 4 && 'Synthesizing legally balanced redlines...'}
+                {processingStage >= 5 && 'Finalizing audit scorecard...'}
+              </span>
             </div>
           </div>
         </div>
@@ -1252,10 +1291,11 @@ export default function App() {
       {/* ========================================================================= */}
       {currentView === 'dashboard' && (
         <div className="dashboard">
+          {/* Top Active Contract Banner */}
           <div className="dashboard-top">
             <div>
               <p className="eyebrow">
-                <FileCheck className="w-4 h-4 text-[#f36963]" /> Active Contract Review
+                <FileCheck className="w-3.5 h-3.5" /> Active Contract Risk Audit
               </p>
               <h1>
                 {documentName} <em>Score: {healthScore}/100</em>
@@ -1265,23 +1305,23 @@ export default function App() {
               </p>
             </div>
             <div className="dashboard-actions">
-              <button className="button button-coral" onClick={() => setCurrentView('editor')}>
-                <FileEdit className="w-4 h-4" /> Open In Contract Editor
+              <button className="button button-coral" onClick={() => navigateTo('editor')}>
+                <FileEdit className="w-3.5 h-3.5" /> Open In Contract Editor
               </button>
               <button className="button button-outline" onClick={() => exportReportApi(documentId, 'pdf')}>
-                <Download className="w-4 h-4" /> Export Report (PDF)
+                <Download className="w-3.5 h-3.5" /> Export Report (PDF)
               </button>
               <button className="button button-light" onClick={() => setShareModalOpen(true)}>
-                <Share2 className="w-4 h-4" /> Share with Team
+                <Share2 className="w-3.5 h-3.5" /> Share with Team
               </button>
             </div>
           </div>
 
-          {/* Quick Metric Cards */}
+          {/* Quick Metric Cards (Stacked mobile-first, 4 cols desktop) */}
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon navy">
-                <FileText className="w-5 h-5" />
+                <FileText className="w-4 h-4" />
               </div>
               <div className="stat-info">
                 <b>{clausesList.length}</b>
@@ -1290,16 +1330,18 @@ export default function App() {
             </div>
             <div className="stat-card">
               <div className="stat-icon coral">
-                <AlertTriangle className="w-5 h-5" />
+                <AlertTriangle className="w-4 h-4" />
               </div>
               <div className="stat-info">
-                <b>{clausesList.filter((c) => c.riskLevel === 'high' || c.riskLevel === 'critical').length}</b>
+                <b className="text-rose-600 dark:text-rose-400">
+                  {clausesList.filter((c) => c.riskLevel === 'high' || c.riskLevel === 'critical').length}
+                </b>
                 <span>Risky Clauses</span>
               </div>
             </div>
             <div className="stat-card">
               <div className="stat-icon green">
-                <ShieldCheck className="w-5 h-5" />
+                <ShieldCheck className="w-4 h-4" />
               </div>
               <div className="stat-info">
                 <b>{missingProtections.length}</b>
@@ -1308,7 +1350,7 @@ export default function App() {
             </div>
             <div className="stat-card">
               <div className="stat-icon amber">
-                <Users className="w-5 h-5" />
+                <Users className="w-4 h-4" />
               </div>
               <div className="stat-info">
                 <b>{collaboratorsCount}</b>
@@ -1335,7 +1377,7 @@ export default function App() {
                       className="gauge-fill"
                       style={{
                         strokeDashoffset: 452 - (452 * healthScore) / 100,
-                        stroke: healthScore > 75 ? '#63ad98' : healthScore > 50 ? '#f36963' : '#e86c5c',
+                        stroke: healthScore > 75 ? '#059669' : healthScore > 50 ? '#d97706' : '#b94a48',
                       }}
                     />
                   </svg>
@@ -1345,7 +1387,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="health-text">
-                  <span>
+                  <span className={healthScore < 60 ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'}>
                     {summary?.overallRiskLevel
                       ? `${summary.overallRiskLevel.toUpperCase()} RISK PROFILE`
                       : healthScore < 60
@@ -1368,8 +1410,8 @@ export default function App() {
 
             <div className="recommend-card">
               <div>
-                <p className="eyebrow text-slate-300">
-                  <Sparkles className="w-3 h-3 text-[#f36963]" /> Priority Recommendation
+                <p className="eyebrow text-indigo-400">
+                  <Sparkles className="w-3 h-3" /> Priority Recommendation
                 </p>
                 <h2>{summary?.recommendation || (topConcern ? `Review: ${topConcern.title}` : 'Review Contract Terms')}</h2>
                 <p>
@@ -1378,20 +1420,20 @@ export default function App() {
               </div>
               {topConcern && (
                 <button
-                  className="button button-coral button-small mt-4 w-fit"
+                  className="button button-coral button-small mt-3 w-fit"
                   onClick={() => {
                     setSelectedClause(topConcern)
-                    setCurrentView('editor')
+                    navigateTo('editor')
                   }}
                 >
-                  <Check className="w-3.5 h-3.5" /> Inspect Top Concern
+                  <Check className="w-3 h-3" /> Inspect Top Concern
                 </button>
               )}
             </div>
 
             <div className="protection-card">
               <div>
-                <p className="eyebrow text-emerald-800">
+                <p className="eyebrow text-emerald-700 dark:text-emerald-400">
                   <ShieldAlert className="w-3 h-3" /> Missing Protection
                 </p>
                 <h3>{missingProtections[0]?.title || 'Standard Protections Applied'}</h3>
@@ -1400,23 +1442,23 @@ export default function App() {
                 </p>
               </div>
               <button
-                className="button button-outline button-small mt-4 w-fit border-emerald-800 text-emerald-900"
-                onClick={() => setCurrentView('clause_library')}
+                className="button button-outline button-small mt-3 w-fit"
+                onClick={() => navigateTo('clause_library')}
               >
-                <Plus className="w-3.5 h-3.5" /> Browse Approved Clauses
+                <Plus className="w-3 h-3" /> Browse Approved Clauses
               </button>
             </div>
           </div>
 
           {/* Top Concerns Cards */}
-          <div className="mt-8">
-            <div className="flex justify-between items-center mb-4">
+          <div className="mt-6">
+            <div className="flex justify-between items-center mb-3">
               <div>
-                <h3 className="text-xl font-bold">Top Clause Concerns</h3>
+                <h3 className="text-lg font-bold">Top Clause Concerns</h3>
                 <p className="text-xs text-slate-500">Click any risk card to inspect explanation & suggested redline</p>
               </div>
-              <button className="button button-ghost button-small" onClick={() => setCurrentView('editor')}>
-                View All {clausesList.length} Clauses <ArrowRight className="w-3 h-3" />
+              <button className="button button-ghost button-small" onClick={() => navigateTo('editor')}>
+                View All {clausesList.length} Clauses <ArrowRight className="w-3 h-3 ml-1" />
               </button>
             </div>
 
@@ -1427,11 +1469,11 @@ export default function App() {
                   className={`concern-card risk-${clause.riskLevel}`}
                   onClick={() => {
                     setSelectedClause(clause)
-                    setCurrentView('editor')
+                    navigateTo('editor')
                   }}
                 >
                   <div className="flex justify-between items-center">
-                    <span className="font-mono text-xs text-slate-400">
+                    <span className="font-mono text-[11px] text-slate-400">
                       {clause.page && clause.page > 0 ? `Page ${clause.page}` : 'Clause'}
                     </span>
                     <span className={`risk-pill risk-${clause.riskLevel}`}>
@@ -1439,13 +1481,13 @@ export default function App() {
                     </span>
                   </div>
                   <div>
-                    <p className="text-xs text-slate-400 font-bold uppercase">{clause.category}</p>
-                    <h3 className="text-lg font-bold my-1">{clause.title}</h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">{clause.explanation}</p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{clause.category}</p>
+                    <h3 className="text-base font-bold my-1">{clause.title}</h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">{clause.explanation}</p>
                   </div>
-                  <div className="flex justify-between items-center text-xs font-semibold text-[#f36963] pt-3 border-t border-slate-200 dark:border-slate-800">
+                  <div className="flex justify-between items-center text-xs font-semibold text-indigo-600 dark:text-indigo-400 pt-2.5 border-t border-slate-200 dark:border-slate-800">
                     <span>Risk Score: {clause.riskScore}/100</span>
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-0.5 text-[11px]">
                       Inspect <ChevronRight className="w-3 h-3" />
                     </span>
                   </div>
@@ -1464,7 +1506,7 @@ export default function App() {
           <div className="dashboard-top">
             <div>
               <p className="eyebrow">
-                <FileEdit className="w-4 h-4 text-[#f36963]" /> Interactive Clause Editor & Redliner
+                <FileEdit className="w-3.5 h-3.5" /> Interactive Clause Editor & Redliner
               </p>
               <h1>
                 {documentName} <em>(Live Editing)</em>
@@ -1475,23 +1517,39 @@ export default function App() {
             </div>
             <div className="dashboard-actions">
               <button className="button button-outline" onClick={() => setVersionSnapshotModalOpen(true)}>
-                <History className="w-4 h-4" /> Save Version Snapshot
+                <History className="w-3.5 h-3.5" /> Save Snapshot
               </button>
               <button className="button button-light" onClick={() => setShareModalOpen(true)}>
-                <Share2 className="w-4 h-4" /> Invite Collaborator
+                <Share2 className="w-3.5 h-3.5" /> Invite Collaborator
               </button>
               <button className="button button-coral" onClick={() => exportReportApi(documentId, 'pdf')}>
-                <Download className="w-4 h-4" /> Export Final Contract
+                <Download className="w-3.5 h-3.5" /> Export Final Contract
               </button>
             </div>
           </div>
 
+          {/* Mobile Tab Switcher for Editor */}
+          <div className="flex lg:hidden bg-subtle p-1 rounded-lg mb-4 border border-slate-200 dark:border-slate-800">
+            <button
+              className={`flex-1 py-2 text-xs font-bold rounded-md transition-colors ${editorTab === 'clauses' ? 'bg-surface shadow-sm text-indigo-600 dark:text-indigo-400' : 'text-slate-500'}`}
+              onClick={() => setEditorTab('clauses')}
+            >
+              Clause List ({clausesList.length})
+            </button>
+            <button
+              className={`flex-1 py-2 text-xs font-bold rounded-md transition-colors ${editorTab === 'inspector' ? 'bg-surface shadow-sm text-indigo-600 dark:text-indigo-400' : 'text-slate-500'}`}
+              onClick={() => setEditorTab('inspector')}
+            >
+              AI Redline Inspector
+            </button>
+          </div>
+
           <div className="editor-layout">
             {/* Main Inline Editable Canvas */}
-            <div className="editor-canvas">
-              <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div className={`editor-canvas ${editorTab === 'inspector' ? 'hidden lg:block' : 'block'}`}>
+              <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-200 dark:border-slate-800">
                 <span className="font-mono text-xs text-slate-400">STATUS: AUTO-SAVING ENABLED</span>
-                <span className="text-xs font-semibold text-emerald-700 bg-emerald-100 dark:bg-emerald-950 px-3 py-1 rounded-full">
+                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
                   Health Score: {healthScore}/100
                 </span>
               </div>
@@ -1500,7 +1558,10 @@ export default function App() {
                 <div
                   key={clause.id}
                   className={`editor-clause-box risk-${clause.riskLevel} ${selectedClause?.id === clause.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedClause(clause)}
+                  onClick={() => {
+                    setSelectedClause(clause)
+                    if (window.innerWidth < 1024) setEditorTab('inspector')
+                  }}
                 >
                   <div className="clause-header">
                     <div>
@@ -1509,7 +1570,7 @@ export default function App() {
                     </div>
                     <div className="flex items-center gap-2">
                       {clause.acceptedRedline && (
-                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 px-2 py-0.5 rounded">
                           REDLINE ACCEPTED
                         </span>
                       )}
@@ -1537,18 +1598,18 @@ export default function App() {
 
             {/* Side Panel: Explanation & Redlines */}
             {selectedClause && (
-              <div className="side-panel">
+              <div className={`side-panel ${editorTab === 'clauses' ? 'hidden lg:block' : 'block'}`}>
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <span className="font-mono text-[10px] text-slate-400 uppercase">{selectedClause.category}</span>
-                    <h3 className="text-xl font-bold my-1">{selectedClause.title}</h3>
+                    <h3 className="text-lg font-bold my-1">{selectedClause.title}</h3>
                   </div>
                   <span className={`risk-pill risk-${selectedClause.riskLevel}`}>
                     Score: {selectedClause.riskScore}/100
                   </span>
                 </div>
 
-                <div className="space-y-4 text-xs">
+                <div className="space-y-3.5 text-xs">
                   <div>
                     <b className="text-slate-700 dark:text-slate-200 block mb-1">Plain English Explanation:</b>
                     <p className="text-slate-600 dark:text-slate-400 leading-relaxed bg-subtle p-3 rounded-lg border border-slate-200 dark:border-slate-800">
@@ -1564,7 +1625,7 @@ export default function App() {
                   </div>
 
                   {selectedClause.actReference && (
-                    <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-lg text-emerald-800 dark:text-emerald-300">
+                    <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-800 dark:text-emerald-300">
                       <b className="block mb-0.5">Statutory Reference:</b>
                       <span>{selectedClause.actReference}</span>
                     </div>
@@ -1574,12 +1635,12 @@ export default function App() {
                   <div>
                     <b className="text-slate-700 dark:text-slate-200 block mb-1">AI Redline Recommendation:</b>
                     <div className="diff-box">
-                      <div className="border border-red-200 dark:border-red-950">
-                        <span className="font-bold text-[10px] text-red-700 uppercase block mb-1">Original Text</span>
+                      <div className="border border-red-200 dark:border-red-950/60">
+                        <span className="font-bold text-[10px] text-red-700 dark:text-red-400 uppercase block mb-1">Original Text</span>
                         <del>{selectedClause.redline.original}</del>
                       </div>
-                      <div className="border border-emerald-200 dark:border-emerald-950">
-                        <span className="font-bold text-[10px] text-emerald-700 uppercase block mb-1">Suggested Redline</span>
+                      <div className="border border-emerald-200 dark:border-emerald-950/60">
+                        <span className="font-bold text-[10px] text-emerald-700 dark:text-emerald-400 uppercase block mb-1">Suggested Redline</span>
                         <ins>{selectedClause.redline.suggested}</ins>
                       </div>
                     </div>
@@ -1588,9 +1649,9 @@ export default function App() {
                     </p>
                   </div>
 
-                  <div className="flex gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
                     <button
-                      className="button button-coral button-small flex-1"
+                      className="button button-coral button-small w-full"
                       onClick={() => handleAcceptRedline(selectedClause.id)}
                     >
                       <Check className="w-3.5 h-3.5" /> Accept Suggested Redline
@@ -1598,27 +1659,31 @@ export default function App() {
                   </div>
 
                   {/* Clause Comments Thread */}
-                  <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+                  <div className="pt-3 border-t border-slate-200 dark:border-slate-800">
                     <b className="text-slate-700 dark:text-slate-200 block mb-2">Clause Comments & Annotations:</b>
-                    <div className="space-y-2 mb-3 max-h-40 overflow-y-auto">
-                      {selectedClause.comments?.map((cmt) => (
-                        <div key={cmt.id} className="p-2.5 bg-subtle rounded border border-slate-200 dark:border-slate-800">
-                          <div className="flex justify-between font-bold text-[11px] text-slate-700 dark:text-slate-300">
-                            <span>{cmt.authorName}</span>
-                            <span className="font-mono text-[9px] text-slate-400">
-                              {new Date(cmt.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </span>
+                    <div className="space-y-2 mb-3 max-h-36 overflow-y-auto">
+                      {selectedClause.comments && selectedClause.comments.length > 0 ? (
+                        selectedClause.comments.map((cmt) => (
+                          <div key={cmt.id} className="p-2.5 bg-subtle rounded-lg border border-slate-200 dark:border-slate-800">
+                            <div className="flex justify-between font-bold text-[11px] text-slate-700 dark:text-slate-300">
+                              <span>{cmt.authorName}</span>
+                              <span className="font-mono text-[9px] text-slate-400">
+                                {new Date(cmt.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            </div>
+                            <p className="mt-1 text-slate-600 dark:text-slate-400">{cmt.content}</p>
                           </div>
-                          <p className="mt-1 text-slate-600 dark:text-slate-400">{cmt.content}</p>
-                        </div>
-                      ))}
+                        ))
+                      ) : (
+                        <div className="text-[11px] text-slate-400 italic py-1">No comments on this clause yet.</div>
+                      )}
                     </div>
 
                     <div className="flex gap-2">
                       <input
                         type="text"
                         placeholder="Add comment..."
-                        className="flex-1 bg-subtle border border-slate-200 dark:border-slate-800 rounded px-2.5 py-1.5 text-xs text-main outline-none"
+                        className="flex-1 bg-subtle border border-slate-200 dark:border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-main outline-none focus:border-indigo-500"
                         value={newCommentText}
                         onChange={(e) => setNewCommentText(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleAddComment(selectedClause.id)}
@@ -1640,15 +1705,15 @@ export default function App() {
       {/* ========================================================================= */}
       {currentView === 'generator' && (
         <div className="dashboard">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-7">
               <p className="eyebrow justify-center">
-                <Sparkles className="w-4 h-4 text-[#f36963]" /> AI Agreement Drafting Studio
+                <Sparkles className="w-3.5 h-3.5" /> AI Agreement Drafting Studio
               </p>
-              <h1 className="text-3xl md:text-5xl font-bold my-2">
+              <h1 className="text-2xl md:text-4xl font-bold my-2">
                 Generate a <em>Compliant Contract Draft</em>
               </h1>
-              <p className="text-slate-500 text-sm">
+              <p className="text-slate-500 text-xs md:text-sm">
                 Pick a template, set your risk posture, and let our AI generate a ready-to-sign agreement.
               </p>
             </div>
@@ -1735,7 +1800,7 @@ export default function App() {
                         onClick={() => setGenForm({ ...genForm, riskTolerance: 'conservative' })}
                       >
                         <b>Conservative</b>
-                        <small className="block text-[10px] text-slate-500">Strict client-side protection</small>
+                        <small className="block text-[10px] text-slate-500 mt-0.5">Strict client-side protection</small>
                       </button>
                       <button
                         type="button"
@@ -1743,7 +1808,7 @@ export default function App() {
                         onClick={() => setGenForm({ ...genForm, riskTolerance: 'balanced' })}
                       >
                         <b>Balanced (Recommended)</b>
-                        <small className="block text-[10px] text-slate-500">Mutual market standards</small>
+                        <small className="block text-[10px] text-slate-500 mt-0.5">Mutual market standards</small>
                       </button>
                       <button
                         type="button"
@@ -1751,13 +1816,13 @@ export default function App() {
                         onClick={() => setGenForm({ ...genForm, riskTolerance: 'aggressive' })}
                       >
                         <b>Aggressive</b>
-                        <small className="block text-[10px] text-slate-500">Vendor-favored terms</small>
+                        <small className="block text-[10px] text-slate-500 mt-0.5">Vendor-favored terms</small>
                       </button>
                     </div>
                   </div>
                 </div>
 
-                <button type="submit" className="button button-coral w-full py-3.5 font-bold" disabled={isGenerating}>
+                <button type="submit" className="button button-coral w-full py-3 font-bold mt-2" disabled={isGenerating}>
                   {isGenerating ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" /> Generating Draft with AI...
@@ -1782,7 +1847,7 @@ export default function App() {
           <div className="dashboard-top">
             <div>
               <p className="eyebrow">
-                <Layers className="w-4 h-4 text-[#f36963]" /> Pre-Approved Clause Repository
+                <Layers className="w-3.5 h-3.5" /> Pre-Approved Clause Repository
               </p>
               <h1>
                 Searchable <em>Clause Library</em>
@@ -1803,7 +1868,7 @@ export default function App() {
                 onChange={(e) => setLibrarySearch(e.target.value)}
               />
             </div>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-1.5 flex-wrap overflow-x-auto pb-1">
               {['all', 'Payment terms', 'Indemnity', 'Liability', 'Disputes', 'Force Majeure', 'Intellectual property'].map((cat) => (
                 <button
                   key={cat}
@@ -1817,57 +1882,67 @@ export default function App() {
           </div>
 
           <div className="library-grid">
-            {filteredClauseLibrary.map((item) => (
-              <div key={item.id} className="library-card">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-mono text-[10px] text-[#f36963] font-bold uppercase">{item.category}</span>
-                    <span className="text-[10px] text-slate-400 font-mono">{item.jurisdiction}</span>
-                  </div>
-                  <h4>{item.title}</h4>
-                  <p className="bg-subtle p-3 rounded-lg border border-slate-200 dark:border-slate-800 font-mono text-xs">
-                    "{item.standardText}"
-                  </p>
-                </div>
-                <div className="flex gap-2 mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
-                  <button
-                    className="button button-outline button-small flex-1"
-                    onClick={() => {
-                      navigator.clipboard.writeText(item.standardText)
-                      showToast('Clause text copied to clipboard!')
-                    }}
-                  >
-                    <Copy className="w-3.5 h-3.5" /> Copy Text
-                  </button>
-                  <button
-                    className="button button-coral button-small flex-1"
-                    onClick={() => {
-                      setClausesList((prev) => [
-                        ...prev,
-                        {
-                          id: `cl_lib_${Date.now()}`,
-                          category: item.category,
-                          title: item.title,
-                          riskLevel: 'low',
-                          riskScore: 10,
-                          confidence: 98,
-                          page: 1,
-                          text: item.standardText,
-                          explanation: 'Inserted pre-approved protective clause from ContractSense library.',
-                          consequences: 'Enforces balanced compliance standard.',
-                          redline: { original: '', suggested: item.standardText, rationale: 'Approved library standard' },
-                          comments: [],
-                        },
-                      ])
-                      showToast('Clause appended to active contract!')
-                      setCurrentView('editor')
-                    }}
-                  >
-                    <Plus className="w-3.5 h-3.5" /> Insert Into Contract
-                  </button>
-                </div>
+            {filteredClauseLibrary.length === 0 ? (
+              <div className="col-span-2 p-8 text-center bg-surface border border-slate-200 dark:border-slate-800 rounded-xl">
+                <Layers className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                <p className="text-sm font-bold text-main">No clauses found matching your search.</p>
+                <button className="button button-outline button-small mt-3" onClick={() => { setLibrarySearch(''); setClauseCategoryFilter('all') }}>
+                  Clear Filters
+                </button>
               </div>
-            ))}
+            ) : (
+              filteredClauseLibrary.map((item) => (
+                <div key={item.id} className="library-card">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-mono text-[10px] text-indigo-600 dark:text-indigo-400 font-bold uppercase">{item.category}</span>
+                      <span className="text-[10px] text-slate-400 font-mono">{item.jurisdiction}</span>
+                    </div>
+                    <h4>{item.title}</h4>
+                    <p className="bg-subtle p-3 rounded-lg border border-slate-200 dark:border-slate-800 font-mono text-xs">
+                      "{item.standardText}"
+                    </p>
+                  </div>
+                  <div className="flex gap-2 mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
+                    <button
+                      className="button button-outline button-small flex-1"
+                      onClick={() => {
+                        navigator.clipboard.writeText(item.standardText)
+                        showToast('Clause text copied to clipboard!')
+                      }}
+                    >
+                      <Copy className="w-3.5 h-3.5" /> Copy Text
+                    </button>
+                    <button
+                      className="button button-coral button-small flex-1"
+                      onClick={() => {
+                        setClausesList((prev) => [
+                          ...prev,
+                          {
+                            id: `cl_lib_${Date.now()}`,
+                            category: item.category,
+                            title: item.title,
+                            riskLevel: 'low',
+                            riskScore: 10,
+                            confidence: 98,
+                            page: 1,
+                            text: item.standardText,
+                            explanation: 'Inserted pre-approved protective clause from ContractSense library.',
+                            consequences: 'Enforces balanced compliance standard.',
+                            redline: { original: '', suggested: item.standardText, rationale: 'Approved library standard' },
+                            comments: [],
+                          },
+                        ])
+                        showToast('Clause appended to active contract!')
+                        navigateTo('editor')
+                      }}
+                    >
+                      <Plus className="w-3.5 h-3.5" /> Insert Into Contract
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}
@@ -1880,7 +1955,7 @@ export default function App() {
           <div className="dashboard-top">
             <div>
               <p className="eyebrow">
-                <BookOpen className="w-4 h-4 text-[#f36963]" /> Contract Repository
+                <BookOpen className="w-3.5 h-3.5" /> Contract Repository
               </p>
               <h1>
                 My Contracts <em>& Audit History</em>
@@ -1891,10 +1966,10 @@ export default function App() {
             </div>
             <div className="dashboard-actions">
               <button className="button button-coral" onClick={() => setUploadModalOpen(true)}>
-                <FileUp className="w-4 h-4" /> Upload New Contract
+                <FileUp className="w-3.5 h-3.5" /> Upload New Contract
               </button>
-              <button className="button button-outline" onClick={() => setCurrentView('generator')}>
-                <Sparkles className="w-4 h-4" /> Generate Agreement
+              <button className="button button-outline" onClick={() => navigateTo('generator')}>
+                <Sparkles className="w-3.5 h-3.5" /> Generate Agreement
               </button>
             </div>
           </div>
@@ -1911,7 +1986,7 @@ export default function App() {
                 />
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-2 flex-wrap">
                 <select className="filter-dropdown" value={tableRiskFilter} onChange={(e) => setTableRiskFilter(e.target.value)}>
                   <option value="all">All Risk Levels</option>
                   <option value="critical">Critical Risk</option>
@@ -1932,7 +2007,7 @@ export default function App() {
 
             {/* Bulk Action Bar */}
             {selectedContractIds.length > 0 && (
-              <div className="mb-4 p-3 bg-slate-900 text-white rounded-lg flex items-center justify-between text-xs">
+              <div className="mb-3 p-3 bg-slate-900 text-white rounded-lg flex items-center justify-between text-xs">
                 <span>{selectedContractIds.length} contract(s) selected</span>
                 <div className="flex gap-2">
                   <button className="button button-small button-light" onClick={() => handleBulkAction('update_status', 'signed')}>
@@ -1967,76 +2042,84 @@ export default function App() {
                 </tr>
               </thead>
               <tbody>
-                {filteredContracts.map((c) => (
-                  <tr key={c.id}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={selectedContractIds.includes(c.id)}
-                        onChange={(e) => {
-                          if (e.target.checked) setSelectedContractIds([...selectedContractIds, c.id])
-                          else setSelectedContractIds(selectedContractIds.filter((id) => id !== c.id))
-                        }}
-                      />
-                    </td>
-                    <td>
-                      <b className="block">{c.fileName}</b>
-                      <small className="text-slate-400 font-mono">{c.folder || 'General'}</small>
-                    </td>
-                    <td>{c.contractType || 'Commercial'}</td>
-                    <td>
-                      <span className={`status-badge status-${c.status}`}>{c.status?.replace('_', ' ')}</span>
-                    </td>
-                    <td>
-                      <b className={c.healthScore > 75 ? 'text-emerald-600' : 'text-[#f36963]'}>
-                        {c.healthScore}/100
-                      </b>
-                    </td>
-                    <td>
-                      <span className="font-semibold text-xs text-rose-500">
-                        {c.criticalRisksCount || 0} critical
-                      </span>
-                    </td>
-                    <td className="font-mono text-xs text-slate-400">
-                      {new Date(c.uploadedAt).toLocaleDateString()}
-                    </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <div className="flex gap-2 justify-end">
-                        <button
-                          className="button button-light button-small"
-                          onClick={async () => {
-                            setDocumentId(c.id)
-                            setDocumentName(c.fileName)
-                            setHealthScore(c.healthScore)
-                            const fullDoc = await fetchContractByIdApi(c.id)
-                            if (fullDoc && fullDoc.clauses) {
-                              setClausesList(fullDoc.clauses)
-                              setSelectedClause(fullDoc.clauses[0] || null)
-                              setSummary(fullDoc.summary)
-                              if (fullDoc.collaborators?.length) setCollaboratorsCount(fullDoc.collaborators.length)
-                              if (fullDoc.summary?.missingProtections) setMissingProtections(fullDoc.summary.missingProtections)
-                              if (fullDoc.summary?.obligations) setObligations(fullDoc.summary.obligations)
-                              if (fullDoc.summary?.timeline) setTimeline(fullDoc.summary.timeline)
-                            }
-                            setCurrentView('editor')
-                          }}
-                        >
-                          Editor
-                        </button>
-                        <button
-                          className="button button-ghost button-small text-red-500"
-                          onClick={async () => {
-                            await deleteContractApi(c.id)
-                            showToast('Contract deleted')
-                            loadInitialData()
-                          }}
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
+                {filteredContracts.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="text-center py-8 text-xs text-slate-500">
+                      No contracts matching filter criteria.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  filteredContracts.map((c) => (
+                    <tr key={c.id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedContractIds.includes(c.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) setSelectedContractIds([...selectedContractIds, c.id])
+                            else setSelectedContractIds(selectedContractIds.filter((id) => id !== c.id))
+                          }}
+                        />
+                      </td>
+                      <td>
+                        <b className="block font-bold">{c.fileName}</b>
+                        <small className="text-slate-400 font-mono">{c.folder || 'General'}</small>
+                      </td>
+                      <td>{c.contractType || 'Commercial'}</td>
+                      <td>
+                        <span className={`status-badge status-${c.status}`}>{c.status?.replace('_', ' ')}</span>
+                      </td>
+                      <td>
+                        <b className={c.healthScore > 75 ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-rose-600 dark:text-rose-400 font-bold'}>
+                          {c.healthScore}/100
+                        </b>
+                      </td>
+                      <td>
+                        <span className="font-semibold text-xs text-rose-600 dark:text-rose-400">
+                          {c.criticalRisksCount || 0} critical
+                        </span>
+                      </td>
+                      <td className="font-mono text-xs text-slate-400">
+                        {new Date(c.uploadedAt).toLocaleDateString()}
+                      </td>
+                      <td style={{ textAlign: 'right' }}>
+                        <div className="flex gap-1.5 justify-end">
+                          <button
+                            className="button button-light button-small"
+                            onClick={async () => {
+                              setDocumentId(c.id)
+                              setDocumentName(c.fileName)
+                              setHealthScore(c.healthScore)
+                              const fullDoc = await fetchContractByIdApi(c.id)
+                              if (fullDoc && fullDoc.clauses) {
+                                setClausesList(fullDoc.clauses)
+                                setSelectedClause(fullDoc.clauses[0] || null)
+                                setSummary(fullDoc.summary)
+                                if (fullDoc.collaborators?.length) setCollaboratorsCount(fullDoc.collaborators.length)
+                                if (fullDoc.summary?.missingProtections) setMissingProtections(fullDoc.summary.missingProtections)
+                                if (fullDoc.summary?.obligations) setObligations(fullDoc.summary.obligations)
+                                if (fullDoc.summary?.timeline) setTimeline(fullDoc.summary.timeline)
+                              }
+                              navigateTo('editor')
+                            }}
+                          >
+                            Editor
+                          </button>
+                          <button
+                            className="button button-ghost button-small text-rose-600"
+                            onClick={async () => {
+                              await deleteContractApi(c.id)
+                              showToast('Contract deleted')
+                              loadInitialData()
+                            }}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -2051,7 +2134,7 @@ export default function App() {
           <div className="dashboard-top">
             <div>
               <p className="eyebrow">
-                <History className="w-4 h-4 text-[#f36963]" /> Side-by-Side Version Diff
+                <History className="w-3.5 h-3.5" /> Side-by-Side Version Diff
               </p>
               <h1>
                 Compare <em>Contract Versions</em>
@@ -2062,41 +2145,41 @@ export default function App() {
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto bg-surface border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-sm">
-            <div className="grid grid-cols-3 gap-6 text-center items-center py-6 border-b border-slate-200 dark:border-slate-800">
-              <div className="bg-subtle p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div className="max-w-4xl mx-auto bg-surface border border-slate-200 dark:border-slate-800 rounded-xl p-6 md:p-8 shadow-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center items-center py-4 border-b border-slate-200 dark:border-slate-800">
+              <div className="bg-subtle p-5 rounded-xl border border-slate-200 dark:border-slate-800">
                 <span className="font-mono text-xs text-slate-400 uppercase">Version 1 (Initial)</span>
-                <strong className="block text-4xl font-bold my-2 text-rose-500">54</strong>
+                <strong className="block text-3xl font-bold my-1.5 text-rose-600">54</strong>
                 <span className="text-xs text-slate-500">Health Score</span>
               </div>
 
-              <div className="bg-emerald-50 dark:bg-emerald-950/40 p-4 rounded-xl text-emerald-800 dark:text-emerald-300 font-bold">
-                <span className="text-2xl block">+36 pts</span>
-                <span className="text-xs uppercase">Health Improvement</span>
+              <div className="bg-emerald-50 dark:bg-emerald-950/40 p-4 rounded-xl text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-200 dark:border-emerald-800">
+                <span className="text-xl md:text-2xl block">+36 pts</span>
+                <span className="text-[10px] uppercase tracking-wider">Health Improvement</span>
               </div>
 
-              <div className="bg-subtle p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+              <div className="bg-subtle p-5 rounded-xl border border-slate-200 dark:border-slate-800">
                 <span className="font-mono text-xs text-slate-400 uppercase">Version 2 (Post-Redline)</span>
-                <strong className="block text-4xl font-bold my-2 text-emerald-600">90</strong>
+                <strong className="block text-3xl font-bold my-1.5 text-emerald-600">90</strong>
                 <span className="text-xs text-slate-500">Health Score</span>
               </div>
             </div>
 
-            <div className="mt-8 space-y-6">
-              <h3 className="text-lg font-bold">Key Clause Modifications:</h3>
+            <div className="mt-6 space-y-4">
+              <h3 className="text-base font-bold">Key Clause Modifications:</h3>
 
               <div className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-subtle">
                 <div className="flex justify-between items-center mb-2">
                   <b className="text-sm">Payment Terms (Section 4)</b>
-                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
-                    IMPROVED
+                  <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 px-2 py-0.5 rounded">
+                    IMPROVED (MSMED 45-DAY)
                   </span>
                 </div>
                 <div className="diff-box">
-                  <del className="p-3 rounded">
+                  <del className="p-2.5 rounded">
                     "The Buyer shall make payment within ninety (90) days from acceptance of the invoice."
                   </del>
-                  <ins className="p-3 rounded">
+                  <ins className="p-2.5 rounded">
                     "Undisputed invoices shall be paid within forty-five (45) days of delivery, with compound interest under MSMED Act."
                   </ins>
                 </div>
@@ -2105,15 +2188,15 @@ export default function App() {
               <div className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-subtle">
                 <div className="flex justify-between items-center mb-2">
                   <b className="text-sm">Limitation of Liability (Section 8)</b>
-                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
-                    IMPROVED
+                  <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 px-2 py-0.5 rounded">
+                    IMPROVED (CAPPED)
                   </span>
                 </div>
                 <div className="diff-box">
-                  <del className="p-3 rounded">
+                  <del className="p-2.5 rounded">
                     "Supplier shall indemnify and hold harmless Buyer from any and all losses without limitation."
                   </del>
-                  <ins className="p-3 rounded">
+                  <ins className="p-2.5 rounded">
                     "Supplier liability shall be limited to total fees paid under this Agreement in the preceding 12 months."
                   </ins>
                 </div>
@@ -2123,7 +2206,6 @@ export default function App() {
         </div>
       )}
 
-      {/* ========================================================================= */}
       {/* ========================================================================= */}
       {/* 9. COMPLETE USER PROFILE & ACCOUNT MANAGEMENT VIEW                         */}
       {/* ========================================================================= */}
@@ -2146,7 +2228,7 @@ export default function App() {
                     className="photo-edit-overlay-btn"
                     title="Change Profile Picture"
                   >
-                    <Camera className="w-4 h-4" />
+                    <Camera className="w-3.5 h-3.5" />
                     <input
                       id="hero-profile-photo-input"
                       type="file"
@@ -2161,7 +2243,7 @@ export default function App() {
                   <h1>
                     {profileForm.name || 'User Profile'}
                     <span className="verified-tag">
-                      <BadgeCheck className="w-3.5 h-3.5" /> Verified Legal Account
+                      <BadgeCheck className="w-3.5 h-3.5" /> Verified Account
                     </span>
                   </h1>
                   <p>
@@ -2172,7 +2254,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-2.5 flex-wrap">
                 <button
                   className={`button button-small ${isEditingProfile ? 'button-dark' : 'button-coral'}`}
                   onClick={() => setIsEditingProfile(!isEditingProfile)}
@@ -2196,461 +2278,177 @@ export default function App() {
                 <span>Avg Health Score</span>
               </div>
               <div className="stat-strip-box">
-                <b className="text-[#f36963]">{userProfile.stats?.risksResolved || 42}</b>
+                <b className="text-indigo-600">{userProfile.stats?.risksResolved || 42}</b>
                 <span>Risks Resolved</span>
               </div>
             </div>
           </div>
 
-          {/* Section 1: Personal Information */}
-          <div className="profile-card-section">
-            <div className="section-title-bar">
-              <h3>
-                <User className="w-4 h-4 text-[#f36963]" /> Personal Information
-              </h3>
+          {/* Form Content Cards */}
+          <div className="space-y-4">
+            <div className="profile-card-section">
+              <div className="section-title-bar">
+                <h3>
+                  <User className="w-4 h-4 text-indigo-500" /> Personal & Account Information
+                </h3>
+              </div>
+              <div className="profile-field-grid-2">
+                <div className="form-group-item">
+                  <label>Full Name</label>
+                  <input
+                    type="text"
+                    disabled={!isEditingProfile}
+                    value={profileForm.name || ''}
+                    onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                  />
+                </div>
+                <div className="form-group-item">
+                  <label>Email Address</label>
+                  <input type="email" disabled value={userProfile.email || ''} />
+                </div>
+                <div className="form-group-item">
+                  <label>Job Title / Role</label>
+                  <input
+                    type="text"
+                    disabled={!isEditingProfile}
+                    value={profileForm.roleTitle || ''}
+                    onChange={(e) => setProfileForm({ ...profileForm, roleTitle: e.target.value })}
+                  />
+                </div>
+                <div className="form-group-item">
+                  <label>Phone Number</label>
+                  <input
+                    type="tel"
+                    disabled={!isEditingProfile}
+                    value={profileForm.phone || profileForm.mobileNumber || ''}
+                    onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+                  />
+                </div>
+                <div className="form-group-item col-span-1 md:col-span-2">
+                  <label>Professional Bio</label>
+                  <textarea
+                    rows={2}
+                    disabled={!isEditingProfile}
+                    value={profileForm.bio || ''}
+                    onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="profile-field-grid-2">
-              <div className="form-group-item">
-                <label>Full Name</label>
-                <input
-                  type="text"
-                  value={profileForm.name || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                  placeholder="e.g. Rajesh Mehta"
-                />
+            <div className="profile-card-section">
+              <div className="section-title-bar">
+                <h3>
+                  <Building className="w-4 h-4 text-indigo-500" /> Organization & Enterprise Profile
+                </h3>
               </div>
-
-              <div className="form-group-item">
-                <label>Mobile Number</label>
-                <input
-                  type="tel"
-                  value={profileForm.phone || profileForm.mobileNumber || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value, mobileNumber: e.target.value })}
-                  placeholder="+91 98765 43210"
-                />
-              </div>
-
-              <div className="form-group-item">
-                <label>Authenticated Email</label>
-                <div className="flex gap-2">
+              <div className="profile-field-grid-2">
+                <div className="form-group-item">
+                  <label>Company Name</label>
                   <input
-                    type="email"
-                    disabled
-                    value={userProfile.email || ''}
-                    className="flex-1"
+                    type="text"
+                    disabled={!isEditingProfile}
+                    value={profileForm.companyName || ''}
+                    onChange={(e) => setProfileForm({ ...profileForm, companyName: e.target.value })}
                   />
-                  <button
-                    type="button"
-                    className="button button-light button-small shrink-0"
-                    onClick={() => {
-                      setEmailFeedback({})
-                      setEmailForm({ newEmail: '', currentPassword: '' })
-                      setChangeEmailModalOpen(true)
-                    }}
+                </div>
+                <div className="form-group-item">
+                  <label>Enterprise Type</label>
+                  <select
+                    disabled={!isEditingProfile}
+                    value={profileForm.companyType || 'MSME'}
+                    onChange={(e) => setProfileForm({ ...profileForm, companyType: e.target.value })}
                   >
-                    Change Email
+                    <option value="MSME">Micro, Small & Medium Enterprise (MSME)</option>
+                    <option value="Startup">Early-stage Startup</option>
+                    <option value="Corporate">Mid-market / Corporate</option>
+                    <option value="LawFirm">Legal Practice / Law Firm</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="profile-card-section">
+              <div className="section-title-bar">
+                <h3>
+                  <LockKeyhole className="w-4 h-4 text-indigo-500" /> Security & Authentication
+                </h3>
+              </div>
+              <div className="flex gap-3 flex-wrap">
+                <button className="button button-outline button-small" onClick={() => setChangePasswordModalOpen(true)}>
+                  <KeyRound className="w-3.5 h-3.5" /> Change Password
+                </button>
+                <button className="button button-outline button-small" onClick={() => setChangeEmailModalOpen(true)}>
+                  <Mail className="w-3.5 h-3.5" /> Update Email
+                </button>
+              </div>
+            </div>
+
+            {/* Sticky Actions Bar if editing */}
+            {isEditingProfile && (
+              <div className="profile-actions-bar">
+                <span className="text-xs text-slate-500">Unsaved changes in profile</span>
+                <div className="flex gap-2">
+                  <button className="button button-light button-small" onClick={handleCancelProfileEdit}>
+                    Cancel
+                  </button>
+                  <button className="button button-coral button-small" onClick={handleSaveProfile} disabled={isSavingProfile}>
+                    {isSavingProfile ? 'Saving...' : 'Save Profile Changes'}
                   </button>
                 </div>
               </div>
-
-              <div className="form-group-item">
-                <label>Profile Picture Actions</label>
-                <div className="flex gap-2 items-center">
-                  <label className="button button-light button-small cursor-pointer">
-                    <Camera className="w-3.5 h-3.5" /> Upload Photo
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handlePhotoUpload}
-                    />
-                  </label>
-                  {profileForm.avatarUrl && (
-                    <button
-                      type="button"
-                      className="button button-danger button-small"
-                      onClick={handleRemovePhoto}
-                    >
-                      <Trash2 className="w-3.5 h-3.5" /> Remove
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Section 2: Professional Information */}
-          <div className="profile-card-section">
-            <div className="section-title-bar">
-              <h3>
-                <Briefcase className="w-4 h-4 text-emerald-600" /> Professional Information
-              </h3>
-            </div>
-
-            <div className="profile-field-grid-2">
-              <div className="form-group-item">
-                <label>Profession</label>
-                <select
-                  value={profileForm.profession || 'Corporate Legal Counsel'}
-                  onChange={(e) => setProfileForm({ ...profileForm, profession: e.target.value })}
-                >
-                  <option value="Corporate Legal Counsel">Corporate Legal Counsel</option>
-                  <option value="Lawyer / Advocate">Lawyer / Advocate</option>
-                  <option value="Business Owner">Business Owner</option>
-                  <option value="Founder / Co-Founder">Founder / Co-Founder</option>
-                  <option value="Managing Director / CEO">Managing Director / CEO</option>
-                  <option value="Chief Financial Officer (CFO)">Chief Financial Officer (CFO)</option>
-                  <option value="Operations / Procurement Manager">Operations / Procurement Manager</option>
-                  <option value="Software / Tech Executive">Software / Tech Executive</option>
-                  <option value="Commercial Consultant">Commercial Consultant</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-
-              <div className="form-group-item">
-                <label>Job Title / Designation</label>
-                <input
-                  type="text"
-                  value={profileForm.roleTitle || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, roleTitle: e.target.value })}
-                  placeholder="e.g. Chief Legal Counsel"
-                />
-              </div>
-
-              <div className="form-group-item col-span-2">
-                <label>Professional Role in Workspace</label>
-                <input
-                  type="text"
-                  value={profileForm.role || 'Chief Legal Counsel & Partner'}
-                  onChange={(e) => setProfileForm({ ...profileForm, role: e.target.value })}
-                  placeholder="e.g. Chief Legal Counsel & Partner"
-                />
-              </div>
-
-              <div className="form-group-item col-span-2">
-                <label>Professional Bio</label>
-                <textarea
-                  rows={3}
-                  value={profileForm.bio || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
-                  placeholder="Brief summary of your legal background, company focus, and contract management responsibilities..."
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Section 3: Company & Organization Details */}
-          <div className="profile-card-section">
-            <div className="section-title-bar">
-              <h3>
-                <Building className="w-4 h-4 text-blue-500" /> Company & Organization Details
-              </h3>
-            </div>
-
-            <div className="profile-field-grid-2">
-              <div className="form-group-item">
-                <label>Company / Organization Name</label>
-                <input
-                  type="text"
-                  value={profileForm.companyName || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, companyName: e.target.value })}
-                  placeholder="e.g. Apex Legal & Tech Advisory LLP"
-                />
-              </div>
-
-              <div className="form-group-item">
-                <label>Company Type</label>
-                <select
-                  value={profileForm.companyType || 'MSME'}
-                  onChange={(e) => setProfileForm({ ...profileForm, companyType: e.target.value })}
-                >
-                  <option value="MSME">MSME (Micro, Small & Medium Enterprise)</option>
-                  <option value="Startup">Startup / Early Stage</option>
-                  <option value="Private Limited">Private Limited (Pvt Ltd)</option>
-                  <option value="Partnership">LLP / Partnership</option>
-                  <option value="Sole Proprietorship">Sole Proprietorship</option>
-                  <option value="Public Limited">Public Limited (Ltd)</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-
-              <div className="form-group-item">
-                <label>Industry Sector</label>
-                <select
-                  value={profileForm.industry || 'Consulting & Legal'}
-                  onChange={(e) => setProfileForm({ ...profileForm, industry: e.target.value })}
-                >
-                  <option value="Consulting & Legal">Consulting & Legal Tech</option>
-                  <option value="Technology">Technology & SaaS</option>
-                  <option value="Manufacturing">Manufacturing & Industrial</option>
-                  <option value="Retail">Retail & E-commerce</option>
-                  <option value="Healthcare">Healthcare & Life Sciences</option>
-                  <option value="Finance">Finance & Banking</option>
-                  <option value="Supply Chain">Supply Chain & Logistics</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-
-              <div className="form-group-item">
-                <label>Company Website</label>
-                <input
-                  type="url"
-                  value={profileForm.companyWebsite || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, companyWebsite: e.target.value })}
-                  placeholder="https://company.com"
-                />
-              </div>
-
-              <div className="form-group-item">
-                <label>Official Company Email</label>
-                <input
-                  type="email"
-                  value={profileForm.companyEmail || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, companyEmail: e.target.value })}
-                  placeholder="contact@company.com"
-                />
-              </div>
-
-              <div className="form-group-item">
-                <label>Official Company Phone</label>
-                <input
-                  type="tel"
-                  value={profileForm.companyPhone || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, companyPhone: e.target.value })}
-                  placeholder="+91 22 4567 8900"
-                />
-              </div>
-
-              <div className="form-group-item col-span-2">
-                <label>Registered Office Address</label>
-                <input
-                  type="text"
-                  value={profileForm.companyAddress || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, companyAddress: e.target.value })}
-                  placeholder="Suite 402, Business Park, Nariman Point"
-                />
-              </div>
-            </div>
-
-            <div className="profile-field-grid-3 mt-4">
-              <div className="form-group-item">
-                <label>City</label>
-                <input
-                  type="text"
-                  value={profileForm.city || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, city: e.target.value })}
-                  placeholder="Mumbai"
-                />
-              </div>
-
-              <div className="form-group-item">
-                <label>State</label>
-                <input
-                  type="text"
-                  value={profileForm.state || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, state: e.target.value })}
-                  placeholder="Maharashtra"
-                />
-              </div>
-
-              <div className="form-group-item">
-                <label>PIN Code</label>
-                <input
-                  type="text"
-                  value={profileForm.pinCode || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, pinCode: e.target.value })}
-                  placeholder="400021"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Section 4: Password & Security */}
-          <div className="profile-card-section">
-            <div className="section-title-bar">
-              <h3>
-                <KeyRound className="w-4 h-4 text-amber-500" /> Password & Security
-              </h3>
-            </div>
-
-            <div className="flex items-center justify-between p-4 bg-subtle rounded-xl border border-slate-200 dark:border-slate-800 flex-wrap gap-4">
-              <div>
-                <b className="text-sm block">Account Password Protection</b>
-                <p className="text-xs text-slate-500 mt-0.5">Encrypted with Scrypt & authenticated tokens. Never exposed in public UI.</p>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  className="button button-coral button-small"
-                  onClick={() => {
-                    setPasswordFeedback({})
-                    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
-                    setChangePasswordModalOpen(true)
-                  }}
-                >
-                  <LockKeyhole className="w-3.5 h-3.5" /> Change Password
-                </button>
-                <button
-                  type="button"
-                  className="button button-light button-small"
-                  onClick={async () => {
-                    await forgotPasswordApi(userProfile.email)
-                    showToast(`Password reset link sent to ${userProfile.email}`)
-                  }}
-                >
-                  Reset via Email
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Section 5: Connected Accounts */}
-          <div className="profile-card-section">
-            <div className="section-title-bar">
-              <h3>
-                <ShieldCheck className="w-4 h-4 text-purple-500" /> Connected Accounts & Providers
-              </h3>
-            </div>
-
-            <div className="connected-accounts-grid">
-              <div className="connected-account-card">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <b className="text-xs block">Google</b>
-                    <small className="text-[10px] text-slate-400">OAuth 2.0</small>
-                  </div>
-                </div>
-                <span className="connected-badge">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Connected
-                </span>
-              </div>
-
-              <div className="connected-account-card">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center">
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.86c.62-.77 1.04-1.84.93-2.91-.9.04-2 .6-2.65 1.36-.58.67-.99 1.76-.87 2.81 1.02.08 2.06-.52 2.59-1.26" />
-                    </svg>
-                  </div>
-                  <div>
-                    <b className="text-xs block">Apple</b>
-                    <small className="text-[10px] text-slate-400">Apple ID</small>
-                  </div>
-                </div>
-                <span className="connected-badge">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Connected
-                </span>
-              </div>
-
-              <div className="connected-account-card">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <b className="text-xs block">Email & Password</b>
-                    <small className="text-[10px] text-slate-400">Primary Login</small>
-                  </div>
-                </div>
-                <span className="connected-badge">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Active
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Sticky Bottom Save / Cancel Bar */}
-          <div className="profile-actions-bar">
-            <div>
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                {JSON.stringify(profileForm) !== JSON.stringify(userProfile)
-                  ? '● You have unsaved changes in your profile.'
-                  : 'Profile data synchronized with secure storage.'}
-              </span>
-            </div>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                className="button button-light button-small"
-                onClick={handleCancelProfileEdit}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="button button-coral button-small"
-                onClick={handleSaveProfile}
-                disabled={isSavingProfile}
-              >
-                {isSavingProfile ? 'Saving...' : 'Save Changes'}
-              </button>
-            </div>
+            )}
           </div>
         </div>
       )}
 
       {/* ========================================================================= */}
-      {/* 10. SETTINGS VIEW & GDPR DANGER ZONE                                      */}
+      {/* 10. SETTINGS VIEW                                                         */}
       {/* ========================================================================= */}
       {currentView === 'settings' && (
-        <div className="dashboard">
-          <div className="max-w-3xl mx-auto bg-surface border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-sm">
-            <h1 className="text-2xl font-bold mb-6">Account Settings & Preferences</h1>
+        <div className="dashboard max-w-3xl mx-auto">
+          <div className="dashboard-top">
+            <div>
+              <p className="eyebrow">
+                <Settings className="w-3.5 h-3.5" /> System Preferences
+              </p>
+              <h1>
+                Application <em>Settings</em>
+              </h1>
+              <p className="dashboard-subtitle">Configure theme appearance, notification thresholds, and data privacy.</p>
+            </div>
+          </div>
 
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-bold uppercase text-slate-400 mb-3">Theme & Appearance</h3>
-                <div className="flex gap-4">
-                  <button
-                    className={`button button-small ${theme === 'light' ? 'button-dark' : 'button-light'}`}
-                    onClick={() => toggleTheme('light')}
-                  >
-                    <Sun className="w-4 h-4" /> Light Mode
-                  </button>
-                  <button
-                    className={`button button-small ${theme === 'dark' ? 'button-dark' : 'button-light'}`}
-                    onClick={() => toggleTheme('dark')}
-                  >
-                    <Moon className="w-4 h-4" /> Dark Navy Mode
-                  </button>
-                </div>
+          <div className="space-y-4">
+            <div className="bg-surface border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
+              <h3 className="text-sm font-bold mb-3">Theme & Display</h3>
+              <div className="flex gap-2">
+                <button
+                  className={`button button-small ${theme === 'light' ? 'button-dark' : 'button-light'}`}
+                  onClick={() => toggleTheme('light')}
+                >
+                  <Sun className="w-3.5 h-3.5 text-amber-500" /> Light Mode
+                </button>
+                <button
+                  className={`button button-small ${theme === 'dark' ? 'button-dark' : 'button-light'}`}
+                  onClick={() => toggleTheme('dark')}
+                >
+                  <Moon className="w-3.5 h-3.5 text-indigo-400" /> Dark Mode
+                </button>
               </div>
+            </div>
 
-              <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
-                <h3 className="text-sm font-bold uppercase text-slate-400 mb-3">Notification Preferences</h3>
-                <div className="space-y-3 text-sm">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" defaultChecked />
-                    <span>Email alert when critical payment or uncapped risk is detected</span>
-                  </label>
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" defaultChecked />
-                    <span>Weekly contract audit and health score summary</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* GDPR Danger Zone */}
-              <div className="pt-6 border-t border-red-200 dark:border-red-950">
-                <h3 className="text-sm font-bold uppercase text-red-500 mb-3">Danger Zone (GDPR / Data Rights)</h3>
-                <div className="p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-lg flex justify-between items-center">
-                  <div>
-                    <b className="text-sm text-red-800 dark:text-red-300 block">Export All Personal & Contract Data</b>
-                    <p className="text-xs text-red-600 dark:text-red-400">Download portable JSON archive as per GDPR Article 20</p>
-                  </div>
-                  <button className="button button-coral button-small" onClick={() => exportUserDataApi()}>
-                    <Download className="w-3.5 h-3.5" /> Export Data
-                  </button>
-                </div>
+            <div className="bg-surface border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
+              <h3 className="text-sm font-bold mb-3">Compliance & Statutory Safeguards</h3>
+              <div className="space-y-3 text-xs">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" defaultChecked className="rounded text-indigo-600 focus:ring-indigo-500" />
+                  <span>Enforce Section 15 MSMED Act 2006 statutory 45-day payment cap alerts</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" defaultChecked className="rounded text-indigo-600 focus:ring-indigo-500" />
+                  <span>Highlight uncapped indemnities exceeding contract value</span>
+                </label>
               </div>
             </div>
           </div>
@@ -2665,7 +2463,7 @@ export default function App() {
           <div className="dashboard-top">
             <div>
               <p className="eyebrow">
-                <BarChart3 className="w-4 h-4 text-[#f36963]" /> Platform Oversight
+                <BarChart3 className="w-3.5 h-3.5" /> Platform Oversight
               </p>
               <h1>
                 Admin & <em>System Analytics</em>
@@ -2679,7 +2477,7 @@ export default function App() {
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon navy">
-                <Users className="w-5 h-5" />
+                <Users className="w-4 h-4" />
               </div>
               <div className="stat-info">
                 <b>{adminStats.totalUsers}</b>
@@ -2688,7 +2486,7 @@ export default function App() {
             </div>
             <div className="stat-card">
               <div className="stat-icon coral">
-                <FileText className="w-5 h-5" />
+                <FileText className="w-4 h-4" />
               </div>
               <div className="stat-info">
                 <b>{adminStats.activeContracts}</b>
@@ -2697,7 +2495,7 @@ export default function App() {
             </div>
             <div className="stat-card">
               <div className="stat-icon green">
-                <ShieldCheck className="w-5 h-5" />
+                <ShieldCheck className="w-4 h-4" />
               </div>
               <div className="stat-info">
                 <b>{adminStats.avgHealthScore}/100</b>
@@ -2706,7 +2504,7 @@ export default function App() {
             </div>
             <div className="stat-card">
               <div className="stat-icon amber">
-                <CheckCircle2 className="w-5 h-5" />
+                <CheckCircle2 className="w-4 h-4" />
               </div>
               <div className="stat-info">
                 <b>{adminStats.systemUptime}</b>
@@ -2716,18 +2514,20 @@ export default function App() {
           </div>
 
           {/* Most Frequent Risk Patterns */}
-          <div className="bg-surface border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm mb-8">
-            <h3 className="text-lg font-bold mb-4">Most Frequent Risky Clause Patterns (Cross-Organization)</h3>
+          <div className="bg-surface border border-slate-200 dark:border-slate-800 rounded-xl p-5 md:p-6 shadow-sm mb-6">
+            <h3 className="text-base font-bold mb-4">Most Frequent Risky Clause Patterns (Cross-Organization)</h3>
             <div className="space-y-4">
               {adminStats.riskFrequency?.map((r: any, idx: number) => (
-                <div key={idx} className="space-y-1">
+                <div key={idx} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-bold">
                     <span>{r.category}</span>
-                    <span className="text-[#f36963]">{r.percentage}% of contracts</span>
+                    <span className={r.riskLevel === 'critical' ? 'text-rose-600 dark:text-rose-400' : 'text-amber-600 dark:text-amber-400'}>
+                      {r.percentage}% of contracts
+                    </span>
                   </div>
-                  <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                     <div
-                      className={`h-full ${r.riskLevel === 'critical' ? 'bg-[#f36963]' : r.riskLevel === 'high' ? 'bg-amber-500' : 'bg-yellow-500'}`}
+                      className={`h-full ${r.riskLevel === 'critical' ? 'bg-rose-600' : r.riskLevel === 'high' ? 'bg-amber-500' : 'bg-yellow-500'}`}
                       style={{ width: `${r.percentage}%` }}
                     />
                   </div>
@@ -2749,10 +2549,10 @@ export default function App() {
             </button>
 
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center">
-                <FileUp className="w-5 h-5 text-[#f36963]" />
+              <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center">
+                <FileUp className="w-4 h-4 text-indigo-400" />
               </div>
-              <h2 className="text-xl font-bold">Analyze a Contract</h2>
+              <h2 className="text-lg font-bold">Analyze a Contract</h2>
             </div>
 
             <div className="flex gap-2 mb-4">
@@ -2771,10 +2571,10 @@ export default function App() {
             </div>
 
             {uploadMode === 'pdf' ? (
-              <label className="border-2 border-dashed border-slate-300 dark:border-slate-700 bg-subtle p-8 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-[#f36963] transition-colors">
-                <Upload className="w-8 h-8 text-[#f36963] mb-2" />
-                <b className="text-sm font-bold text-main">{selectedFile ? selectedFile.name : 'Select or drop contract file'}</b>
-                <span className="text-xs text-slate-400 mt-1">PDF, DOCX, or Scanned agreement up to 50MB</span>
+              <label className="border-2 border-dashed border-slate-300 dark:border-slate-700 bg-subtle p-6 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500 transition-colors">
+                <Upload className="w-7 h-7 text-indigo-500 mb-2" />
+                <b className="text-xs font-bold text-main">{selectedFile ? selectedFile.name : 'Select or drop contract file'}</b>
+                <span className="text-[11px] text-slate-400 mt-1">PDF, DOCX, or text file up to 50MB</span>
                 <input
                   type="file"
                   accept=".pdf,.docx,.txt"
@@ -2786,14 +2586,14 @@ export default function App() {
               <textarea
                 rows={6}
                 placeholder="Paste contract text here..."
-                className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-3 text-xs text-main outline-none focus:border-[#f36963]"
+                className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-3 text-xs text-main outline-none focus:border-indigo-500"
                 value={pastedText}
                 onChange={(e) => setPastedText(e.target.value)}
               />
             )}
 
             <button
-              className="button button-coral w-full py-3 mt-5 font-bold"
+              className="button button-coral w-full py-2.5 mt-4 font-bold"
               onClick={handleUploadAndAnalyze}
             >
               Start AI Risk Audit
@@ -2803,7 +2603,7 @@ export default function App() {
       )}
 
       {/* ========================================================================= */}
-      {/* MODAL: SHARE / INVITE COLLABORATOR                                        */}
+      {/* MODAL: SHARE CONTRACT                                                     */}
       {/* ========================================================================= */}
       {shareModalOpen && (
         <div className="modal-backdrop" onClick={() => setShareModalOpen(false)}>
@@ -2811,36 +2611,41 @@ export default function App() {
             <button className="close-modal" onClick={() => setShareModalOpen(false)}>
               <X className="w-4 h-4" />
             </button>
-            <h2 className="text-xl font-bold mb-2">Share Contract with Team</h2>
-            <p className="text-xs text-slate-500 mb-4">Invite legal counsel or partners to review and comment.</p>
 
-            <form onSubmit={handleShareContract} className="space-y-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center">
+                <Share2 className="w-4 h-4 text-indigo-400" />
+              </div>
+              <h2 className="text-lg font-bold">Invite Collaborator</h2>
+            </div>
+
+            <form onSubmit={handleShareContract} className="space-y-3">
               <div>
-                <label className="block text-xs font-bold mb-1">Email Address</label>
+                <label className="block text-xs font-bold mb-1">Collaborator Email</label>
                 <input
                   type="email"
                   required
-                  placeholder="colleague@firm.com"
-                  className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded p-2 text-xs text-main outline-none"
+                  placeholder="lawyer@counterparty.com"
+                  className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs text-main outline-none focus:border-indigo-500"
                   value={shareEmail}
                   onChange={(e) => setShareEmail(e.target.value)}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold mb-1">Permission Level</label>
+                <label className="block text-xs font-bold mb-1">Permission Role</label>
                 <select
-                  className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded p-2 text-xs text-main outline-none"
+                  className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs text-main outline-none"
                   value={shareRole}
                   onChange={(e: any) => setShareRole(e.target.value)}
                 >
-                  <option value="view">Can View Only</option>
-                  <option value="comment">Can Comment & Annotate</option>
+                  <option value="view">Can View & Read Analysis</option>
+                  <option value="comment">Can Review & Comment</option>
                   <option value="edit">Can Edit Clauses & Accept Redlines</option>
                 </select>
               </div>
 
-              <button type="submit" className="button button-coral w-full py-2.5 font-bold">
+              <button type="submit" className="button button-coral w-full py-2.5 mt-2 font-bold">
                 Send Invitation
               </button>
             </form>
@@ -2857,24 +2662,29 @@ export default function App() {
             <button className="close-modal" onClick={() => setVersionSnapshotModalOpen(false)}>
               <X className="w-4 h-4" />
             </button>
-            <h2 className="text-xl font-bold mb-2">Save Version Snapshot</h2>
-            <p className="text-xs text-slate-500 mb-4">Record a permanent rollback checkpoint for this contract.</p>
 
-            <form onSubmit={handleCreateVersionSnapshot} className="space-y-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center">
+                <History className="w-4 h-4 text-indigo-400" />
+              </div>
+              <h2 className="text-lg font-bold">Record Version Snapshot</h2>
+            </div>
+
+            <form onSubmit={handleCreateVersionSnapshot} className="space-y-3">
               <div>
-                <label className="block text-xs font-bold mb-1">Snapshot Summary / Note</label>
+                <label className="block text-xs font-bold mb-1">Version Note / Summary</label>
                 <input
                   type="text"
-                  required
-                  placeholder="e.g. Pre-negotiation draft with accepted 45-day redline"
-                  className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded p-2 text-xs text-main outline-none"
+                  placeholder="e.g. Post-renegotiation payment terms accepted"
+                  className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs text-main outline-none focus:border-indigo-500"
                   value={versionNote}
                   onChange={(e) => setVersionNote(e.target.value)}
+                  required
                 />
               </div>
 
-              <button type="submit" className="button button-coral w-full py-2.5 font-bold">
-                Record Snapshot
+              <button type="submit" className="button button-coral w-full py-2.5 mt-2 font-bold">
+                Save Snapshot
               </button>
             </form>
           </div>
@@ -2886,29 +2696,27 @@ export default function App() {
       {/* ========================================================================= */}
       {changePasswordModalOpen && (
         <div className="modal-backdrop" onClick={() => setChangePasswordModalOpen(false)}>
-          <div className="modal-panel" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+          <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
             <button className="close-modal" onClick={() => setChangePasswordModalOpen(false)}>
               <X className="w-4 h-4" />
             </button>
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-full bg-amber-500/10 text-amber-600 flex items-center justify-center">
-                <LockKeyhole className="w-4 h-4" />
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center">
+                <KeyRound className="w-4 h-4 text-indigo-400" />
               </div>
-              <div>
-                <h2 className="text-lg font-bold text-main">Change Account Password</h2>
-                <p className="text-xs text-slate-500">Update your security credentials</p>
-              </div>
+              <h2 className="text-lg font-bold">Change Account Password</h2>
             </div>
 
             {passwordFeedback.error && (
-              <div className="auth-alert auth-alert-error mb-3">
-                <ShieldAlert className="w-4 h-4 flex-shrink-0" />
+              <div className="p-2.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs mb-3 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{passwordFeedback.error}</span>
               </div>
             )}
             {passwordFeedback.success && (
-              <div className="auth-alert auth-alert-success mb-3">
-                <Check className="w-4 h-4 flex-shrink-0" />
+              <div className="p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-xs mb-3 flex items-center gap-2">
+                <Check className="w-4 h-4 shrink-0" />
                 <span>{passwordFeedback.success}</span>
               </div>
             )}
@@ -2916,20 +2724,18 @@ export default function App() {
             <form onSubmit={handleChangePasswordSubmit} className="space-y-3">
               <div>
                 <label className="block text-xs font-bold mb-1">Current Password</label>
-                <div className="input-group">
-                  <KeyRound className="input-icon" />
+                <div className="relative">
                   <input
                     type={showCurrentPass ? 'text' : 'password'}
                     required
-                    placeholder="Enter current password"
+                    className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 pr-9 text-xs text-main outline-none focus:border-indigo-500"
                     value={passwordForm.currentPassword}
                     onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
                   />
                   <button
                     type="button"
-                    className="password-toggle-btn"
+                    className="absolute right-2.5 top-2.5 text-slate-400"
                     onClick={() => setShowCurrentPass(!showCurrentPass)}
-                    tabIndex={-1}
                   >
                     {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -2938,21 +2744,19 @@ export default function App() {
 
               <div>
                 <label className="block text-xs font-bold mb-1">New Password</label>
-                <div className="input-group">
-                  <LockKeyhole className="input-icon" />
+                <div className="relative">
                   <input
                     type={showNewPass ? 'text' : 'password'}
                     required
                     minLength={8}
-                    placeholder="At least 8 characters"
+                    className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 pr-9 text-xs text-main outline-none focus:border-indigo-500"
                     value={passwordForm.newPassword}
                     onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
                   />
                   <button
                     type="button"
-                    className="password-toggle-btn"
+                    className="absolute right-2.5 top-2.5 text-slate-400"
                     onClick={() => setShowNewPass(!showNewPass)}
-                    tabIndex={-1}
                   >
                     {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -2961,43 +2765,28 @@ export default function App() {
 
               <div>
                 <label className="block text-xs font-bold mb-1">Confirm New Password</label>
-                <div className="input-group">
-                  <LockKeyhole className="input-icon" />
+                <div className="relative">
                   <input
                     type={showConfirmPass ? 'text' : 'password'}
                     required
                     minLength={8}
-                    placeholder="Re-enter new password"
+                    className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 pr-9 text-xs text-main outline-none focus:border-indigo-500"
                     value={passwordForm.confirmPassword}
                     onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
                   />
                   <button
                     type="button"
-                    className="password-toggle-btn"
+                    className="absolute right-2.5 top-2.5 text-slate-400"
                     onClick={() => setShowConfirmPass(!showConfirmPass)}
-                    tabIndex={-1}
                   >
                     {showConfirmPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="button"
-                  className="button button-light flex-1"
-                  onClick={() => setChangePasswordModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="button button-coral flex-1"
-                  disabled={passwordSaving}
-                >
-                  {passwordSaving ? 'Updating...' : 'Update Password'}
-                </button>
-              </div>
+              <button type="submit" className="button button-coral w-full py-2.5 mt-2 font-bold" disabled={passwordSaving}>
+                {passwordSaving ? 'Updating...' : 'Update Password'}
+              </button>
             </form>
           </div>
         </div>
@@ -3008,29 +2797,27 @@ export default function App() {
       {/* ========================================================================= */}
       {changeEmailModalOpen && (
         <div className="modal-backdrop" onClick={() => setChangeEmailModalOpen(false)}>
-          <div className="modal-panel" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+          <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
             <button className="close-modal" onClick={() => setChangeEmailModalOpen(false)}>
               <X className="w-4 h-4" />
             </button>
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-full bg-blue-500/10 text-blue-600 flex items-center justify-center">
-                <Mail className="w-4 h-4" />
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center">
+                <Mail className="w-4 h-4 text-indigo-400" />
               </div>
-              <div>
-                <h2 className="text-lg font-bold text-main">Update Account Email</h2>
-                <p className="text-xs text-slate-500">Enter new verified email address</p>
-              </div>
+              <h2 className="text-lg font-bold">Update Account Email</h2>
             </div>
 
             {emailFeedback.error && (
-              <div className="auth-alert auth-alert-error mb-3">
-                <ShieldAlert className="w-4 h-4 flex-shrink-0" />
+              <div className="p-2.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs mb-3 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{emailFeedback.error}</span>
               </div>
             )}
             {emailFeedback.success && (
-              <div className="auth-alert auth-alert-success mb-3">
-                <Check className="w-4 h-4 flex-shrink-0" />
+              <div className="p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-xs mb-3 flex items-center gap-2">
+                <Check className="w-4 h-4 shrink-0" />
                 <span>{emailFeedback.success}</span>
               </div>
             )}
@@ -3038,127 +2825,100 @@ export default function App() {
             <form onSubmit={handleChangeEmailSubmit} className="space-y-3">
               <div>
                 <label className="block text-xs font-bold mb-1">New Email Address</label>
-                <div className="input-group">
-                  <Mail className="input-icon" />
-                  <input
-                    type="email"
-                    required
-                    placeholder="new.email@company.com"
-                    value={emailForm.newEmail}
-                    onChange={(e) => setEmailForm({ ...emailForm, newEmail: e.target.value })}
-                  />
-                </div>
+                <input
+                  type="email"
+                  required
+                  placeholder="newemail@company.com"
+                  className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs text-main outline-none focus:border-indigo-500"
+                  value={emailForm.newEmail}
+                  onChange={(e) => setEmailForm({ ...emailForm, newEmail: e.target.value })}
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-bold mb-1">Current Password (Re-authentication)</label>
-                <div className="input-group">
-                  <LockKeyhole className="input-icon" />
-                  <input
-                    type="password"
-                    required
-                    placeholder="Enter current password"
-                    value={emailForm.currentPassword}
-                    onChange={(e) => setEmailForm({ ...emailForm, currentPassword: e.target.value })}
-                  />
-                </div>
+                <label className="block text-xs font-bold mb-1">Current Password for Verification</label>
+                <input
+                  type="password"
+                  required
+                  className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs text-main outline-none focus:border-indigo-500"
+                  value={emailForm.currentPassword}
+                  onChange={(e) => setEmailForm({ ...emailForm, currentPassword: e.target.value })}
+                />
               </div>
 
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="button"
-                  className="button button-light flex-1"
-                  onClick={() => setChangeEmailModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="button button-coral flex-1"
-                  disabled={emailSaving}
-                >
-                  {emailSaving ? 'Updating...' : 'Save New Email'}
-                </button>
-              </div>
+              <button type="submit" className="button button-coral w-full py-2.5 mt-2 font-bold" disabled={emailSaving}>
+                {emailSaving ? 'Updating...' : 'Save New Email'}
+              </button>
             </form>
           </div>
         </div>
       )}
 
-      {/* ========================================================================= */}
-      {/* FLOATING AI CHATBOT WIDGET                                                */}
-      {/* ========================================================================= */}
+      {/* Floating AI Chat Assistant */}
       <div className="chat-widget">
         {chatOpen ? (
           <div className="chat-window">
             <header>
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#f36963]" />
-                <div>
-                  <b className="text-xs">Contract AI Assistant</b>
-                  <small className="text-[9px] text-slate-300 block">Ask anything about this agreement</small>
-                </div>
+                <Sparkles className="w-4 h-4 text-indigo-400" />
+                <b className="text-xs">Contract AI Assistant</b>
               </div>
-              <button className="text-white hover:opacity-75" onClick={() => setChatOpen(false)}>
+              <button className="text-slate-400 hover:text-white" onClick={() => setChatOpen(false)}>
                 <X className="w-4 h-4" />
               </button>
             </header>
 
             <div className="chat-messages">
-              {chatMessages.map((m) => (
-                <div key={m.id} className={`chat-msg ${m.role}`}>
-                  <p>{m.content}</p>
-                  {m.sources && m.sources.length > 0 && (
-                    <div className="flex gap-1 mt-1 flex-wrap">
-                      {m.sources.map((s, i) => (
-                        <span key={i} className="text-[9px] bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-400">
-                          § {s}
-                        </span>
-                      ))}
+              {chatMessages.map((msg) => (
+                <div key={msg.id} className={`chat-msg ${msg.role}`}>
+                  <p>{msg.content}</p>
+                  {msg.sources && msg.sources.length > 0 && (
+                    <div className="mt-1.5 pt-1 border-t border-slate-200 dark:border-slate-700 text-[10px] opacity-75 font-mono">
+                      Sources: {msg.sources.join(', ')}
                     </div>
                   )}
                 </div>
               ))}
               {chatTyping && (
-                <div className="chat-msg assistant text-xs text-slate-400">
-                  AI is analyzing contract clauses...
+                <div className="chat-msg assistant text-xs italic text-slate-500">
+                  AI Assistant is analyzing contract clauses...
                 </div>
               )}
             </div>
 
-            <form onSubmit={handleSendChat} className="chat-input">
+            <form className="chat-input" onSubmit={handleSendChat}>
               <input
                 type="text"
-                placeholder="e.g. Is liability capped? What is payment deadline?"
+                placeholder="Ask about payment or liabilities..."
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
               />
               <button type="submit" className="button button-coral button-small px-3">
-                <Send className="w-3.5 h-3.5" />
+                <Send className="w-3 h-3" />
               </button>
             </form>
           </div>
         ) : (
           <button className="chat-launcher" onClick={() => setChatOpen(true)}>
-            <Sparkles className="w-4 h-4 text-[#f36963]" />
+            <Sparkles className="w-4 h-4 text-indigo-400" />
             <span>Ask Contract AI</span>
           </button>
         )}
       </div>
 
-      {/* Footer */}
+      {/* Site Footer */}
       <footer className="site-footer">
         <div className="footer-top">
           <div>
-            <button className="brand text-white" onClick={() => setCurrentView('welcome')}>
+            <button className="brand text-white" onClick={() => navigateTo('welcome')}>
               <div className="brand-mark bg-white text-slate-900">
                 <Scale className="w-4 h-4" />
               </div>
               <span className="text-white">
-                Contract<span className="text-[#f36963]">Sense</span>
+                Contract<span className="text-indigo-400">Sense</span>
               </span>
             </button>
-            <p className="text-xs text-slate-400 mt-3 max-w-xs">
+            <p className="text-xs text-slate-400 mt-2.5 max-w-xs">
               AI-Powered contract analysis, MSMED compliance auditing, and redline management for modern businesses.
             </p>
           </div>
@@ -3166,16 +2926,16 @@ export default function App() {
           <div className="footer-links">
             <div>
               <span>Platform</span>
-              <button onClick={() => setCurrentView('dashboard')}>Dashboard</button>
-              <button onClick={() => setCurrentView('generator')}>AI Generator</button>
-              <button onClick={() => setCurrentView('clause_library')}>Clause Library</button>
-              <button onClick={() => setCurrentView('compare')}>Version Diff</button>
+              <button onClick={() => navigateTo('dashboard')}>Dashboard</button>
+              <button onClick={() => navigateTo('generator')}>AI Generator</button>
+              <button onClick={() => navigateTo('clause_library')}>Clause Library</button>
+              <button onClick={() => navigateTo('compare')}>Version Diff</button>
             </div>
             <div>
               <span>Compliance</span>
               <button onClick={() => showToast('MSMED Act 2006 Rule Engine Active')}>MSMED Act 2006</button>
               <button onClick={() => exportUserDataApi()}>GDPR Data Export</button>
-              <button onClick={() => setCurrentView('admin')}>Admin Metrics</button>
+              <button onClick={() => navigateTo('admin')}>Admin Metrics</button>
             </div>
           </div>
         </div>
