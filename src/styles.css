@@ -2423,3 +2423,74 @@ h1 em, h2 em {
   .side-panel { padding: 16px 14px; }
   .contracts-section { padding: 14px 10px; }
 }
+
+/* ========================================================================= */
+/* DYNAMIC LASER-SCANNING & OCR EXTRACTION ANIMATIONS                        */
+/* ========================================================================= */
+@keyframes laserScan {
+  0% {
+    top: 2%;
+    opacity: 0.85;
+  }
+  50% {
+    top: 94%;
+    opacity: 1;
+  }
+  100% {
+    top: 2%;
+    opacity: 0.85;
+  }
+}
+
+@keyframes laserGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px #7c3aed, 0 0 30px rgba(124, 58, 237, 0.6), 0 0 8px #22d3ee;
+  }
+  50% {
+    box-shadow: 0 0 25px #a855f7, 0 0 45px rgba(168, 85, 247, 0.8), 0 0 14px #38bdf8;
+  }
+}
+
+@keyframes ocrShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes typewriterFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-laser-scan {
+  animation: laserScan 2.4s ease-in-out infinite, laserGlowPulse 1.8s ease-in-out infinite;
+}
+
+.ocr-skeleton-shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(124, 58, 237, 0.22) 50%, rgba(255, 255, 255, 0.03) 100%);
+  background-size: 200% 100%;
+  animation: ocrShimmer 1.8s ease-in-out infinite;
+}
+
+.ocr-tag-typewriter {
+  animation: typewriterFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.laser-preview-frame {
+  position: relative;
+  background: #0d0d11;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(124, 58, 237, 0.2);
+  overflow: hidden;
+}
+

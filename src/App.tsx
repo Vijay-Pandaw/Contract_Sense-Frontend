@@ -98,6 +98,7 @@ import {
   ConstitutionSealStamp,
   IndianLegalEmptyBanner,
 } from './LegalMotifs'
+import { LaserScanViewer } from './LaserScanViewer'
 
 type ViewType =
   | 'welcome'
@@ -640,7 +641,7 @@ export default function App() {
       const stages = [0, 1, 2, 3, 4, 5]
       for (let i = 0; i < stages.length; i++) {
         setProcessingStage(i)
-        await new Promise((r) => setTimeout(r, 400))
+        await new Promise((r) => setTimeout(r, 650))
       }
 
       const data = await analyzeContractApi(currentFile, currentText, currentName)
@@ -1566,39 +1567,16 @@ export default function App() {
       )}
 
       {/* ========================================================================= */}
-      {/* 2. PROCESSING SCREEN                                                      */}
+      {/* 2. DYNAMIC LASER SCANNING & OCR PROCESSING SCREEN                         */}
       {/* ========================================================================= */}
       {currentView === 'processing' && (
-        <div className="processing-screen">
-          <div className="processing-panel text-center max-w-md mx-auto py-16 px-4">
-            <p className="eyebrow justify-center text-indigo-400">
-              <Sparkles className="w-3.5 h-3.5" /> AI Statutory Engine Running
-            </p>
-            <h1 className="text-2xl md:text-3xl font-bold my-4 text-white">
-              Auditing <em>Contract Terms</em>
-            </h1>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto mb-8">
-              Cross-referencing liability clauses, payment schedules, and indemnity provisions against statutory MSMED guidelines.
-            </p>
-
-            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-6">
-              <div
-                className="h-full bg-indigo-500 transition-all duration-300 ease-out"
-                style={{ width: `${Math.min(100, (processingStage + 1) * 20)}%` }}
-              />
-            </div>
-
-            <div className="flex justify-center items-center gap-2 text-xs font-mono text-indigo-400">
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              <span>
-                {processingStage === 0 && 'Extracting text & clause boundaries...'}
-                {processingStage === 1 && 'Scanning for Section 15/16 payment caps...'}
-                {processingStage === 2 && 'Evaluating uncapped indemnity & liabilities...'}
-                {processingStage === 3 && 'Generating plain-English business risk breakdown...'}
-                {processingStage === 4 && 'Synthesizing legally balanced redlines...'}
-                {processingStage >= 5 && 'Finalizing audit scorecard...'}
-              </span>
-            </div>
+        <div className="processing-screen py-10 px-4 min-h-[85vh] flex items-center justify-center relative overflow-hidden">
+          <ScalesOfJusticeWatermark className="w-[650px] h-[650px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20" />
+          <div className="relative z-10 w-full max-w-3xl mx-auto">
+            <LaserScanViewer
+              documentName={selectedFile?.name || documentName || 'Commercial_Vendor_Agreement.pdf'}
+              stage={processingStage}
+            />
           </div>
         </div>
       )}
