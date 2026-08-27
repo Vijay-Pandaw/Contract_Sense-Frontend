@@ -90,6 +90,14 @@ import {
 } from './api'
 import AuthPage from './AuthPage'
 import { auth, onAuthStateChanged, logoutUser } from './firebase'
+import {
+  ScalesOfJusticeWatermark,
+  LegalLedgerIcon,
+  StatutoryMSMEDBadge,
+  IndianContractActBadge,
+  ConstitutionSealStamp,
+  IndianLegalEmptyBanner,
+} from './LegalMotifs'
 
 type ViewType =
   | 'welcome'
@@ -1168,11 +1176,17 @@ export default function App() {
       {/* ========================================================================= */}
       {currentView === 'welcome' && (
         <main className="w-full">
-          <section className="hero">
-            <div className="hero-copy">
+          <section className="hero relative overflow-hidden">
+            {/* Background Watermark: Scales of Justice */}
+            <ScalesOfJusticeWatermark className="w-[600px] h-[600px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20" />
+
+            <div className="hero-copy relative z-10">
               {/* Glowing Pill / Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-semibold uppercase tracking-wider mb-5 backdrop-blur-md shadow-[0_0_20px_rgba(124,58,237,0.25)] animate-fade-in-up">
-                <span className="text-violet-400">✦</span> AI-POWERED CONTRACT INTELLIGENCE
+              <div className="flex flex-wrap items-center gap-2 mb-5">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-semibold uppercase tracking-wider backdrop-blur-md shadow-[0_0_20px_rgba(124,58,237,0.25)] animate-fade-in-up">
+                  <span className="text-violet-400">✦</span> AI-POWERED CONTRACT INTELLIGENCE
+                </div>
+                <ConstitutionSealStamp title="INDIAN LEGAL INTELLIGENCE" subtitle="MSMED ACT 2006 & STATUTORY AUDIT" />
               </div>
 
               {/* Oversized Heavy Bold Sans-Serif Hero Title with Elegant Italic Highlighting */}
@@ -1183,9 +1197,15 @@ export default function App() {
                 </em>
               </h1>
 
-              <p className="hero-description text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mb-8">
-                ContractSense automatically audits MSME & vendor agreements against statutory payment laws, caps unlimited liabilities, flags missing safeguards, and suggests 1-click fair redlines.
+              <p className="hero-description text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mb-6">
+                ContractSense automatically audits MSME & vendor agreements against Indian statutory payment laws, caps unlimited liabilities, flags missing safeguards, and suggests 1-click fair redlines.
               </p>
+
+              {/* Statutory Compliance Badges */}
+              <div className="flex flex-wrap items-center gap-2.5 mb-8">
+                <StatutoryMSMEDBadge variant="compact" />
+                <IndianContractActBadge variant="compact" />
+              </div>
 
               {/* Primary & Secondary CTAs */}
               <div className="hero-cta flex items-center gap-4 flex-wrap mb-8">
@@ -1218,7 +1238,7 @@ export default function App() {
             </div>
 
             {/* Right Side: Interactive Hero Preview Panel */}
-            <div className="hero-visual">
+            <div className="hero-visual relative z-10">
               <div className="scan-halo" />
 
               {/* Modern Layered Preview Panel */}
@@ -1589,19 +1609,32 @@ export default function App() {
       {currentView === 'dashboard' && (
         <div className="dashboard">
           {/* Top Active Contract Banner */}
-          <div className="dashboard-top">
-            <div>
-              <p className="eyebrow">
-                <FileCheck className="w-3.5 h-3.5" /> Active Contract Risk Audit
-              </p>
-              <h1>
-                {documentName} <em>Score: {healthScore}/100</em>
+          <div className="dashboard-top relative overflow-hidden">
+            {/* Background Watermark: Scales of Justice */}
+            <ScalesOfJusticeWatermark className="w-[450px] h-[450px] -right-10 -top-14 opacity-20" />
+
+            <div className="relative z-10">
+              <div className="flex flex-wrap items-center gap-3 mb-2">
+                <p className="eyebrow m-0">
+                  <FileCheck className="w-3.5 h-3.5" /> Active Contract Risk Audit
+                </p>
+                <ConstitutionSealStamp title="CONSTITUTION OF INDIA" subtitle="STATUTORY MSMED 2006 JURISDICTION" />
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                {documentName} <em className="text-violet-400">Score: {healthScore}/100</em>
               </h1>
-              <p className="dashboard-subtitle">
-                Comprehensive statutory risk breakdown and renegotiation recommendations.
+              <p className="dashboard-subtitle text-slate-400 mt-1 max-w-2xl text-xs sm:text-sm">
+                Comprehensive statutory risk breakdown, Section 15 payment compliance, and renegotiation recommendations.
               </p>
+              
+              {/* Compliance Engine Badges */}
+              <div className="flex flex-wrap items-center gap-2.5 mt-3.5">
+                <StatutoryMSMEDBadge variant="compact" />
+                <IndianContractActBadge variant="compact" />
+              </div>
             </div>
-            <div className="dashboard-actions">
+
+            <div className="dashboard-actions relative z-10 flex flex-wrap gap-2.5 items-center">
               <button className="button button-coral px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all" onClick={() => navigateTo('editor')}>
                 <FileEdit className="w-5 h-5" /> Open In Contract Editor
               </button>
@@ -1658,7 +1691,7 @@ export default function App() {
 
           {/* Health Score Gauge & Recommendations Row */}
           <div className="health-layout">
-            <div className="health-card bg-[#121215] border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
+            <div className="health-card bg-[#121215] border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden">
               <div className="card-heading flex justify-between items-center pb-3 mb-4 border-b border-white/10">
                 <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-400">Contract Health Score</span>
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
@@ -1702,22 +1735,25 @@ export default function App() {
                   <p className="text-xs text-slate-300 leading-relaxed">
                     {summary?.protectionDetail ||
                       (healthScore < 60
-                        ? 'Contains critical payment and liability terms. Prompt renegotiation advised.'
+                        ? 'Contains critical payment and liability terms under MSMED Act 2006. Prompt renegotiation advised.'
                         : 'Equitable terms with balanced mutual rights.')}
                   </p>
                 </div>
               </div>
-              <div className="health-footer flex justify-between items-center pt-4 mt-4 border-t border-white/10 text-xs text-slate-400 font-mono">
+              <div className="health-footer flex flex-wrap justify-between items-center pt-4 mt-4 border-t border-white/10 text-xs text-slate-400 font-mono gap-2">
                 <span>Confidence: <b className="text-white">96% Statutory</b></span>
                 <span>Jurisdiction: <b className="text-white">India / MSMED 2006</b></span>
               </div>
             </div>
 
-            <div className="recommend-card bg-[#18181f] border border-violet-500/30 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
+            <div className="recommend-card bg-[#18181f] border border-violet-500/30 rounded-2xl p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden">
               <div>
-                <p className="eyebrow text-violet-400 flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs">
-                  <Sparkles className="w-3.5 h-3.5" /> Priority Recommendation
-                </p>
+                <div className="flex justify-between items-center mb-1">
+                  <p className="eyebrow text-violet-400 flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs">
+                    <Sparkles className="w-3.5 h-3.5" /> Priority Recommendation
+                  </p>
+                  <IndianContractActBadge variant="compact" />
+                </div>
                 <h2 className="text-lg font-bold text-white my-2">{summary?.recommendation || (topConcern ? `Fix: ${topConcern.title}` : 'Review Contract Terms')}</h2>
                 <p className="text-xs text-slate-400 leading-relaxed">
                   {summary?.recommendationDetail || topConcern?.explanation || 'Inspect flagged clauses and apply suggested statutory redlines before execution.'}
@@ -2456,19 +2492,31 @@ export default function App() {
       {/* ========================================================================= */}
       {currentView === 'contracts' && (
         <div className="dashboard">
-          <div className="dashboard-top">
-            <div>
-              <p className="eyebrow">
-                <BookOpen className="w-3.5 h-3.5" /> Contract Repository
-              </p>
-              <h1>
-                My Contracts <em>& Audit History</em>
-              </h1>
-              <p className="dashboard-subtitle">
-                Manage, filter, compare, and organize all uploaded and drafted legal documents.
+          <div className="dashboard-top relative overflow-hidden">
+            {/* Background Watermark: Scales of Justice */}
+            <ScalesOfJusticeWatermark className="w-[450px] h-[450px] -right-10 -top-14 opacity-20" />
+
+            <div className="relative z-10">
+              <div className="flex items-center gap-3.5 mb-2">
+                <LegalLedgerIcon className="w-12 h-12" />
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="eyebrow m-0">
+                      <BookOpen className="w-3.5 h-3.5" /> Indian Legal Repository & CLM
+                    </p>
+                    <ConstitutionSealStamp title="LEGAL LEDGER" subtitle="SECTION 15 COMPLIANCE" />
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-1">
+                    My Contracts <em>& Audit History</em>
+                  </h1>
+                </div>
+              </div>
+              <p className="dashboard-subtitle text-slate-400 max-w-2xl text-xs sm:text-sm">
+                Manage, filter, compare, and organize all uploaded and drafted agreements under Indian Commercial & MSMED Law.
               </p>
             </div>
-            <div className="dashboard-actions">
+
+            <div className="dashboard-actions relative z-10 flex flex-wrap gap-2.5 items-center">
               <button className="button button-coral px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all" onClick={() => setUploadModalOpen(true)}>
                 <FileUp className="w-5 h-5" /> Upload New Contract
               </button>
@@ -2524,36 +2572,43 @@ export default function App() {
               </div>
             )}
 
-            <table className="contracts-table">
-              <thead>
-                <tr>
-                  <th style={{ width: '30px' }}>
-                    <input
-                      type="checkbox"
-                      onChange={(e) => {
-                        if (e.target.checked) setSelectedContractIds(filteredContracts.map((c) => c.id))
-                        else setSelectedContractIds([])
-                      }}
-                    />
-                  </th>
-                  <th>Contract Title</th>
-                  <th>Type</th>
-                  <th>Status</th>
-                  <th>Health Score</th>
-                  <th>Risks</th>
-                  <th>Date</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredContracts.length === 0 ? (
+            {filteredContracts.length === 0 ? (
+              <IndianLegalEmptyBanner
+                title="No Agreements in Legal Repository"
+                subtitle="Your repository is ready for Indian Contract Act & MSMED compliance auditing. Upload a contract to begin automated clause extraction and risk scoring."
+                actionButton={
+                  <button
+                    className="button button-coral px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 shadow-[0_0_20px_rgba(124,58,237,0.5)] hover:-translate-y-0.5 transition-all"
+                    onClick={() => setUploadModalOpen(true)}
+                  >
+                    <FileUp className="w-5 h-5" /> Upload Contract Now
+                  </button>
+                }
+              />
+            ) : (
+              <table className="contracts-table">
+                <thead>
                   <tr>
-                    <td colSpan={8} className="text-center py-8 text-xs text-slate-500">
-                      No contracts matching filter criteria.
-                    </td>
+                    <th style={{ width: '30px' }}>
+                      <input
+                        type="checkbox"
+                        onChange={(e) => {
+                          if (e.target.checked) setSelectedContractIds(filteredContracts.map((c) => c.id))
+                          else setSelectedContractIds([])
+                        }}
+                      />
+                    </th>
+                    <th>Contract Title</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Health Score</th>
+                    <th>Risks</th>
+                    <th>Date</th>
+                    <th style={{ textAlign: 'right' }}>Actions</th>
                   </tr>
-                ) : (
-                  filteredContracts.map((c) => (
+                </thead>
+                <tbody>
+                  {filteredContracts.map((c) => (
                     <tr key={c.id}>
                       <td>
                         <input
@@ -2623,10 +2678,10 @@ export default function App() {
                         </div>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       )}
@@ -3048,61 +3103,76 @@ export default function App() {
       {/* ========================================================================= */}
       {uploadModalOpen && (
         <div className="modal-backdrop" onClick={() => setUploadModalOpen(false)}>
-          <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
-            <button className="close-modal" onClick={() => setUploadModalOpen(false)}>
+          <div className="modal-panel relative overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            {/* Background Watermark: Scales of Justice */}
+            <ScalesOfJusticeWatermark className="w-[360px] h-[360px] -right-16 -top-16 opacity-15" />
+
+            <button className="close-modal relative z-10" onClick={() => setUploadModalOpen(false)}>
               <X className="w-4 h-4" />
             </button>
 
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center">
-                <FileUp className="w-4 h-4 text-indigo-400" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-700 text-white flex items-center justify-center shadow-[0_0_15px_rgba(124,58,237,0.4)]">
+                  <FileUp className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-white">Upload & Audit Agreement</h2>
+                  <p className="text-[11px] text-slate-400">Statutory Indian Contract Act & MSMED 2006 compliance scanner</p>
+                </div>
               </div>
-              <h2 className="text-lg font-bold">Analyze a Contract</h2>
-            </div>
 
-            <div className="flex gap-2 mb-4">
-              <button
-                className={`button button-small flex-1 ${uploadMode === 'pdf' ? 'button-coral' : 'button-light'}`}
-                onClick={() => setUploadMode('pdf')}
-              >
-                Upload PDF / DOCX
-              </button>
-              <button
-                className={`button button-small flex-1 ${uploadMode === 'text' ? 'button-coral' : 'button-light'}`}
-                onClick={() => setUploadMode('text')}
-              >
-                Paste Contract Text
-              </button>
-            </div>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <StatutoryMSMEDBadge variant="compact" />
+                <IndianContractActBadge variant="compact" />
+              </div>
 
-            {uploadMode === 'pdf' ? (
-              <label className="border-2 border-dashed border-slate-300 dark:border-slate-700 bg-subtle p-6 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500 transition-colors">
-                <Upload className="w-7 h-7 text-indigo-500 mb-2" />
-                <b className="text-xs font-bold text-main">{selectedFile ? selectedFile.name : 'Select or drop contract file'}</b>
-                <span className="text-[11px] text-slate-400 mt-1">PDF, DOCX, or text file up to 50MB</span>
-                <input
-                  type="file"
-                  accept=".pdf,.docx,.txt"
-                  className="hidden"
-                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+              <div className="flex gap-2 mb-4">
+                <button
+                  className={`button button-small flex-1 rounded-md ${uploadMode === 'pdf' ? 'button-coral' : 'button-light'}`}
+                  onClick={() => setUploadMode('pdf')}
+                >
+                  Upload PDF / DOCX
+                </button>
+                <button
+                  className={`button button-small flex-1 rounded-md ${uploadMode === 'text' ? 'button-coral' : 'button-light'}`}
+                  onClick={() => setUploadMode('text')}
+                >
+                  Paste Contract Text
+                </button>
+              </div>
+
+              {uploadMode === 'pdf' ? (
+                <label className="border-2 border-dashed border-white/20 bg-black/40 hover:bg-white/5 hover:border-violet-500/60 p-6 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200 group">
+                  <div className="w-12 h-12 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400 group-hover:scale-110 group-hover:text-violet-300 transition-all mb-2.5 shadow-[0_0_15px_rgba(124,58,237,0.25)]">
+                    <Upload className="w-6 h-6" />
+                  </div>
+                  <b className="text-sm font-bold text-white">{selectedFile ? selectedFile.name : 'Select or drop contract file'}</b>
+                  <span className="text-xs text-slate-400 mt-1">PDF, DOCX, or text file up to 50MB</span>
+                  <input
+                    type="file"
+                    accept=".pdf,.docx,.txt"
+                    className="hidden"
+                    onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                  />
+                </label>
+              ) : (
+                <textarea
+                  rows={6}
+                  placeholder="Paste contract clauses or agreement text here for instant statutory evaluation..."
+                  className="w-full bg-black/50 border border-white/15 rounded-lg p-3 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500 transition-colors font-mono leading-relaxed"
+                  value={pastedText}
+                  onChange={(e) => setPastedText(e.target.value)}
                 />
-              </label>
-            ) : (
-              <textarea
-                rows={6}
-                placeholder="Paste contract text here..."
-                className="w-full bg-subtle border border-slate-300 dark:border-slate-700 rounded-lg p-3 text-xs text-main outline-none focus:border-indigo-500"
-                value={pastedText}
-                onChange={(e) => setPastedText(e.target.value)}
-              />
-            )}
+              )}
 
-            <button
-              className="button button-coral w-full py-2.5 mt-4 font-bold"
-              onClick={handleUploadAndAnalyze}
-            >
-              Start AI Risk Audit
-            </button>
+              <button
+                className="button button-coral w-full py-3.5 mt-4 text-base font-bold rounded-lg shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+                onClick={handleUploadAndAnalyze}
+              >
+                <Sparkles className="w-5 h-5 text-white" /> Start AI Statutory Risk Audit
+              </button>
+            </div>
           </div>
         </div>
       )}
