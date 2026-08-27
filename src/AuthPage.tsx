@@ -373,9 +373,9 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
                   </div>
                 </div>
 
-                <button type="submit" className="button button-coral w-full submit-btn" disabled={submitting}>
+                <button type="submit" className="button button-coral w-full py-3.5 text-base font-bold rounded-lg shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all flex items-center justify-center gap-2" disabled={submitting}>
                   {submitting ? 'Signing in...' : 'Sign in'}
-                  {!submitting && <ArrowRight className="w-4 h-4" />}
+                  {!submitting && <ArrowRight className="w-5 h-5" />}
                 </button>
 
                 <div className="auth-switch-footer">
@@ -469,9 +469,9 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
                   </div>
                 </div>
 
-                <button type="submit" className="button button-coral w-full submit-btn" disabled={submitting}>
+                <button type="submit" className="button button-coral w-full py-3.5 text-base font-bold rounded-lg shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all flex items-center justify-center gap-2" disabled={submitting}>
                   {submitting ? 'Creating account...' : 'Create Account'}
-                  {!submitting && <ArrowRight className="w-4 h-4" />}
+                  {!submitting && <ArrowRight className="w-5 h-5" />}
                 </button>
 
                 <div className="auth-switch-footer">
@@ -509,9 +509,9 @@ export default function AuthPage({ onAuthenticated }: AuthPageProps) {
                   </div>
                 </div>
 
-                <button type="submit" className="button button-coral w-full submit-btn" disabled={submitting}>
+                <button type="submit" className="button button-coral w-full py-3.5 text-base font-bold rounded-lg shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all flex items-center justify-center gap-2" disabled={submitting}>
                   {submitting ? 'Sending instructions...' : 'Send Reset Instructions'}
-                  {!submitting && <ArrowRight className="w-4 h-4" />}
+                  {!submitting && <ArrowRight className="w-5 h-5" />}
                 </button>
 
                 <div className="auth-switch-footer">

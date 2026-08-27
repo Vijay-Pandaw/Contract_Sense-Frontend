@@ -979,16 +979,15 @@ export default function App() {
               </div>
             )}
           </div>
-
           {/* Quick Upload CTA (Hidden on smallest screens to preserve padding) */}
-          <button className="button button-coral button-small hidden sm:inline-flex" onClick={() => setUploadModalOpen(true)}>
-            <FileUp className="w-3.5 h-3.5" /> Upload Contract
+          <button className="button button-coral button-small hidden sm:inline-flex rounded-lg text-xs font-bold shadow-[0_0_15px_rgba(124,58,237,0.35)]" onClick={() => setUploadModalOpen(true)}>
+            <FileUp className="w-4 h-4" /> Upload Contract
           </button>
 
           {/* User Profile Avatar Dropdown */}
           <div className="profile-nav-container">
             <button
-              className="profile-trigger-btn"
+              className="profile-trigger-btn rounded-lg"
               onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
               title="User Account & Profile"
             >
@@ -1010,7 +1009,7 @@ export default function App() {
             </button>
 
             {profileDropdownOpen && (
-              <div className="popover-menu" style={{ width: '270px', top: '48px' }}>
+              <div className="popover-menu rounded-xl" style={{ width: '270px', top: '48px' }}>
                 <div className="popover-header flex items-center gap-2.5">
                   <div className="profile-avatar-circle w-9 h-9 text-xs">
                     {userProfile.avatarUrl ? (
@@ -1030,7 +1029,7 @@ export default function App() {
 
                 <div className="py-1">
                   <button
-                    className="popover-item"
+                    className="popover-item rounded-lg"
                     onClick={() => {
                       setIsEditingProfile(false)
                       navigateTo('profile')
@@ -1040,7 +1039,7 @@ export default function App() {
                     <User className="w-4 h-4 text-indigo-500" /> View Profile
                   </button>
                   <button
-                    className="popover-item"
+                    className="popover-item rounded-lg"
                     onClick={() => {
                       setIsEditingProfile(true)
                       navigateTo('profile')
@@ -1050,7 +1049,7 @@ export default function App() {
                     <FileEdit className="w-4 h-4 text-emerald-600" /> Edit Profile
                   </button>
                   <button
-                    className="popover-item"
+                    className="popover-item rounded-lg"
                     onClick={() => {
                       navigateTo('settings')
                       setProfileDropdownOpen(false)
@@ -1059,7 +1058,7 @@ export default function App() {
                     <Settings className="w-4 h-4 text-slate-500" /> Settings
                   </button>
                   <button
-                    className="popover-item"
+                    className="popover-item rounded-lg"
                     onClick={() => {
                       exportUserDataApi()
                       setProfileDropdownOpen(false)
@@ -1070,7 +1069,7 @@ export default function App() {
                   </button>
                   <div className="border-t border-slate-200 dark:border-slate-800 my-1" />
                   <button
-                    className="popover-item danger-item"
+                    className="popover-item danger-item rounded-lg"
                     onClick={async () => {
                       setProfileDropdownOpen(false)
                       await logoutUser()
@@ -1079,83 +1078,64 @@ export default function App() {
                       showToast('Signed out of session')
                     }}
                   >
-                    <LogOut className="w-4 h-4" /> Sign out
+                    <LogOut className="w-4 h-4 text-rose-500" /> Sign Out
                   </button>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Mobile Hamburger Trigger */}
+          {/* Mobile Menu Toggle Button */}
           <button
-            className="menu-button md:hidden"
+            className="mobile-menu-btn rounded-lg"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle Navigation Menu"
+            aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </header>
-
-      {/* Mobile Navigation Slide-Over Drawer */}
+      {/* Mobile Slide-over Drawer */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex flex-col">
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
-          <div className="relative w-full bg-surface border-b border-slate-200 dark:border-slate-800 p-5 shadow-2xl flex flex-col gap-2.5 z-10 animate-fade-in-up mt-[62px]">
-            <div className="flex items-center justify-between pb-3 mb-1 border-b border-slate-200 dark:border-slate-800">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">Navigation Menu</span>
-              <button
-                className="text-xs text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1"
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  setUploadModalOpen(true)
-                }}
-              >
-                <FileUp className="w-3.5 h-3.5" /> Upload Contract
+        <div className="mobile-nav-backdrop" onClick={() => setMobileMenuOpen(false)}>
+          <div className="mobile-nav-panel" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between pb-4 mb-2 border-b border-white/10">
+              <span className="font-extrabold text-sm text-white tracking-wider uppercase">Menu</span>
+              <button className="icon-btn rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+                <X className="w-4 h-4" />
               </button>
             </div>
-            <button
-              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'dashboard' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
-              onClick={() => navigateTo('dashboard')}
-            >
-              <LayoutDashboard className="w-4 h-4 text-purple-400" /> Dashboard
+            <button className={`mobile-nav-item rounded-lg ${currentView === 'welcome' ? 'active' : ''}`} onClick={() => navigateTo('welcome')}>
+              <Sparkles className="w-4 h-4 text-violet-400" /> Overview & Hero
             </button>
-            <button
-              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'contracts' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
-              onClick={() => navigateTo('contracts')}
-            >
-              <BookOpen className="w-4 h-4 text-purple-400" /> My Contracts & Repository
+            <button className={`mobile-nav-item rounded-lg ${currentView === 'dashboard' ? 'active' : ''}`} onClick={() => navigateTo('dashboard')}>
+              <LayoutDashboard className="w-4 h-4 text-indigo-400" /> Risk Dashboard
             </button>
-            <button
-              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'editor' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
-              onClick={() => navigateTo('editor')}
-            >
-              <FileEdit className="w-4 h-4 text-purple-400" /> Interactive Contract Editor
+            <button className={`mobile-nav-item rounded-lg ${currentView === 'contracts' ? 'active' : ''}`} onClick={() => navigateTo('contracts')}>
+              <BookOpen className="w-4 h-4 text-emerald-400" /> My Contracts
             </button>
-            <button
-              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'generator' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
-              onClick={() => navigateTo('generator')}
-            >
-              <Sparkles className="w-4 h-4 text-purple-400" /> AI Agreement Drafting Studio
+            <button className={`mobile-nav-item rounded-lg ${currentView === 'editor' ? 'active' : ''}`} onClick={() => navigateTo('editor')}>
+              <FileEdit className="w-4 h-4 text-amber-400" /> Clause Editor
             </button>
-            <button
-              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'clause_library' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
-              onClick={() => navigateTo('clause_library')}
-            >
-              <Layers className="w-4 h-4 text-purple-400" /> Pre-Approved Clause Library
+            <button className={`mobile-nav-item rounded-lg ${currentView === 'generator' ? 'active' : ''}`} onClick={() => navigateTo('generator')}>
+              <Sparkles className="w-4 h-4 text-violet-400" /> Agreement Generator
             </button>
-            <button
-              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'compare' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
-              onClick={() => navigateTo('compare')}
-            >
-              <History className="w-4 h-4 text-purple-400" /> Version Diff & Comparison
+            <button className={`mobile-nav-item rounded-lg ${currentView === 'clause_library' ? 'active' : ''}`} onClick={() => navigateTo('clause_library')}>
+              <Layers className="w-4 h-4 text-blue-400" /> Clause Library
             </button>
-            <button
-              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'admin' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
-              onClick={() => navigateTo('admin')}
-            >
-              <BarChart3 className="w-4 h-4 text-purple-400" /> Admin Analytics & Oversight
+            <button className={`mobile-nav-item rounded-lg ${currentView === 'compare' ? 'active' : ''}`} onClick={() => navigateTo('compare')}>
+              <History className="w-4 h-4 text-purple-400" /> Version Diff
             </button>
+            {userProfile.role === 'admin' && (
+              <button className={`mobile-nav-item rounded-lg ${currentView === 'admin' ? 'active' : ''}`} onClick={() => navigateTo('admin')}>
+                <ShieldCheck className="w-4 h-4 text-rose-400" /> Admin Console
+              </button>
+            )}
+            <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
+              <button className="button button-coral w-full py-3 rounded-lg text-sm font-bold shadow-[0_0_20px_rgba(124,58,237,0.4)] flex items-center justify-center gap-2" onClick={() => { setUploadModalOpen(true); setMobileMenuOpen(false) }}>
+                <FileUp className="w-4 h-4" /> Upload Contract
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1168,7 +1148,7 @@ export default function App() {
           <section className="hero">
             <div className="hero-copy">
               {/* Glowing Pill / Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-semibold uppercase tracking-wider mb-5 backdrop-blur-md shadow-[0_0_20px_rgba(124,58,237,0.25)] animate-fade-in-up">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-semibold uppercase tracking-wider mb-5 backdrop-blur-md shadow-[0_0_20px_rgba(124,58,237,0.25)] animate-fade-in-up">
                 <span className="text-violet-400">✦</span> AI-POWERED CONTRACT INTELLIGENCE
               </div>
 
@@ -1187,16 +1167,16 @@ export default function App() {
               {/* Primary & Secondary CTAs */}
               <div className="hero-cta flex items-center gap-4 flex-wrap mb-8">
                 <button
-                  className="button button-coral hover:scale-105 transition-all duration-200 shadow-[0_0_25px_rgba(124,58,237,0.5)] text-sm sm:text-base font-bold px-6 py-3.5 rounded-full"
+                  className="button button-coral hover:-translate-y-0.5 hover:scale-[1.02] transition-all duration-200 shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] text-base font-bold px-6 py-3.5 rounded-lg flex items-center gap-2.5"
                   onClick={() => setUploadModalOpen(true)}
                 >
-                  <FileUp className="w-4 h-4" /> Analyze a Contract Now
+                  <FileUp className="w-5 h-5" /> Analyze a Contract Now
                 </button>
                 <button
-                  className="button button-dark rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 text-slate-200 text-sm sm:text-base font-semibold px-6 py-3.5 transition-all duration-200"
+                  className="button button-dark rounded-lg border border-white/20 hover:border-violet-500/50 hover:bg-white/10 hover:-translate-y-0.5 text-white text-base font-bold px-6 py-3.5 transition-all duration-200 flex items-center gap-2.5"
                   onClick={() => navigateTo('generator')}
                 >
-                  <Sparkles className="w-4 h-4 text-violet-400" /> Generate New Agreement
+                  <Sparkles className="w-5 h-5 text-violet-400" /> Generate New Agreement
                 </button>
               </div>
 
@@ -1599,14 +1579,14 @@ export default function App() {
               </p>
             </div>
             <div className="dashboard-actions">
-              <button className="button button-coral" onClick={() => navigateTo('editor')}>
-                <FileEdit className="w-3.5 h-3.5" /> Open In Contract Editor
+              <button className="button button-coral px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all" onClick={() => navigateTo('editor')}>
+                <FileEdit className="w-5 h-5" /> Open In Contract Editor
               </button>
-              <button className="button button-outline" onClick={() => exportReportApi(documentId, 'pdf')}>
-                <Download className="w-3.5 h-3.5" /> Export Report (PDF)
+              <button className="button button-outline px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 border border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all" onClick={() => exportReportApi(documentId, 'pdf')}>
+                <Download className="w-5 h-5" /> Export Report (PDF)
               </button>
-              <button className="button button-light" onClick={() => setShareModalOpen(true)}>
-                <Share2 className="w-3.5 h-3.5" /> Share with Team
+              <button className="button button-light px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 border border-white/15 hover:border-white/30 hover:-translate-y-0.5 transition-all" onClick={() => setShareModalOpen(true)}>
+                <Share2 className="w-5 h-5" /> Share with Team
               </button>
             </div>
           </div>
@@ -1834,14 +1814,14 @@ export default function App() {
               </p>
             </div>
             <div className="dashboard-actions">
-              <button className="button button-outline" onClick={() => setVersionSnapshotModalOpen(true)}>
-                <History className="w-3.5 h-3.5" /> Save Snapshot
+              <button className="button button-outline px-5 py-3 text-sm sm:text-base font-bold rounded-lg flex items-center gap-2 border border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all" onClick={() => setVersionSnapshotModalOpen(true)}>
+                <History className="w-5 h-5" /> Save Snapshot
               </button>
-              <button className="button button-light" onClick={() => setShareModalOpen(true)}>
-                <Share2 className="w-3.5 h-3.5" /> Invite Collaborator
+              <button className="button button-light px-5 py-3 text-sm sm:text-base font-bold rounded-lg flex items-center gap-2 border border-white/15 hover:border-white/30 hover:-translate-y-0.5 transition-all" onClick={() => setShareModalOpen(true)}>
+                <Share2 className="w-5 h-5" /> Invite Collaborator
               </button>
-              <button className="button button-coral hover:scale-105 transition-all shadow-[0_0_20px_rgba(124,58,237,0.4)]" onClick={() => exportReportApi(documentId, 'pdf')}>
-                <Download className="w-3.5 h-3.5" /> Export Final Contract
+              <button className="button button-coral px-5 py-3 text-sm sm:text-base font-bold rounded-lg flex items-center gap-2 shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all" onClick={() => exportReportApi(documentId, 'pdf')}>
+                <Download className="w-5 h-5" /> Export Final Contract
               </button>
             </div>
           </div>
@@ -2149,10 +2129,10 @@ export default function App() {
 
                   {/* 1-Click Execution Trigger */}
                   <button
-                    className="button button-coral w-full py-3.5 rounded-full text-sm font-bold flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(124,58,237,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    className="button button-coral w-full py-3.5 px-6 rounded-lg text-base font-bold flex items-center justify-center gap-2.5 shadow-[0_0_25px_rgba(124,58,237,0.5)] hover:-translate-y-0.5 hover:shadow-[0_0_35px_rgba(124,58,237,0.7)] transition-all cursor-pointer"
                     onClick={() => handleAcceptRedline(selectedClause.id)}
                   >
-                    <Check className="w-4 h-4" /> Accept & Apply Redline (1-Click)
+                    <Check className="w-5 h-5" /> Accept & Apply Redline (1-Click)
                   </button>
                 </div>
 
@@ -2466,11 +2446,11 @@ export default function App() {
               </p>
             </div>
             <div className="dashboard-actions">
-              <button className="button button-coral" onClick={() => setUploadModalOpen(true)}>
-                <FileUp className="w-3.5 h-3.5" /> Upload New Contract
+              <button className="button button-coral px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all" onClick={() => setUploadModalOpen(true)}>
+                <FileUp className="w-5 h-5" /> Upload New Contract
               </button>
-              <button className="button button-outline" onClick={() => navigateTo('generator')}>
-                <Sparkles className="w-3.5 h-3.5" /> Generate Agreement
+              <button className="button button-outline px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 border border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all" onClick={() => navigateTo('generator')}>
+                <Sparkles className="w-5 h-5 text-violet-400" /> Generate Agreement
               </button>
             </div>
           </div>
@@ -2488,7 +2468,7 @@ export default function App() {
               </div>
 
               <div className="flex gap-2 flex-wrap">
-                <select className="filter-dropdown" value={tableRiskFilter} onChange={(e) => setTableRiskFilter(e.target.value)}>
+                <select className="filter-dropdown rounded-lg" value={tableRiskFilter} onChange={(e) => setTableRiskFilter(e.target.value)}>
                   <option value="all">All Risk Levels</option>
                   <option value="critical">Critical Risk</option>
                   <option value="high">High Risk</option>
@@ -2496,7 +2476,7 @@ export default function App() {
                   <option value="low">Low Risk</option>
                 </select>
 
-                <select className="filter-dropdown" value={tableStatusFilter} onChange={(e) => setTableStatusFilter(e.target.value)}>
+                <select className="filter-dropdown rounded-lg" value={tableStatusFilter} onChange={(e) => setTableStatusFilter(e.target.value)}>
                   <option value="all">All Statuses</option>
                   <option value="under_review">Under Review</option>
                   <option value="signed">Signed</option>
@@ -2511,10 +2491,10 @@ export default function App() {
               <div className="mb-3 p-3 bg-slate-900 text-white rounded-lg flex items-center justify-between text-xs">
                 <span>{selectedContractIds.length} contract(s) selected</span>
                 <div className="flex gap-2">
-                  <button className="button button-small button-light" onClick={() => handleBulkAction('update_status', 'signed')}>
+                  <button className="button button-small button-light rounded-md" onClick={() => handleBulkAction('update_status', 'signed')}>
                     Mark Signed
                   </button>
-                  <button className="button button-small button-danger" onClick={() => handleBulkAction('delete')}>
+                  <button className="button button-small button-danger rounded-md" onClick={() => handleBulkAction('delete')}>
                     Delete Selected
                   </button>
                 </div>
@@ -2584,9 +2564,9 @@ export default function App() {
                         {new Date(c.uploadedAt).toLocaleDateString()}
                       </td>
                       <td style={{ textAlign: 'right' }}>
-                        <div className="flex gap-1.5 justify-end">
+                        <div className="flex gap-2 justify-end">
                           <button
-                            className="button button-light button-small"
+                            className="px-4 py-2 text-sm font-semibold rounded-md bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-1.5"
                             onClick={async () => {
                               setDocumentId(c.id)
                               setDocumentName(c.fileName)
@@ -2604,17 +2584,18 @@ export default function App() {
                               navigateTo('editor')
                             }}
                           >
-                            Editor
+                            <FileText className="w-4 h-4 text-violet-400" /> Editor
                           </button>
                           <button
-                            className="button button-ghost button-small text-rose-600"
+                            className="px-3 py-2 text-sm font-semibold rounded-md bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 hover:border-rose-500/60 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-1.5"
                             onClick={async () => {
                               await deleteContractApi(c.id)
                               showToast('Contract deleted')
                               loadInitialData()
                             }}
+                            title="Delete Contract"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                       </td>
@@ -3434,23 +3415,23 @@ export default function App() {
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
               />
-              <button type="submit" className="button button-coral rounded-full px-3.5 py-2.5 hover:scale-105 transition-all shadow-[0_0_15px_rgba(124,58,237,0.4)]">
-                <Send className="w-3.5 h-3.5" />
+              <button type="submit" className="button button-coral rounded-lg px-4 py-3 hover:-translate-y-0.5 transition-all shadow-[0_0_15px_rgba(124,58,237,0.4)] flex items-center justify-center cursor-pointer">
+                <Send className="w-5 h-5" />
               </button>
             </form>
           </div>
         )}
 
-        {/* Floating Pill Trigger Button */}
+        {/* Floating Trigger Button */}
         <button
-          className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-black/80 hover:bg-black/95 backdrop-blur-md border border-white/20 hover:border-violet-500/50 shadow-2xl hover:shadow-[0_0_25px_rgba(124,58,237,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 text-white cursor-pointer group"
+          className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2.5 px-5 py-3 rounded-lg bg-black/85 hover:bg-black backdrop-blur-md border border-white/20 hover:border-violet-500/60 shadow-2xl hover:shadow-[0_0_25px_rgba(124,58,237,0.45)] transition-all duration-300 hover:-translate-y-0.5 text-white cursor-pointer group font-bold text-sm"
           onClick={() => setChatOpen(!chatOpen)}
         >
           <div className="relative flex items-center justify-center text-violet-400">
-            <Sparkles className="w-4 h-4 text-violet-400 group-hover:rotate-12 transition-transform" />
-            <span className="absolute inset-0 blur-[6px] bg-violet-500/50 rounded-full animate-pulse" />
+            <Sparkles className="w-5 h-5 text-violet-400 group-hover:rotate-12 transition-transform" />
+            <span className="absolute inset-0 blur-[6px] bg-violet-500/50 rounded-lg animate-pulse" />
           </div>
-          <span className="text-xs sm:text-[13px] font-bold tracking-tight text-white">Ask Contract AI</span>
+          <span className="text-sm font-bold tracking-tight text-white">Ask Contract AI</span>
         </button>
       </div>
 
