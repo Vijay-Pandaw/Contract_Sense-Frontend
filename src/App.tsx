@@ -231,9 +231,10 @@ const riskMeta: Record<RiskLevel, { label: string; className: string }> = {
 export default function App() {
   // Navigation & View State
   const [currentView, setCurrentView] = useState<ViewType>('welcome')
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [editorTab, setEditorTab] = useState<'clauses' | 'inspector'>('clauses')
+  const [heroPreviewTab, setHeroPreviewTab] = useState<'risks' | 'redlines' | 'msmed'>('risks')
 
   // Auth State & Modals
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -517,10 +518,10 @@ export default function App() {
   // Initialize Theme and Listen for Firebase Auth State Changes
   useEffect(() => {
     const savedTheme = localStorage.getItem('contractsense_theme') as 'light' | 'dark' | null
-    if (savedTheme) {
-      setTheme(savedTheme)
-      document.documentElement.classList.toggle('dark', savedTheme === 'dark')
-    }
+    const activeTheme = savedTheme || 'dark'
+    setTheme(activeTheme)
+    document.documentElement.classList.toggle('dark', activeTheme === 'dark')
+    document.documentElement.classList.toggle('light', activeTheme === 'light')
 
     console.log('[Auth] Initializing Firebase Auth observer...')
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -600,6 +601,7 @@ export default function App() {
     setTheme(newTheme)
     localStorage.setItem('contractsense_theme', newTheme)
     document.documentElement.classList.toggle('dark', newTheme === 'dark')
+    document.documentElement.classList.toggle('light', newTheme === 'light')
     showToast(`Switched to ${newTheme} theme`)
   }
 
@@ -1075,46 +1077,46 @@ export default function App() {
               </button>
             </div>
             <button
-              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'dashboard' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'dashboard' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
               onClick={() => navigateTo('dashboard')}
             >
-              <LayoutDashboard className="w-4 h-4" /> Dashboard
+              <LayoutDashboard className="w-4 h-4 text-purple-400" /> Dashboard
             </button>
             <button
-              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'contracts' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'contracts' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
               onClick={() => navigateTo('contracts')}
             >
-              <BookOpen className="w-4 h-4" /> My Contracts & Repository
+              <BookOpen className="w-4 h-4 text-purple-400" /> My Contracts & Repository
             </button>
             <button
-              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'editor' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'editor' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
               onClick={() => navigateTo('editor')}
             >
-              <FileEdit className="w-4 h-4" /> Interactive Contract Editor
+              <FileEdit className="w-4 h-4 text-purple-400" /> Interactive Contract Editor
             </button>
             <button
-              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'generator' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'generator' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
               onClick={() => navigateTo('generator')}
             >
-              <Sparkles className="w-4 h-4 text-indigo-500" /> AI Agreement Drafting Studio
+              <Sparkles className="w-4 h-4 text-purple-400" /> AI Agreement Drafting Studio
             </button>
             <button
-              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'clause_library' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'clause_library' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
               onClick={() => navigateTo('clause_library')}
             >
-              <Layers className="w-4 h-4" /> Pre-Approved Clause Library
+              <Layers className="w-4 h-4 text-purple-400" /> Pre-Approved Clause Library
             </button>
             <button
-              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'compare' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'compare' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
               onClick={() => navigateTo('compare')}
             >
-              <History className="w-4 h-4" /> Version Diff & Comparison
+              <History className="w-4 h-4 text-purple-400" /> Version Diff & Comparison
             </button>
             <button
-              className={`p-3 rounded-lg text-left text-sm font-medium flex items-center gap-3 ${currentView === 'admin' ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-bold' : 'bg-slate-50 dark:bg-slate-800/60'}`}
+              className={`p-3 rounded-xl text-left text-sm font-medium flex items-center gap-3 transition-all ${currentView === 'admin' ? 'bg-purple-600/20 border border-purple-500/30 text-white font-bold shadow-lg shadow-purple-950/40' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10 hover:text-white'}`}
               onClick={() => navigateTo('admin')}
             >
-              <BarChart3 className="w-4 h-4" /> Admin Analytics & Oversight
+              <BarChart3 className="w-4 h-4 text-purple-400" /> Admin Analytics & Oversight
             </button>
           </div>
         </div>
@@ -1127,121 +1129,375 @@ export default function App() {
         <main className="w-full">
           <section className="hero">
             <div className="hero-copy">
-              <p className="eyebrow">
-                <Sparkles className="w-3.5 h-3.5" /> AI-Powered Contract Intelligence
-              </p>
-              <h1>
-                Detect risky clauses in seconds. <em>Protect your business.</em>
+              {/* Glowing Pill / Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-semibold uppercase tracking-wider mb-5 backdrop-blur-md shadow-[0_0_20px_rgba(124,58,237,0.25)] animate-fade-in-up">
+                <span className="text-violet-400">✦</span> AI-POWERED CONTRACT INTELLIGENCE
+              </div>
+
+              {/* Oversized Heavy Bold Sans-Serif Hero Title with Elegant Italic Highlighting */}
+              <h1 className="hero-title text-4xl sm:text-5xl lg:text-[58px] font-extrabold tracking-tight text-white leading-[1.08] mb-6">
+                Detect risky clauses in seconds. <br className="hidden sm:inline" />
+                <em className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-300 font-normal drop-shadow-[0_0_35px_rgba(167,139,250,0.5)]">
+                  Protect your business.
+                </em>
               </h1>
-              <p className="hero-description">
-                ContractSense audits MSME and commercial vendor contracts against statutory payment laws, caps unlimited liabilities, detects missing safeguards, and suggests fair redlines with 1-click execution.
+
+              <p className="hero-description text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mb-8">
+                ContractSense automatically audits MSME & vendor agreements against statutory payment laws, caps unlimited liabilities, flags missing safeguards, and suggests 1-click fair redlines.
               </p>
-              <div className="hero-cta">
-                <button className="button button-coral" onClick={() => setUploadModalOpen(true)}>
+
+              {/* Primary & Secondary CTAs */}
+              <div className="hero-cta flex items-center gap-4 flex-wrap mb-8">
+                <button
+                  className="button button-coral hover:scale-105 transition-all duration-200 shadow-[0_0_25px_rgba(124,58,237,0.5)] text-sm sm:text-base font-bold px-6 py-3.5 rounded-full"
+                  onClick={() => setUploadModalOpen(true)}
+                >
                   <FileUp className="w-4 h-4" /> Analyze a Contract Now
                 </button>
-                <button className="button button-outline" onClick={() => navigateTo('generator')}>
-                  <Sparkles className="w-4 h-4" /> Generate New Agreement
+                <button
+                  className="button button-dark rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 text-slate-200 text-sm sm:text-base font-semibold px-6 py-3.5 transition-all duration-200"
+                  onClick={() => navigateTo('generator')}
+                >
+                  <Sparkles className="w-4 h-4 text-violet-400" /> Generate New Agreement
                 </button>
               </div>
-              <div className="hero-trust">
-                <span>
-                  <ShieldCheck className="w-4 h-4" /> MSMED Act 2006 Compliant
+
+              {/* Trust Indicators */}
+              <div className="hero-trust flex items-center gap-6 text-xs text-slate-400 font-medium flex-wrap">
+                <span className="inline-flex items-center gap-2 text-slate-300">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" /> MSMED Act 2006 Compliant
                 </span>
-                <span>
-                  <CheckCircle2 className="w-4 h-4" /> SOC2 & GDPR Encrypted
+                <span className="inline-flex items-center gap-2 text-slate-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" /> SOC2 & GDPR Encrypted
                 </span>
-                <span>
-                  <LockKeyhole className="w-4 h-4" /> 100% Confidential
+                <span className="inline-flex items-center gap-2 text-slate-300">
+                  <LockKeyhole className="w-4 h-4 text-violet-400" /> 100% Confidential
                 </span>
               </div>
             </div>
 
+            {/* Right Side: Interactive Hero Preview Panel */}
             <div className="hero-visual">
               <div className="scan-halo" />
-              <div className="hero-sheet">
-                <div className="contract-sheet">
-                  <div className="sheet-topline">
-                    <span>VENDOR SERVICES AGREEMENT</span>
-                    <span>SEC 15/16</span>
+
+              {/* Modern Layered Preview Panel */}
+              <div className="hero-interactive-panel relative z-10 w-full max-w-[500px] rounded-2xl bg-[#121215]/90 border border-white/15 p-5 sm:p-6 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-violet-500/40 hover:shadow-[0_0_40px_rgba(124,58,237,0.25)]">
+                
+                {/* Panel Top Window Bar */}
+                <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b border-white/10">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
+                    <span className="ml-2 font-mono text-[11px] text-slate-400 truncate max-w-[180px]">
+                      MSA_Vendor_Agreement.pdf
+                    </span>
                   </div>
-                  <div className="sheet-lines">
-                    <i />
-                    <i />
-                    <i />
-                  </div>
-                  <div className="sheet-highlight">
-                    <span>CRITICAL RISK DETECTED</span>
-                    <strong>Payment 90 Days</strong>
-                    <b>MSMED VIOLATION</b>
-                  </div>
-                  <div className="sheet-lines">
-                    <i />
-                    <i />
-                  </div>
-                  <div className="sheet-bottom">
-                    <span>HEALTH SCORE</span>
-                    <b className="text-rose-600 font-bold text-sm">54 / 100</b>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Audit
+                    </span>
                   </div>
                 </div>
-              </div>
-              <div className="floating-card card-confidence">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <div>
-                  <b>96% Audit Confidence</b>
-                  <small>Statutory Legal Engine</small>
+
+                {/* Interactive Sub-Tabs */}
+                <div className="flex items-center gap-1 p-1 bg-white/5 rounded-xl border border-white/10 mb-4">
+                  <button
+                    type="button"
+                    onClick={() => setHeroPreviewTab('risks')}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 ${
+                      heroPreviewTab === 'risks'
+                        ? 'bg-violet-600/30 text-white border border-violet-500/50 shadow-md shadow-violet-950/50'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <ShieldAlert className="w-3.5 h-3.5 text-rose-400" /> 3 High Risks
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setHeroPreviewTab('redlines')}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 ${
+                      heroPreviewTab === 'redlines'
+                        ? 'bg-violet-600/30 text-white border border-violet-500/50 shadow-md shadow-violet-950/50'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-violet-400" /> Smart Redline
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setHeroPreviewTab('msmed')}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 ${
+                      heroPreviewTab === 'msmed'
+                        ? 'bg-violet-600/30 text-white border border-violet-500/50 shadow-md shadow-violet-950/50'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <Scale className="w-3.5 h-3.5 text-amber-400" /> MSMED Audit
+                  </button>
                 </div>
-              </div>
-              <div className="floating-card card-score">
-                <Sparkles className="w-4 h-4 text-indigo-600" />
-                <div>
-                  <b>1-Click Redlines</b>
-                  <small>Auto-fair clause fixes</small>
+
+                {/* Tab 1: Risks Content */}
+                {heroPreviewTab === 'risks' && (
+                  <div className="space-y-2.5 animate-fade-in-up">
+                    <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 flex items-start gap-3">
+                      <div className="p-1.5 rounded-lg bg-rose-500/20 text-rose-400 mt-0.5 shrink-0">
+                        <AlertTriangle className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-rose-300">Clause 8.2 — Net 90-Day Payment Term</span>
+                          <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                            Critical
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                          Violates Section 15 of MSMED Act 2006 (Maximum statutory payment term is 45 days).
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
+                      <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400 mt-0.5 shrink-0">
+                        <ShieldAlert className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-amber-300">Clause 14.1 — Unlimited Consequential Liability</span>
+                          <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                            High
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                          Exposes vendor to uncapped damages. Recommended cap: 100% of contract fee.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Scale className="w-4 h-4 text-violet-400" />
+                        <span className="text-xs font-medium text-slate-300">Overall Contract Health Score</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 font-bold text-rose-400 text-sm">
+                        <span>54 / 100</span>
+                        <span className="text-[10px] text-slate-400 font-normal">(Needs Revision)</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Tab 2: Redline Content */}
+                {heroPreviewTab === 'redlines' && (
+                  <div className="space-y-3 animate-fade-in-up">
+                    <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                      <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block mb-2 font-bold">
+                        Draft Redline Proposed by ContractSense AI:
+                      </span>
+                      <div className="space-y-2 text-xs font-mono leading-relaxed">
+                        <div className="p-2 rounded bg-rose-500/15 text-rose-300 border-l-2 border-rose-500 line-through">
+                          "Buyer shall settle all undisputed invoices within ninety (90) calendar days from receipt..."
+                        </div>
+                        <div className="p-2 rounded bg-emerald-500/15 text-emerald-300 border-l-2 border-emerald-500">
+                          "Buyer shall settle all undisputed invoices within forty-five (45) days in strict compliance with MSMED Act 2006 Section 15..."
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-slate-400 px-1">
+                      <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+                        <Check className="w-3.5 h-3.5" /> Legally enforceable statutory override
+                      </span>
+                      <span className="text-violet-400 font-semibold cursor-pointer hover:underline" onClick={() => setUploadModalOpen(true)}>
+                        Accept redline →
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Tab 3: MSMED Audit */}
+                {heroPreviewTab === 'msmed' && (
+                  <div className="space-y-2.5 animate-fade-in-up">
+                    <div className="p-3 rounded-xl bg-violet-500/10 border border-violet-500/25">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-violet-300">Section 16 Statutory Interest Mandate</span>
+                        <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-violet-500/20 text-violet-300">
+                          Mandatory Law
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                        Buyer is liable to pay compound interest at 3× the RBI bank rate with monthly rests for delayed payments exceeding 45 days.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-mono">Max Term Allowed</span>
+                        <b className="text-sm font-bold text-white mt-0.5 block">45 Days</b>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-mono">Compound Penalty</span>
+                        <b className="text-sm font-bold text-emerald-400 mt-0.5 block">3× RBI Rate</b>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Floating Badge 1 (Top-Right): 96% Audit Confidence */}
+                <div className="absolute -top-4 -right-3 sm:-right-6 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#18181b]/95 border border-violet-500/40 shadow-xl shadow-purple-950/60 backdrop-blur-xl animate-float-slow">
+                  <div className="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <b className="text-[11px] text-white block leading-tight">96% Audit Confidence</b>
+                    <small className="text-[9px] text-slate-400 font-mono block">Statutory Legal Engine</small>
+                  </div>
                 </div>
+
+                {/* Floating Badge 2 (Bottom-Left): MSMED Violation Detected */}
+                <div className="absolute -bottom-4 -left-3 sm:-left-6 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#18181b]/95 border border-rose-500/40 shadow-xl shadow-black/80 backdrop-blur-xl animate-float-slow [animation-delay:2s]">
+                  <div className="w-6 h-6 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <b className="text-[11px] text-rose-300 block leading-tight">MSMED Violation Detected</b>
+                    <small className="text-[9px] text-slate-400 font-mono block">Section 15 — Term exceeds 45 days</small>
+                  </div>
+                </div>
+
               </div>
             </div>
           </section>
 
-          {/* Process Section */}
-          <section className="section bg-surface">
-            <div className="max-w-5xl mx-auto">
-              <p className="eyebrow text-center justify-center">
-                <Layers className="w-3.5 h-3.5" /> How It Works
-              </p>
-              <h2 className="text-center text-2xl md:text-4xl font-bold mt-2 mb-10">
-                From risky PDF to <em>protected agreement</em> in three steps.
+          {/* Process Section (wearedirect.co Bento Card Layout) */}
+          <section className="section bg-transparent py-20 px-4 sm:px-6 lg:px-8 border-t border-white/10">
+            <div className="max-w-6xl mx-auto">
+              {/* Center Subtitle Badge */}
+              <div className="flex justify-center mb-4">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-semibold uppercase tracking-wider backdrop-blur-md shadow-[0_0_15px_rgba(124,58,237,0.2)]">
+                  <span className="text-violet-400">✦</span> HOW IT WORKS
+                </div>
+              </div>
+
+              {/* Oversized Headline with Dynamic Gradient Text */}
+              <h2 className="text-center text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+                From risky PDF to{' '}
+                <span className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-300 font-normal drop-shadow-[0_0_30px_rgba(167,139,250,0.4)]">
+                  protected agreement
+                </span>{' '}
+                in three steps.
               </h2>
+              <p className="text-center text-slate-400 text-sm sm:text-base max-w-2xl mx-auto mb-14 leading-relaxed">
+                Our OCR, clause chunker, and statutory legal engine streamline the entire contract review and negotiation workflow in seconds.
+              </p>
 
+              {/* 3-Column Bento Step Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-subtle">
-                  <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-sm mb-4">
-                    01
+                
+                {/* Step 1 Bento Card */}
+                <div className="bento-step-card group">
+                  <div>
+                    {/* Top Step Badge & Icon */}
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="step-badge-pill bg-violet-500/15 border border-violet-500/30 text-violet-300">
+                        STEP 01
+                      </span>
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-violet-400 group-hover:scale-110 group-hover:bg-violet-600/20 group-hover:border-violet-500/40 transition-all duration-300">
+                        <Upload className="w-5 h-5" />
+                      </div>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-white mb-2.5 group-hover:text-violet-300 transition-colors">
+                      Upload Contract
+                    </h3>
+                    <p className="text-xs sm:text-[13px] text-slate-400 leading-relaxed mb-6">
+                      Upload any PDF, DOCX, scanned agreement, or paste raw covenants. Our OCR extracts every clause with semantic precision.
+                    </p>
                   </div>
-                  <h3 className="text-lg font-bold mb-2">Upload Contract</h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Upload any PDF, DOCX, or scan. Our OCR & clause chunking engine extracts every covenant instantly.
-                  </p>
+
+                  {/* Visual Bento Mini-Panel */}
+                  <div className="p-3.5 rounded-xl bg-white/5 border border-white/5 space-y-2 group-hover:border-white/10 transition-colors">
+                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
+                      <span className="truncate max-w-[140px] text-white font-semibold">Vendor_Agreement.pdf</span>
+                      <span className="text-emerald-400 font-bold">● Parsed</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-slate-300 border border-white/10">PDF</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-slate-300 border border-white/10">DOCX</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-500/20 text-violet-300 border border-violet-500/30">18 Clauses</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-subtle">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm mb-4">
-                    02
+                {/* Step 2 Bento Card */}
+                <div className="bento-step-card group">
+                  <div>
+                    {/* Top Step Badge & Icon */}
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="step-badge-pill bg-amber-500/15 border border-amber-500/30 text-amber-300">
+                        STEP 02
+                      </span>
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-amber-400 group-hover:scale-110 group-hover:bg-amber-500/20 group-hover:border-amber-500/40 transition-all duration-300">
+                        <ShieldAlert className="w-5 h-5" />
+                      </div>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-white mb-2.5 group-hover:text-amber-300 transition-colors">
+                      Instant Risk Audit
+                    </h3>
+                    <p className="text-xs sm:text-[13px] text-slate-400 leading-relaxed mb-6">
+                      AI audits covenants against MSMED Act Section 15/16, Arbitration rules, and Commercial benchmarks to flag critical traps.
+                    </p>
                   </div>
-                  <h3 className="text-lg font-bold mb-2">Instant Risk Audit</h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    AI flags uncapped liability, delayed payments, and one-sided indemnity terms with statutory references.
-                  </p>
+
+                  {/* Visual Bento Mini-Panel */}
+                  <div className="p-3.5 rounded-xl bg-white/5 border border-white/5 space-y-2 group-hover:border-white/10 transition-colors">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-rose-400 font-bold flex items-center gap-1">
+                        <AlertTriangle className="w-3 h-3" /> MSMED 45-Day Violation
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-500/20 text-rose-300">High Risk</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                      <span>Unlimited Consequential Damages</span>
+                      <span className="text-amber-400 font-semibold">Flagged</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-subtle">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-bold text-sm mb-4">
-                    03
+                {/* Step 3 Bento Card */}
+                <div className="bento-step-card group">
+                  <div>
+                    {/* Top Step Badge & Icon */}
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="step-badge-pill bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">
+                        STEP 03
+                      </span>
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/20 group-hover:border-emerald-500/40 transition-all duration-300">
+                        <CheckCircle2 className="w-5 h-5" />
+                      </div>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-white mb-2.5 group-hover:text-emerald-300 transition-colors">
+                      Accept Redlines & Sign
+                    </h3>
+                    <p className="text-xs sm:text-[13px] text-slate-400 leading-relaxed mb-6">
+                      Review side-by-side redlines, accept statutory revisions in the editor, and export an execution-ready protected PDF.
+                    </p>
                   </div>
-                  <h3 className="text-lg font-bold mb-2">Accept Redlines & Sign</h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Review side-by-side redlines, accept fair revisions in the editor, and export a clean PDF report.
-                  </p>
+
+                  {/* Visual Bento Mini-Panel */}
+                  <div className="p-3.5 rounded-xl bg-white/5 border border-white/5 space-y-2 group-hover:border-white/10 transition-colors">
+                    <div className="text-[11px] font-mono leading-tight">
+                      <span className="text-rose-400 line-through block">Net 90-Day Payment</span>
+                      <span className="text-emerald-400 font-bold block mt-0.5">→ Net 45-Day Statutory Override</span>
+                    </div>
+                    <div className="flex items-center justify-between pt-1 border-t border-white/10 text-[10px] text-slate-400">
+                      <span className="text-emerald-400 font-semibold">✓ 1-Click Redline Applied</span>
+                      <span className="text-violet-400 font-bold">Export PDF</span>
+                    </div>
+                  </div>
                 </div>
+
               </div>
             </div>
           </section>
@@ -1361,40 +1617,48 @@ export default function App() {
 
           {/* Health Score Gauge & Recommendations Row */}
           <div className="health-layout">
-            <div className="health-card">
-              <div className="card-heading">
-                <span>Contract Health Score</span>
-                <span className="live-dot" />
+            <div className="health-card bg-[#121215] border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
+              <div className="card-heading flex justify-between items-center pb-3 mb-4 border-b border-white/10">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-400">Contract Health Score</span>
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Statutory Engine Active
+                </span>
               </div>
-              <div className="health-content">
-                <div className="health-gauge">
-                  <svg viewBox="0 0 160 160">
-                    <circle cx="80" cy="80" r="70" className="gauge-track" />
+              <div className="health-content flex items-center gap-5">
+                {/* Circular Neon Meter */}
+                <div className="relative w-28 h-28 min-w-[112px] grid place-items-center">
+                  <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
+                    <circle cx="80" cy="80" r="70" className="stroke-white/10 fill-none stroke-[12]" />
                     <circle
                       cx="80"
                       cy="80"
                       r="70"
-                      className="gauge-fill"
+                      className="fill-none stroke-[12] transition-all duration-700"
                       style={{
+                        strokeDasharray: 452,
                         strokeDashoffset: 452 - (452 * healthScore) / 100,
-                        stroke: healthScore > 75 ? '#059669' : healthScore > 50 ? '#d97706' : '#b94a48',
+                        stroke: healthScore > 75 ? '#34d399' : healthScore > 50 ? '#fbbf24' : '#f87171',
+                        filter: healthScore > 75 ? 'drop-shadow(0 0 10px rgba(52,211,153,0.6))' : 'drop-shadow(0 0 10px rgba(248,113,113,0.6))',
+                        strokeLinecap: 'round',
                       }}
                     />
                   </svg>
-                  <div>
-                    <strong>{healthScore}</strong>
-                    <span>out of 100</span>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <b className="text-3xl font-extrabold text-white leading-none">{healthScore}</b>
+                    <span className="text-[10px] text-slate-400 font-mono mt-0.5">/ 100</span>
                   </div>
                 </div>
-                <div className="health-text">
-                  <span className={healthScore < 60 ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'}>
+                <div className="health-text space-y-2">
+                  <span className={`inline-block text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full ${
+                    healthScore < 60 ? 'crimson-glass-badge' : 'emerald-glass-badge'
+                  }`}>
                     {summary?.overallRiskLevel
                       ? `${summary.overallRiskLevel.toUpperCase()} RISK PROFILE`
                       : healthScore < 60
                       ? 'HIGH RISK PROFILE'
                       : 'BALANCED PROFILE'}
                   </span>
-                  <p>
+                  <p className="text-xs text-slate-300 leading-relaxed">
                     {summary?.protectionDetail ||
                       (healthScore < 60
                         ? 'Contains critical payment and liability terms. Prompt renegotiation advised.'
@@ -1402,97 +1666,112 @@ export default function App() {
                   </p>
                 </div>
               </div>
-              <div className="health-footer">
-                <span>Confidence: <b>95% Statutory</b></span>
-                <span>Jurisdiction: <b>India / MSMED</b></span>
+              <div className="health-footer flex justify-between items-center pt-4 mt-4 border-t border-white/10 text-xs text-slate-400 font-mono">
+                <span>Confidence: <b className="text-white">96% Statutory</b></span>
+                <span>Jurisdiction: <b className="text-white">India / MSMED 2006</b></span>
               </div>
             </div>
 
-            <div className="recommend-card">
+            <div className="recommend-card bg-[#18181f] border border-violet-500/30 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
               <div>
-                <p className="eyebrow text-indigo-400">
-                  <Sparkles className="w-3 h-3" /> Priority Recommendation
+                <p className="eyebrow text-violet-400 flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs">
+                  <Sparkles className="w-3.5 h-3.5" /> Priority Recommendation
                 </p>
-                <h2>{summary?.recommendation || (topConcern ? `Review: ${topConcern.title}` : 'Review Contract Terms')}</h2>
-                <p>
+                <h2 className="text-lg font-bold text-white my-2">{summary?.recommendation || (topConcern ? `Fix: ${topConcern.title}` : 'Review Contract Terms')}</h2>
+                <p className="text-xs text-slate-400 leading-relaxed">
                   {summary?.recommendationDetail || topConcern?.explanation || 'Inspect flagged clauses and apply suggested statutory redlines before execution.'}
                 </p>
               </div>
               {topConcern && (
                 <button
-                  className="button button-coral button-small mt-3 w-fit"
+                  className="button button-coral button-small mt-4 w-fit hover:scale-105 transition-all shadow-[0_0_15px_rgba(124,58,237,0.4)]"
                   onClick={() => {
                     setSelectedClause(topConcern)
                     navigateTo('editor')
                   }}
                 >
-                  <Check className="w-3 h-3" /> Inspect Top Concern
+                  <Check className="w-3.5 h-3.5" /> Inspect Top Concern & Redline
                 </button>
               )}
             </div>
 
-            <div className="protection-card">
+            <div className="protection-card bg-[#121215] border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
               <div>
-                <p className="eyebrow text-emerald-700 dark:text-emerald-400">
-                  <ShieldAlert className="w-3 h-3" /> Missing Protection
+                <p className="eyebrow text-emerald-400 flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs">
+                  <ShieldAlert className="w-3.5 h-3.5" /> Missing Protection
                 </p>
-                <h3>{missingProtections[0]?.title || 'Standard Protections Applied'}</h3>
-                <p>
+                <h3 className="text-lg font-bold text-white my-2">{missingProtections[0]?.title || 'Standard Protections Applied'}</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
                   {missingProtections[0]?.text || 'No critical statutory safeguards missing from this agreement.'}
                 </p>
               </div>
               <button
-                className="button button-outline button-small mt-3 w-fit"
+                className="button button-outline button-small mt-4 w-fit"
                 onClick={() => navigateTo('clause_library')}
               >
-                <Plus className="w-3 h-3" /> Browse Approved Clauses
+                <Plus className="w-3.5 h-3.5" /> Browse Approved Clauses
               </button>
             </div>
           </div>
 
           {/* Top Concerns Cards */}
-          <div className="mt-6">
-            <div className="flex justify-between items-center mb-3">
+          <div className="mt-8">
+            <div className="flex justify-between items-center mb-4">
               <div>
-                <h3 className="text-lg font-bold">Top Clause Concerns</h3>
-                <p className="text-xs text-slate-500">Click any risk card to inspect explanation & suggested redline</p>
+                <h3 className="text-xl font-bold text-white">Top Clause Concerns & Risk Audit</h3>
+                <p className="text-xs text-slate-400">Click any risk card to inspect statutory explanation & apply side-by-side redlines</p>
               </div>
-              <button className="button button-ghost button-small" onClick={() => navigateTo('editor')}>
-                View All {clausesList.length} Clauses <ArrowRight className="w-3 h-3 ml-1" />
+              <button className="button button-ghost button-small text-violet-400 hover:text-violet-300 font-bold" onClick={() => navigateTo('editor')}>
+                Open Split-Pane Editor ({clausesList.length} Clauses) <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </button>
             </div>
 
-            <div className="concern-grid">
-              {clausesList.map((clause) => (
-                <div
-                  key={clause.id}
-                  className={`concern-card risk-${clause.riskLevel}`}
-                  onClick={() => {
-                    setSelectedClause(clause)
-                    navigateTo('editor')
-                  }}
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-mono text-[11px] text-slate-400">
-                      {clause.page && clause.page > 0 ? `Page ${clause.page}` : 'Clause'}
-                    </span>
-                    <span className={`risk-pill risk-${clause.riskLevel}`}>
-                      {riskMeta[clause.riskLevel].label}
-                    </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+              {clausesList.map((clause) => {
+                const isHigh = clause.riskLevel === 'critical' || clause.riskLevel === 'high'
+                return (
+                  <div
+                    key={clause.id}
+                    className={`p-5 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
+                      isHigh
+                        ? 'bg-[#18181f] border-rose-500/30 hover:border-rose-500/60 shadow-lg shadow-rose-950/20'
+                        : 'bg-[#121215] border-white/10 hover:border-white/20'
+                    }`}
+                    onClick={() => {
+                      setSelectedClause(clause)
+                      navigateTo('editor')
+                    }}
+                  >
+                    <div>
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2 py-0.5 rounded bg-white/5 border border-white/5">
+                          {clause.category}
+                        </span>
+                        <span className={`risk-pill risk-${clause.riskLevel}`}>
+                          {riskMeta[clause.riskLevel].label}
+                        </span>
+                      </div>
+
+                      {isHigh && (
+                        <div className="crimson-glass-badge p-2 rounded-lg text-[11px] font-bold flex items-center gap-1.5 mb-2.5">
+                          <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                          <span>CRITICAL RISK DETECTED</span>
+                        </div>
+                      )}
+
+                      <h4 className="text-base font-bold text-white mb-1.5">{clause.title}</h4>
+                      <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">{clause.explanation}</p>
+                    </div>
+
+                    <div className="flex justify-between items-center text-xs font-semibold text-violet-400 pt-3 border-t border-white/10">
+                      <span>Risk Score: <b className={isHigh ? 'text-rose-400' : 'text-emerald-400'}>{clause.riskScore}/100</b></span>
+                      <span className="flex items-center gap-0.5 text-xs font-bold hover:underline">
+                        Inspect & Redline <ChevronRight className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{clause.category}</p>
-                    <h3 className="text-base font-bold my-1">{clause.title}</h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">{clause.explanation}</p>
-                  </div>
-                  <div className="flex justify-between items-center text-xs font-semibold text-indigo-600 dark:text-indigo-400 pt-2.5 border-t border-slate-200 dark:border-slate-800">
-                    <span>Risk Score: {clause.riskScore}/100</span>
-                    <span className="flex items-center gap-0.5 text-[11px]">
-                      Inspect <ChevronRight className="w-3 h-3" />
-                    </span>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </div>
@@ -1503,16 +1782,17 @@ export default function App() {
       {/* ========================================================================= */}
       {currentView === 'editor' && (
         <div className="dashboard">
+          {/* Top Header & Actions */}
           <div className="dashboard-top">
             <div>
-              <p className="eyebrow">
-                <FileEdit className="w-3.5 h-3.5" /> Interactive Clause Editor & Redliner
-              </p>
-              <h1>
-                {documentName} <em>(Live Editing)</em>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-semibold uppercase tracking-wider mb-2.5 backdrop-blur-md">
+                <span className="text-violet-400">✦</span> CONTRACT INTELLIGENCE WORKBENCH
+              </div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+                {documentName} <em className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-300 font-normal">(Live Analysis & Redlines)</em>
               </h1>
-              <p className="dashboard-subtitle">
-                Click any highlighted clause to inspect AI recommendations, apply redlines, or add collaborative comments.
+              <p className="dashboard-subtitle text-slate-400 text-xs sm:text-sm mt-1">
+                Inspect AI statutory audits, view high-contrast side-by-side redlines, and execute 1-click statutory protections.
               </p>
             </div>
             <div className="dashboard-actions">
@@ -1522,178 +1802,361 @@ export default function App() {
               <button className="button button-light" onClick={() => setShareModalOpen(true)}>
                 <Share2 className="w-3.5 h-3.5" /> Invite Collaborator
               </button>
-              <button className="button button-coral" onClick={() => exportReportApi(documentId, 'pdf')}>
+              <button className="button button-coral hover:scale-105 transition-all shadow-[0_0_20px_rgba(124,58,237,0.4)]" onClick={() => exportReportApi(documentId, 'pdf')}>
                 <Download className="w-3.5 h-3.5" /> Export Final Contract
               </button>
             </div>
           </div>
 
           {/* Mobile Tab Switcher for Editor */}
-          <div className="flex lg:hidden bg-subtle p-1 rounded-lg mb-4 border border-slate-200 dark:border-slate-800">
+          <div className="flex lg:hidden bg-[#121215] p-1 rounded-xl mb-4 border border-white/10">
             <button
-              className={`flex-1 py-2 text-xs font-bold rounded-md transition-colors ${editorTab === 'clauses' ? 'bg-surface shadow-sm text-indigo-600 dark:text-indigo-400' : 'text-slate-500'}`}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${editorTab === 'clauses' ? 'bg-violet-600/30 border border-violet-500/40 text-white shadow-md' : 'text-slate-400'}`}
               onClick={() => setEditorTab('clauses')}
             >
-              Clause List ({clausesList.length})
+              Document Clauses ({clausesList.length})
             </button>
             <button
-              className={`flex-1 py-2 text-xs font-bold rounded-md transition-colors ${editorTab === 'inspector' ? 'bg-surface shadow-sm text-indigo-600 dark:text-indigo-400' : 'text-slate-500'}`}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${editorTab === 'inspector' ? 'bg-violet-600/30 border border-violet-500/40 text-white shadow-md' : 'text-slate-400'}`}
               onClick={() => setEditorTab('inspector')}
             >
               AI Redline Inspector
             </button>
           </div>
 
-          <div className="editor-layout">
-            {/* Main Inline Editable Canvas */}
-            <div className={`editor-canvas ${editorTab === 'inspector' ? 'hidden lg:block' : 'block'}`}>
-              <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-200 dark:border-slate-800">
-                <span className="font-mono text-xs text-slate-400">STATUS: AUTO-SAVING ENABLED</span>
-                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
-                  Health Score: {healthScore}/100
-                </span>
-              </div>
-
-              {clausesList.map((clause) => (
-                <div
-                  key={clause.id}
-                  className={`editor-clause-box risk-${clause.riskLevel} ${selectedClause?.id === clause.id ? 'selected' : ''}`}
-                  onClick={() => {
-                    setSelectedClause(clause)
-                    if (window.innerWidth < 1024) setEditorTab('inspector')
-                  }}
-                >
-                  <div className="clause-header">
-                    <div>
-                      <span className="font-mono text-[10px] text-slate-400 uppercase mr-2">{clause.category}</span>
-                      <b className="text-sm">{clause.title}</b>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {clause.acceptedRedline && (
-                        <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 px-2 py-0.5 rounded">
-                          REDLINE ACCEPTED
-                        </span>
-                      )}
-                      <span className={`risk-pill risk-${clause.riskLevel}`}>
-                        {riskMeta[clause.riskLevel].label}
-                      </span>
-                    </div>
-                  </div>
-
-                  <textarea
-                    className="clause-editable-text"
-                    value={clause.text}
-                    onChange={(e) => handleClauseTextChange(clause.id, e.target.value)}
-                    rows={3}
-                  />
-
-                  {clause.comments && clause.comments.length > 0 && (
-                    <div className="mt-2 text-xs text-slate-500 flex items-center gap-1">
-                      <MessageCircle className="w-3 h-3" /> {clause.comments.length} comment(s)
-                    </div>
-                  )}
+          {/* High-Contrast Split Pane Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            {/* Left Pane: Document Viewer & Clause List (7 Columns) */}
+            <div className={`lg:col-span-7 bg-[#121215] border border-white/10 rounded-2xl p-5 sm:p-6 shadow-2xl backdrop-blur-xl ${editorTab === 'inspector' ? 'hidden lg:block' : 'block'}`}>
+              
+              {/* Document Status Banner */}
+              <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/10 flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-violet-400" />
+                  <span className="font-mono text-xs font-bold text-white uppercase tracking-wider">{documentName}</span>
+                  <span className="text-slate-400 text-xs">({clausesList.length} Clauses)</span>
                 </div>
-              ))}
-            </div>
-
-            {/* Side Panel: Explanation & Redlines */}
-            {selectedClause && (
-              <div className={`side-panel ${editorTab === 'clauses' ? 'hidden lg:block' : 'block'}`}>
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <span className="font-mono text-[10px] text-slate-400 uppercase">{selectedClause.category}</span>
-                    <h3 className="text-lg font-bold my-1">{selectedClause.title}</h3>
-                  </div>
-                  <span className={`risk-pill risk-${selectedClause.riskLevel}`}>
-                    Score: {selectedClause.riskScore}/100
+                <div className="flex items-center gap-2.5">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Auto-Saving Active
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-violet-500/15 text-violet-300 border border-violet-500/30">
+                    Health Score: {healthScore}/100
                   </span>
                 </div>
+              </div>
 
-                <div className="space-y-3.5 text-xs">
-                  <div>
-                    <b className="text-slate-700 dark:text-slate-200 block mb-1">Plain English Explanation:</b>
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed bg-subtle p-3 rounded-lg border border-slate-200 dark:border-slate-800">
-                      {selectedClause.explanation}
-                    </p>
-                  </div>
+              {/* Clause Cards List */}
+              <div className="space-y-4">
+                {clausesList.map((clause) => {
+                  const isSelected = selectedClause?.id === clause.id
+                  const isHighRisk = clause.riskLevel === 'critical' || clause.riskLevel === 'high'
 
-                  <div>
-                    <b className="text-slate-700 dark:text-slate-200 block mb-1">Business Consequences:</b>
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed bg-subtle p-3 rounded-lg border border-slate-200 dark:border-slate-800">
-                      {selectedClause.consequences}
-                    </p>
-                  </div>
-
-                  {selectedClause.actReference && (
-                    <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-800 dark:text-emerald-300">
-                      <b className="block mb-0.5">Statutory Reference:</b>
-                      <span>{selectedClause.actReference}</span>
-                    </div>
-                  )}
-
-                  {/* Redline Diff Box */}
-                  <div>
-                    <b className="text-slate-700 dark:text-slate-200 block mb-1">AI Redline Recommendation:</b>
-                    <div className="diff-box">
-                      <div className="border border-red-200 dark:border-red-950/60">
-                        <span className="font-bold text-[10px] text-red-700 dark:text-red-400 uppercase block mb-1">Original Text</span>
-                        <del>{selectedClause.redline.original}</del>
-                      </div>
-                      <div className="border border-emerald-200 dark:border-emerald-950/60">
-                        <span className="font-bold text-[10px] text-emerald-700 dark:text-emerald-400 uppercase block mb-1">Suggested Redline</span>
-                        <ins>{selectedClause.redline.suggested}</ins>
-                      </div>
-                    </div>
-                    <p className="text-[11px] text-slate-500 italic mt-1">
-                      Rationale: {selectedClause.redline.rationale}
-                    </p>
-                  </div>
-
-                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
-                    <button
-                      className="button button-coral button-small w-full"
-                      onClick={() => handleAcceptRedline(selectedClause.id)}
+                  return (
+                    <div
+                      key={clause.id}
+                      className={`p-4 sm:p-5 rounded-xl border transition-all duration-200 cursor-pointer ${
+                        isSelected
+                          ? 'bg-[#18181f] border-violet-500/70 shadow-[0_0_30px_rgba(124,58,237,0.2)] ring-1 ring-violet-500/40'
+                          : 'bg-[#16161a] border-white/10 hover:border-white/20 hover:bg-[#1a1a20]'
+                      }`}
+                      onClick={() => {
+                        setSelectedClause(clause)
+                        if (window.innerWidth < 1024) setEditorTab('inspector')
+                      }}
                     >
-                      <Check className="w-3.5 h-3.5" /> Accept Suggested Redline
-                    </button>
+                      {/* Clause Top Bar */}
+                      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-[10px] font-bold uppercase text-slate-400 px-2 py-0.5 rounded bg-white/5 border border-white/5">
+                            {clause.category}
+                          </span>
+                          <b className="text-sm font-bold text-white">{clause.title}</b>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className={`risk-pill risk-${clause.riskLevel}`}>
+                            {riskMeta[clause.riskLevel].label}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* High Risk Callout Badge */}
+                      {isHighRisk && !clause.acceptedRedline && (
+                        <div className="crimson-glass-badge p-2.5 rounded-lg text-xs flex items-center justify-between gap-2 mb-3">
+                          <div className="flex items-center gap-2 font-bold text-rose-300">
+                            <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                            <span>CRITICAL RISK: {clause.title.toUpperCase()} (MSMED VIOLATION)</span>
+                          </div>
+                          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                            Action Required
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Accepted Redline Badge */}
+                      {clause.acceptedRedline && (
+                        <div className="emerald-glass-badge p-2.5 rounded-lg text-xs flex items-center justify-between gap-2 mb-3">
+                          <div className="flex items-center gap-2 font-bold text-emerald-300">
+                            <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span>STATUTORY REDLINE APPLIED (Net 45-Days Cap Enforced)</span>
+                          </div>
+                          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                            Enforced
+                          </span>
+                        </div>
+                      )}
+
+                      {/* High-Contrast Clause Textarea */}
+                      <textarea
+                        className="w-full bg-[#0e0e11] text-white font-mono text-xs leading-relaxed p-3.5 rounded-lg border border-white/10 focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/40 outline-none resize-y min-h-[85px] transition-all"
+                        value={clause.text}
+                        onChange={(e) => handleClauseTextChange(clause.id, e.target.value)}
+                        rows={3}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+
+                      {/* Clause Bottom Footer */}
+                      <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-white/5 text-[11px] text-slate-400">
+                        <span>Risk Score: <b className={isHighRisk ? 'text-rose-400' : 'text-emerald-400'}>{clause.riskScore}/100</b></span>
+                        <div className="flex items-center gap-3">
+                          {clause.comments && clause.comments.length > 0 && (
+                            <span className="flex items-center gap-1 text-slate-400">
+                              <MessageCircle className="w-3 h-3" /> {clause.comments.length}
+                            </span>
+                          )}
+                          <span className="text-violet-400 font-semibold flex items-center gap-0.5 hover:underline">
+                            Inspect Analytics <ChevronRight className="w-3 h-3" />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Right Pane: Risk & Clause Analytics Modular Stack (5 Columns) */}
+            {selectedClause && (
+              <div className={`lg:col-span-5 sticky top-20 space-y-4 ${editorTab === 'clauses' ? 'hidden lg:block' : 'block'}`}>
+                
+                {/* Modular Card 1: Health Score & Real-Time Risk Progress Meter */}
+                <div className="bg-[#121215] border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-xl">
+                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-400">
+                      CONTRACT HEALTH METER
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Analysis
+                    </span>
                   </div>
 
-                  {/* Clause Comments Thread */}
-                  <div className="pt-3 border-t border-slate-200 dark:border-slate-800">
-                    <b className="text-slate-700 dark:text-slate-200 block mb-2">Clause Comments & Annotations:</b>
-                    <div className="space-y-2 mb-3 max-h-36 overflow-y-auto">
-                      {selectedClause.comments && selectedClause.comments.length > 0 ? (
-                        selectedClause.comments.map((cmt) => (
-                          <div key={cmt.id} className="p-2.5 bg-subtle rounded-lg border border-slate-200 dark:border-slate-800">
-                            <div className="flex justify-between font-bold text-[11px] text-slate-700 dark:text-slate-300">
-                              <span>{cmt.authorName}</span>
-                              <span className="font-mono text-[9px] text-slate-400">
-                                {new Date(cmt.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                            </div>
-                            <p className="mt-1 text-slate-600 dark:text-slate-400">{cmt.content}</p>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="text-[11px] text-slate-400 italic py-1">No comments on this clause yet.</div>
-                      )}
+                  <div className="flex items-center gap-5">
+                    {/* Circular Neon Meter */}
+                    <div className="relative w-24 h-24 min-w-[96px] grid place-items-center">
+                      <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
+                        <circle cx="80" cy="80" r="70" className="stroke-white/10 fill-none stroke-[12]" />
+                        <circle
+                          cx="80"
+                          cy="80"
+                          r="70"
+                          className="fill-none stroke-[12] transition-all duration-700"
+                          style={{
+                            strokeDasharray: 452,
+                            strokeDashoffset: 452 - (452 * healthScore) / 100,
+                            stroke: healthScore > 75 ? '#34d399' : healthScore > 50 ? '#fbbf24' : '#f87171',
+                            filter: healthScore > 75 ? 'drop-shadow(0 0 8px rgba(52,211,153,0.5))' : 'drop-shadow(0 0 8px rgba(248,113,113,0.5))',
+                            strokeLinecap: 'round',
+                          }}
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <b className="text-2xl font-extrabold text-white leading-none">{healthScore}</b>
+                        <span className="text-[9px] text-slate-400 font-mono mt-0.5">/ 100</span>
+                      </div>
                     </div>
 
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        placeholder="Add comment..."
-                        className="flex-1 bg-subtle border border-slate-200 dark:border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-main outline-none focus:border-indigo-500"
-                        value={newCommentText}
-                        onChange={(e) => setNewCommentText(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleAddComment(selectedClause.id)}
-                      />
-                      <button className="button button-dark button-small px-3" onClick={() => handleAddComment(selectedClause.id)}>
-                        <Send className="w-3 h-3" />
-                      </button>
+                    <div className="flex-1 space-y-2">
+                      <span className={`inline-block text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                        healthScore < 60 ? 'crimson-glass-badge' : 'emerald-glass-badge'
+                      }`}>
+                        {healthScore < 60 ? 'HIGH RISK PROFILE' : 'BALANCED PROFILE'}
+                      </span>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        {healthScore < 60 ? 'Contains critical payment terms violating statutory caps. Accept redlines to normalize.' : 'All clauses compliant with MSMED statutory safeguards.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Statutory Sub-Progress Bars */}
+                  <div className="mt-4 pt-3.5 border-t border-white/10 space-y-2.5">
+                    <div>
+                      <div className="flex justify-between text-[10px] font-mono text-slate-400 mb-1">
+                        <span>MSMED 45-Day Statutory Compliance</span>
+                        <span className="text-white font-bold">{selectedClause.acceptedRedline ? '100%' : '35%'}</span>
+                      </div>
+                      <div className="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${selectedClause.acceptedRedline ? 'w-full bg-emerald-500 shadow-[0_0_8px_#34d399]' : 'w-[35%] bg-rose-500 shadow-[0_0_8px_#f87171]'}`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-[10px] font-mono text-slate-400 mb-1">
+                        <span>Liability Protection Ratio</span>
+                        <span className="text-white font-bold">85%</span>
+                      </div>
+                      <div className="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
+                        <div className="h-full rounded-full w-[85%] bg-amber-500 shadow-[0_0_8px_#fbbf24]" />
+                      </div>
                     </div>
                   </div>
                 </div>
+
+                {/* Modular Card 2: Selected Clause Statutory Violation Breakdown */}
+                <div className="bg-[#121215] border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-3.5">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <span className="font-mono text-[10px] font-bold text-violet-400 uppercase tracking-wider block">
+                        {selectedClause.category}
+                      </span>
+                      <h3 className="text-base font-bold text-white mt-0.5">{selectedClause.title}</h3>
+                    </div>
+                    <span className={`risk-pill risk-${selectedClause.riskLevel}`}>
+                      Score: {selectedClause.riskScore}/100
+                    </span>
+                  </div>
+
+                  {/* High Risk Banner */}
+                  {(selectedClause.riskLevel === 'critical' || selectedClause.riskLevel === 'high') && (
+                    <div className="crimson-glass-badge p-3 rounded-xl text-xs flex items-start gap-2.5">
+                      <AlertTriangle className="w-4 h-4 text-rose-400 mt-0.5 shrink-0" />
+                      <div>
+                        <b className="text-rose-200 block text-xs">CRITICAL STATUTORY RISK DETECTED</b>
+                        <p className="text-rose-300/90 text-[11px] mt-0.5 leading-relaxed">
+                          Violates Section 15 of MSMED Act 2006. Standard business risk requires capping buyer payment to 45 calendar days.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Plain English Explanation */}
+                  <div>
+                    <span className="text-[11px] font-mono uppercase text-slate-400 font-bold block mb-1.5">
+                      Plain English Explanation
+                    </span>
+                    <div className="p-3 rounded-xl bg-[#0e0e11] border border-white/10 text-xs text-slate-300 leading-relaxed">
+                      {selectedClause.explanation}
+                    </div>
+                  </div>
+
+                  {/* Business Consequences */}
+                  <div>
+                    <span className="text-[11px] font-mono uppercase text-slate-400 font-bold block mb-1.5">
+                      Business Hazard
+                    </span>
+                    <div className="p-3 rounded-xl bg-[#0e0e11] border border-white/10 text-xs text-slate-300 leading-relaxed">
+                      {selectedClause.consequences}
+                    </div>
+                  </div>
+
+                  {/* Statutory Reference Pill */}
+                  {selectedClause.actReference && (
+                    <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-300 flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <div>
+                        <b className="block text-[11px] uppercase font-mono">Statutory Authority</b>
+                        <span>{selectedClause.actReference}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Modular Card 3: AI Redline Recommendation & 1-Click Execution */}
+                <div className="bg-[#121215] border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-3.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-violet-300 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-violet-400" /> AI STATUTORY REDLINE
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
+                      Pre-Approved Redline
+                    </span>
+                  </div>
+
+                  {/* High-Contrast Diff Box */}
+                  <div className="space-y-2.5">
+                    <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25">
+                      <span className="text-[10px] font-mono font-bold uppercase text-rose-400 block mb-1">
+                        Original Covenant (High Risk)
+                      </span>
+                      <p className="text-xs font-mono text-rose-300/90 line-through leading-relaxed">
+                        {selectedClause.redline.original}
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25">
+                      <span className="text-[10px] font-mono font-bold uppercase text-emerald-400 block mb-1">
+                        Suggested Statutory Redline (Safe)
+                      </span>
+                      <p className="text-xs font-mono text-emerald-300 font-semibold leading-relaxed">
+                        {selectedClause.redline.suggested}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] text-slate-400 italic">
+                    Rationale: {selectedClause.redline.rationale}
+                  </p>
+
+                  {/* 1-Click Execution Trigger */}
+                  <button
+                    className="button button-coral w-full py-3.5 rounded-full text-sm font-bold flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(124,58,237,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    onClick={() => handleAcceptRedline(selectedClause.id)}
+                  >
+                    <Check className="w-4 h-4" /> Accept & Apply Redline (1-Click)
+                  </button>
+                </div>
+
+                {/* Modular Card 4: Clause Comments Thread */}
+                <div className="bg-[#121215] border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-3">
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                    <MessageCircle className="w-3.5 h-3.5" /> Collaborative Annotations
+                  </span>
+
+                  <div className="space-y-2 max-h-36 overflow-y-auto">
+                    {selectedClause.comments && selectedClause.comments.length > 0 ? (
+                      selectedClause.comments.map((cmt) => (
+                        <div key={cmt.id} className="p-2.5 bg-[#0e0e11] rounded-xl border border-white/10">
+                          <div className="flex justify-between font-bold text-[11px] text-slate-300">
+                            <span>{cmt.authorName}</span>
+                            <span className="font-mono text-[9px] text-slate-500">
+                              {new Date(cmt.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-xs text-slate-400">{cmt.content}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-[11px] text-slate-500 italic py-1">No comments on this clause yet.</div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2 pt-1">
+                    <input
+                      type="text"
+                      placeholder="Add comment..."
+                      className="flex-1 bg-[#0e0e11] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30"
+                      value={newCommentText}
+                      onChange={(e) => setNewCommentText(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleAddComment(selectedClause.id)}
+                    />
+                    <button className="button button-dark px-3.5 py-2 rounded-xl text-xs font-bold" onClick={() => handleAddComment(selectedClause.id)}>
+                      <Send className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+
               </div>
             )}
           </div>
@@ -2854,56 +3317,103 @@ export default function App() {
         </div>
       )}
 
-      {/* Floating AI Chat Assistant */}
+      {/* Floating AI Chat Assistant (wearedirect.co Popover Style) */}
       <div className="chat-widget">
-        {chatOpen ? (
+        {chatOpen && (
           <div className="chat-window">
             <header>
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-indigo-400" />
-                <b className="text-xs">Contract AI Assistant</b>
+              <div className="flex items-center gap-2.5">
+                <div className="relative flex items-center justify-center text-violet-400">
+                  <Sparkles className="w-4 h-4 text-violet-400" />
+                  <span className="absolute inset-0 blur-[5px] bg-violet-500/40 rounded-full" />
+                </div>
+                <div>
+                  <b className="text-xs font-bold text-white block leading-tight">Contract AI Intelligence</b>
+                  <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> MSMED Legal Engine Active
+                  </span>
+                </div>
               </div>
-              <button className="text-slate-400 hover:text-white" onClick={() => setChatOpen(false)}>
+              <button
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                onClick={() => setChatOpen(false)}
+                title="Close Chat"
+              >
                 <X className="w-4 h-4" />
               </button>
             </header>
 
+            {/* Quick Prompt Suggestions */}
+            <div className="px-3.5 py-2 bg-[#18181b]/60 border-b border-white/5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+              <button
+                type="button"
+                className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-white/5 hover:bg-violet-600/20 text-slate-300 hover:text-white border border-white/10 hover:border-violet-500/40 whitespace-nowrap transition-all"
+                onClick={() => setChatInput('Check Clause 8 for MSMED Act Section 15 payment violations')}
+              >
+                MSMED 45-Day Check
+              </button>
+              <button
+                type="button"
+                className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-white/5 hover:bg-violet-600/20 text-slate-300 hover:text-white border border-white/10 hover:border-violet-500/40 whitespace-nowrap transition-all"
+                onClick={() => setChatInput('Explain uncapped consequential liability risks in plain English')}
+              >
+                Explain Liabilities
+              </button>
+              <button
+                type="button"
+                className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-white/5 hover:bg-violet-600/20 text-slate-300 hover:text-white border border-white/10 hover:border-violet-500/40 whitespace-nowrap transition-all"
+                onClick={() => setChatInput('Suggest a fair redline for the indemnity clause')}
+              >
+                Suggest Redline
+              </button>
+            </div>
+
+            {/* Messages Scroll Area */}
             <div className="chat-messages">
               {chatMessages.map((msg) => (
                 <div key={msg.id} className={`chat-msg ${msg.role}`}>
-                  <p>{msg.content}</p>
+                  <p className="leading-relaxed">{msg.content}</p>
                   {msg.sources && msg.sources.length > 0 && (
-                    <div className="mt-1.5 pt-1 border-t border-slate-200 dark:border-slate-700 text-[10px] opacity-75 font-mono">
-                      Sources: {msg.sources.join(', ')}
+                    <div className="mt-2 pt-1.5 border-t border-white/10 text-[10px] text-violet-300/80 font-mono">
+                      Authority: {msg.sources.join(', ')}
                     </div>
                   )}
                 </div>
               ))}
               {chatTyping && (
-                <div className="chat-msg assistant text-xs italic text-slate-500">
-                  AI Assistant is analyzing contract clauses...
+                <div className="chat-msg assistant text-xs text-slate-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                  Analyzing contract clauses against statutory rules...
                 </div>
               )}
             </div>
 
+            {/* Input Bar */}
             <form className="chat-input" onSubmit={handleSendChat}>
               <input
                 type="text"
-                placeholder="Ask about payment or liabilities..."
+                placeholder="Ask about clauses, statutory risks..."
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
               />
-              <button type="submit" className="button button-coral button-small px-3">
-                <Send className="w-3 h-3" />
+              <button type="submit" className="button button-coral rounded-full px-3.5 py-2.5 hover:scale-105 transition-all shadow-[0_0_15px_rgba(124,58,237,0.4)]">
+                <Send className="w-3.5 h-3.5" />
               </button>
             </form>
           </div>
-        ) : (
-          <button className="chat-launcher" onClick={() => setChatOpen(true)}>
-            <Sparkles className="w-4 h-4 text-indigo-400" />
-            <span>Ask Contract AI</span>
-          </button>
         )}
+
+        {/* Floating Pill Trigger Button */}
+        <button
+          className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-black/80 hover:bg-black/95 backdrop-blur-md border border-white/20 hover:border-violet-500/50 shadow-2xl hover:shadow-[0_0_25px_rgba(124,58,237,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 text-white cursor-pointer group"
+          onClick={() => setChatOpen(!chatOpen)}
+        >
+          <div className="relative flex items-center justify-center text-violet-400">
+            <Sparkles className="w-4 h-4 text-violet-400 group-hover:rotate-12 transition-transform" />
+            <span className="absolute inset-0 blur-[6px] bg-violet-500/50 rounded-full animate-pulse" />
+          </div>
+          <span className="text-xs sm:text-[13px] font-bold tracking-tight text-white">Ask Contract AI</span>
+        </button>
       </div>
 
       {/* Site Footer */}
