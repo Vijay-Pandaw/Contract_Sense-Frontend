@@ -779,26 +779,64 @@ export default function App() {
     if (e) e.preventDefault()
     if (!chatInput.trim() || chatTyping) return
 
-    const userMsg: ChatMessage = { id: Date.now(), role: 'user', content: chatInput }
+    const userMsg: ChatMessage = { id: Date.now(), role: 'user', content: chatInput.trim() }
     setChatMessages((prev) => [...prev, userMsg])
     setChatInput('')
     setChatTyping(true)
 
-    const res = await askContractChatApi(documentId, userMsg.content)
+    const contractContext = {
+      fileName: documentName,
+      healthScore,
+      summary,
+      clauses: clausesList.map((c) => ({
+        id: c.id,
+        title: c.title,
+        category: c.category,
+        riskLevel: c.riskLevel,
+        riskScore: c.riskScore,
+        text: c.text,
+        explanation: c.explanation,
+        actReference: c.actReference,
+        redline: c.redline,
+      })),
+    }
+
+    const res = await askContractChatApi(documentId, userMsg.content, chatMessages, contractContext)
     setChatTyping(false)
 
-    if (res) {
+    if (res && res.content) {
       setChatMessages((prev) => [
         ...prev,
         { id: Date.now() + 1, role: 'assistant', content: res.content, sources: res.sources },
       ])
     } else {
+      const q = userMsg.content.toLowerCase()
+      let dynamicFallback = ''
+      let sources: string[] = []
+
+      if (/^(hi|hello|hey|ok|okay|thanks|thank you)\b/i.test(q)) {
+        dynamicFallback = "Hello! I am your expert AI Legal Assistant. How can I help you analyze, audit, or redline your contract today?"
+      } else {
+        const matchingClause = clausesList.find((c) =>
+          q.split(' ').some((word) => word.length > 3 && (c.title.toLowerCase().includes(word) || c.category.toLowerCase().includes(word) || c.text.toLowerCase().includes(word)))
+        )
+
+        if (matchingClause) {
+          dynamicFallback = `Regarding "${matchingClause.title}" in ${documentName}: "${matchingClause.text}". ${matchingClause.explanation || ''} ${matchingClause.actReference ? `Statutory reference: ${matchingClause.actReference}.` : ''}`
+          sources = [matchingClause.title]
+        } else {
+          dynamicFallback = `Based on "${documentName}" (Health Score: ${healthScore}/100), ${clausesList.length} clauses were audited. You can ask directly about payment terms, MSMED statutory deadlines, liability caps, or redlines.`
+          sources = clausesList.slice(0, 2).map((c) => c.title)
+        }
+      }
+
       setChatMessages((prev) => [
         ...prev,
         {
           id: Date.now() + 1,
           role: 'assistant',
-          content: `Regarding your query on "${userMsg.content}": This contract specifies standard commercial terms under Section 15 of MSMED Act. Payment is due within 45 days, and liability is capped to 12-month aggregate fees.`,
+          content: dynamicFallback,
+          sources,
         },
       ])
     }

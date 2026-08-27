@@ -418,7 +418,12 @@ export async function fetchAdminStatsApi() {
   return null
 }
 
-export async function askContractChatApi(documentId: string, question: string, history: any[] = []): Promise<{ content: string; sources?: string[] } | null> {
+export async function askContractChatApi(
+  documentId: string,
+  question: string,
+  history: any[] = [],
+  context?: any
+): Promise<{ content: string; sources?: string[] } | null> {
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${documentId}/chat`, {
       method: 'POST',
@@ -426,7 +431,7 @@ export async function askContractChatApi(documentId: string, question: string, h
         'Content-Type': 'application/json',
         ...buildAuthHeaders(),
       },
-      body: JSON.stringify({ question, history }),
+      body: JSON.stringify({ question, history, context }),
     })
     const json = await res.json()
     if (json.success && json.data) {
