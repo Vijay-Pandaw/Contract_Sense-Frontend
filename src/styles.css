@@ -332,17 +332,46 @@ html.light .site-header {
   box-shadow: 0 0 22px rgba(124, 58, 237, 0.7); 
 }
 
+/* Navigation Horizontal Scroll Wrapper */
+.nav-scroll-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.35) transparent;
+  padding: 4px 2px;
+  margin: 0 8px;
+}
+
+.nav-scroll-wrapper::-webkit-scrollbar {
+  height: 3.5px;
+}
+.nav-scroll-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+.nav-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.35);
+  border-radius: 4px;
+}
+.nav-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(167, 139, 250, 0.6);
+}
+
 .main-nav { 
-  display: flex; 
+  display: inline-flex; 
   align-items: center; 
-  gap: 2px; 
-  margin-left: auto; 
-  margin-right: 12px; 
-  padding: 4px;
+  gap: 8px; 
+  padding: 4px 6px;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 9999px;
-  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  backdrop-filter: blur(12px);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 html.light .main-nav {
@@ -353,43 +382,48 @@ html.light .main-nav {
 .main-nav button, .main-nav a, .text-button { 
   background: transparent; 
   color: var(--text-muted); 
-  font-size: 13px; 
+  font-size: 15px; 
   font-weight: 500; 
-  padding: 6px 14px; 
-  border-radius: 9999px; 
+  padding: 8px 16px; 
+  border-radius: 8px; 
+  border: 1px solid transparent;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
   display: inline-flex; 
   align-items: center; 
-  gap: 6px;
+  gap: 7px;
   white-space: nowrap;
   position: relative;
+  cursor: pointer;
 }
 .main-nav button:hover, .main-nav a:hover, .text-button:hover { 
   color: #ffffff; 
-  background: rgba(255, 255, 255, 0.06); 
+  background: rgba(255, 255, 255, 0.08); 
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
 }
 html.light .main-nav button:hover, html.light .main-nav a:hover {
   color: #0f172a;
   background: rgba(15, 23, 42, 0.06);
 }
 
-/* Sleek Indicator Underline on Active Navigation Tab */
+/* Squarish Glowing Active Navigation Tab */
 .main-nav button.nav-active { 
-  color: #ffffff; 
-  background: rgba(124, 58, 237, 0.2); 
-  border: 1px solid rgba(124, 58, 237, 0.4);
-  box-shadow: 0 0 15px -3px rgba(124, 58, 237, 0.4);
+  color: #ffffff !important; 
+  background: rgba(124, 58, 237, 0.22) !important; 
+  border: 1px solid rgba(124, 58, 237, 0.5) !important;
+  box-shadow: 0 0 16px -2px rgba(124, 58, 237, 0.5), inset 0 0 10px rgba(124, 58, 237, 0.2);
   font-weight: 600; 
+  border-radius: 8px;
 }
 .main-nav button.nav-active::after {
   content: "";
   position: absolute;
-  bottom: -2px;
-  left: 20%;
-  right: 20%;
+  bottom: -1px;
+  left: 15%;
+  right: 15%;
   height: 2px;
   background: linear-gradient(90deg, transparent, #a78bfa, transparent);
-  border-radius: 99px;
+  border-radius: 2px;
   box-shadow: 0 0 8px #a78bfa;
 }
 

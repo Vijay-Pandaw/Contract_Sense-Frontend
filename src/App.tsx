@@ -883,42 +883,65 @@ export default function App() {
 
       {/* Top Navbar */}
       <header className="site-header">
-        <button className="brand" onClick={() => navigateTo('welcome')} aria-label="ContractSense Home">
+        <button className="brand flex-shrink-0" onClick={() => navigateTo('welcome')} aria-label="ContractSense Home">
           <div className="brand-mark">
-            <Scale className="w-4 h-4" />
+            <Scale className="w-5 h-5" />
           </div>
           <span>
             Contract<span>Sense</span>
           </span>
         </button>
 
-        {/* Desktop Navigation Links */}
-        <nav className="main-nav hidden md:flex">
-          <button className={currentView === 'dashboard' ? 'nav-active' : ''} onClick={() => navigateTo('dashboard')}>
-            <LayoutDashboard className="w-3.5 h-3.5" /> Dashboard
-          </button>
-          <button className={currentView === 'contracts' ? 'nav-active' : ''} onClick={() => navigateTo('contracts')}>
-            <BookOpen className="w-3.5 h-3.5" /> My Contracts
-          </button>
-          <button className={currentView === 'editor' ? 'nav-active' : ''} onClick={() => navigateTo('editor')}>
-            <FileEdit className="w-3.5 h-3.5" /> Contract Editor
-          </button>
-          <button className={currentView === 'generator' ? 'nav-active' : ''} onClick={() => navigateTo('generator')}>
-            <Sparkles className="w-3.5 h-3.5 text-indigo-500" /> AI Generator
-          </button>
-          <button className={currentView === 'clause_library' ? 'nav-active' : ''} onClick={() => navigateTo('clause_library')}>
-            <Layers className="w-3.5 h-3.5" /> Clause Library
-          </button>
-          <button className={currentView === 'compare' ? 'nav-active' : ''} onClick={() => navigateTo('compare')}>
-            <History className="w-3.5 h-3.5" /> Compare
-          </button>
-          <button className={currentView === 'admin' ? 'nav-active' : ''} onClick={() => navigateTo('admin')}>
-            <BarChart3 className="w-3.5 h-3.5" /> Admin Analytics
-          </button>
-        </nav>
+        {/* Desktop & Tablet Navigation Links: Horizontal Scroll Container */}
+        <div className="nav-scroll-wrapper overflow-x-auto flex-1 scrollbar-thin">
+          <nav className="main-nav">
+            <button
+              className={`px-4 py-2.5 text-base font-medium rounded-lg ${currentView === 'dashboard' ? 'nav-active' : ''}`}
+              onClick={() => navigateTo('dashboard')}
+            >
+              <LayoutDashboard className="w-4 h-4 text-violet-400" /> Dashboard
+            </button>
+            <button
+              className={`px-4 py-2.5 text-base font-medium rounded-lg ${currentView === 'contracts' ? 'nav-active' : ''}`}
+              onClick={() => navigateTo('contracts')}
+            >
+              <BookOpen className="w-4 h-4 text-emerald-400" /> My Contracts
+            </button>
+            <button
+              className={`px-4 py-2.5 text-base font-medium rounded-lg ${currentView === 'editor' ? 'nav-active' : ''}`}
+              onClick={() => navigateTo('editor')}
+            >
+              <FileEdit className="w-4 h-4 text-amber-400" /> Contract Editor
+            </button>
+            <button
+              className={`px-4 py-2.5 text-base font-medium rounded-lg ${currentView === 'generator' ? 'nav-active' : ''}`}
+              onClick={() => navigateTo('generator')}
+            >
+              <Sparkles className="w-4 h-4 text-violet-400" /> AI Generator
+            </button>
+            <button
+              className={`px-4 py-2.5 text-base font-medium rounded-lg ${currentView === 'clause_library' ? 'nav-active' : ''}`}
+              onClick={() => navigateTo('clause_library')}
+            >
+              <Layers className="w-4 h-4 text-blue-400" /> Clause Library
+            </button>
+            <button
+              className={`px-4 py-2.5 text-base font-medium rounded-lg ${currentView === 'compare' ? 'nav-active' : ''}`}
+              onClick={() => navigateTo('compare')}
+            >
+              <History className="w-4 h-4 text-purple-400" /> Compare
+            </button>
+            <button
+              className={`px-4 py-2.5 text-base font-medium rounded-lg ${currentView === 'admin' ? 'nav-active' : ''}`}
+              onClick={() => navigateTo('admin')}
+            >
+              <BarChart3 className="w-4 h-4 text-rose-400" /> Admin Analytics
+            </button>
+          </nav>
+        </div>
 
         {/* Header Right Actions */}
-        <div className="header-actions">
+        <div className="header-actions flex-shrink-0">
           {/* Theme Switcher */}
           <button className="icon-btn" onClick={() => toggleTheme()} title="Toggle theme">
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
