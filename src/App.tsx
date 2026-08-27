@@ -1903,7 +1903,7 @@ export default function App() {
               </div>
 
               {/* Clause Cards List */}
-              <div className="space-y-4">
+              <div className="space-y-4 max-h-[72vh] overflow-y-auto pr-1.5 custom-scrollbar">
                 {clausesList.map((clause) => {
                   const isSelected = selectedClause?.id === clause.id
                   const isHighRisk = clause.riskLevel === 'critical' || clause.riskLevel === 'high'
@@ -1993,7 +1993,7 @@ export default function App() {
 
             {/* Right Pane: Risk & Clause Analytics Modular Stack (5 Columns) */}
             {selectedClause && (
-              <div className={`lg:col-span-5 sticky top-20 space-y-4 ${editorTab === 'clauses' ? 'hidden lg:block' : 'block'}`}>
+              <div className={`lg:col-span-5 sticky top-20 space-y-4 max-h-[85vh] overflow-y-auto pr-1.5 custom-scrollbar ${editorTab === 'clauses' ? 'hidden lg:block' : 'block'}`}>
                 
                 {/* Modular Card 1: Health Score & Real-Time Risk Progress Meter */}
                 <div className="bg-[#121215] border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-xl">
@@ -2564,101 +2564,103 @@ export default function App() {
                 }
               />
             ) : (
-              <table className="contracts-table">
-                <thead>
-                  <tr>
-                    <th style={{ width: '30px' }}>
-                      <input
-                        type="checkbox"
-                        onChange={(e) => {
-                          if (e.target.checked) setSelectedContractIds(filteredContracts.map((c) => c.id))
-                          else setSelectedContractIds([])
-                        }}
-                      />
-                    </th>
-                    <th>Contract Title</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Health Score</th>
-                    <th>Risks</th>
-                    <th>Date</th>
-                    <th style={{ textAlign: 'right' }}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredContracts.map((c) => (
-                    <tr key={c.id}>
-                      <td>
+              <div className="table-responsive-container max-h-[65vh] overflow-y-auto overflow-x-auto custom-scrollbar rounded-xl border border-white/10 bg-[#0e0e12]/60">
+                <table className="contracts-table">
+                  <thead>
+                    <tr>
+                      <th style={{ width: '30px' }}>
                         <input
                           type="checkbox"
-                          checked={selectedContractIds.includes(c.id)}
                           onChange={(e) => {
-                            if (e.target.checked) setSelectedContractIds([...selectedContractIds, c.id])
-                            else setSelectedContractIds(selectedContractIds.filter((id) => id !== c.id))
+                            if (e.target.checked) setSelectedContractIds(filteredContracts.map((c) => c.id))
+                            else setSelectedContractIds([])
                           }}
                         />
-                      </td>
-                      <td>
-                        <b className="block font-bold">{c.fileName}</b>
-                        <small className="text-slate-400 font-mono">{c.folder || 'General'}</small>
-                      </td>
-                      <td>{c.contractType || 'Commercial'}</td>
-                      <td>
-                        <span className={`status-badge status-${c.status}`}>{c.status?.replace('_', ' ')}</span>
-                      </td>
-                      <td>
-                        <b className={c.healthScore > 75 ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-rose-600 dark:text-rose-400 font-bold'}>
-                          {c.healthScore}/100
-                        </b>
-                      </td>
-                      <td>
-                        <span className="font-semibold text-xs text-rose-600 dark:text-rose-400">
-                          {c.criticalRisksCount || 0} critical
-                        </span>
-                      </td>
-                      <td className="font-mono text-xs text-slate-400">
-                        {new Date(c.uploadedAt).toLocaleDateString()}
-                      </td>
-                      <td style={{ textAlign: 'right' }}>
-                        <div className="flex gap-2 justify-end">
-                          <button
-                            className="px-4 py-2 text-sm font-semibold rounded-md bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-1.5"
-                            onClick={async () => {
-                              setDocumentId(c.id)
-                              setDocumentName(c.fileName)
-                              setHealthScore(c.healthScore)
-                              const fullDoc = await fetchContractByIdApi(c.id)
-                              if (fullDoc && fullDoc.clauses) {
-                                setClausesList(fullDoc.clauses)
-                                setSelectedClause(fullDoc.clauses[0] || null)
-                                setSummary(fullDoc.summary)
-                                if (fullDoc.collaborators?.length) setCollaboratorsCount(fullDoc.collaborators.length)
-                                if (fullDoc.summary?.missingProtections) setMissingProtections(fullDoc.summary.missingProtections)
-                                if (fullDoc.summary?.obligations) setObligations(fullDoc.summary.obligations)
-                                if (fullDoc.summary?.timeline) setTimeline(fullDoc.summary.timeline)
-                              }
-                              navigateTo('editor')
-                            }}
-                          >
-                            <FileText className="w-4 h-4 text-violet-400" /> Editor
-                          </button>
-                          <button
-                            className="px-3 py-2 text-sm font-semibold rounded-md bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 hover:border-rose-500/60 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-1.5"
-                            onClick={async () => {
-                              await deleteContractApi(c.id)
-                              showToast('Contract deleted')
-                              loadInitialData()
-                            }}
-                            title="Delete Contract"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
+                      </th>
+                      <th>Contract Title</th>
+                      <th>Type</th>
+                      <th>Status</th>
+                      <th>Health Score</th>
+                      <th>Risks</th>
+                      <th>Date</th>
+                      <th style={{ textAlign: 'right' }}>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredContracts.map((c) => (
+                      <tr key={c.id}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedContractIds.includes(c.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) setSelectedContractIds([...selectedContractIds, c.id])
+                              else setSelectedContractIds(selectedContractIds.filter((id) => id !== c.id))
+                            }}
+                          />
+                        </td>
+                        <td>
+                          <b className="block font-bold">{c.fileName}</b>
+                          <small className="text-slate-400 font-mono">{c.folder || 'General'}</small>
+                        </td>
+                        <td>{c.contractType || 'Commercial'}</td>
+                        <td>
+                          <span className={`status-badge status-${c.status}`}>{c.status?.replace('_', ' ')}</span>
+                        </td>
+                        <td>
+                          <b className={c.healthScore > 75 ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-rose-600 dark:text-rose-400 font-bold'}>
+                            {c.healthScore}/100
+                          </b>
+                        </td>
+                        <td>
+                          <span className="font-semibold text-xs text-rose-600 dark:text-rose-400">
+                            {c.criticalRisksCount || 0} critical
+                          </span>
+                        </td>
+                        <td className="font-mono text-xs text-slate-400">
+                          {new Date(c.uploadedAt).toLocaleDateString()}
+                        </td>
+                        <td style={{ textAlign: 'right' }}>
+                          <div className="flex gap-2 justify-end">
+                            <button
+                              className="px-4 py-2 text-sm font-semibold rounded-md bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-1.5"
+                              onClick={async () => {
+                                setDocumentId(c.id)
+                                setDocumentName(c.fileName)
+                                setHealthScore(c.healthScore)
+                                const fullDoc = await fetchContractByIdApi(c.id)
+                                if (fullDoc && fullDoc.clauses) {
+                                  setClausesList(fullDoc.clauses)
+                                  setSelectedClause(fullDoc.clauses[0] || null)
+                                  setSummary(fullDoc.summary)
+                                  if (fullDoc.collaborators?.length) setCollaboratorsCount(fullDoc.collaborators.length)
+                                  if (fullDoc.summary?.missingProtections) setMissingProtections(fullDoc.summary.missingProtections)
+                                  if (fullDoc.summary?.obligations) setObligations(fullDoc.summary.obligations)
+                                  if (fullDoc.summary?.timeline) setTimeline(fullDoc.summary.timeline)
+                                }
+                                navigateTo('editor')
+                              }}
+                            >
+                              <FileText className="w-4 h-4 text-violet-400" /> Editor
+                            </button>
+                            <button
+                              className="px-3 py-2 text-sm font-semibold rounded-md bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 hover:border-rose-500/60 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-1.5"
+                              onClick={async () => {
+                                await deleteContractApi(c.id)
+                                showToast('Contract deleted')
+                                loadInitialData()
+                              }}
+                              title="Delete Contract"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>
@@ -3459,7 +3461,7 @@ export default function App() {
             </div>
 
             {/* Messages Scroll Area */}
-            <div className="chat-messages">
+            <div className="chat-messages custom-scrollbar max-h-[380px] min-h-[220px] overflow-y-auto">
               {chatMessages.map((msg) => (
                 <div key={msg.id} className={`chat-msg ${msg.role}`}>
                   <p className="leading-relaxed">{msg.content}</p>
