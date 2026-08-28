@@ -3064,3 +3064,372 @@ html.dark .laser-preview-frame {
   border-color: rgba(255, 255, 255, 0.14);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(124, 58, 237, 0.2);
 }
+
+/* ========================================================================= */
+/* 23. LIGHT-THEME PREMIUM REFINEMENT                                        */
+/* ========================================================================= */
+/* Light is intentionally the base palette. Dark mode is only applied by the
+   existing, explicit .dark class controlled by the user-facing theme toggle. */
+:root,
+html.light {
+  --bg-main: #fbfcf8;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f4f6ef;
+  --bg-card: #ffffff;
+  --bg-card-subtle: #fafbf7;
+  --border-color: rgba(31, 41, 55, 0.09);
+  --border-subtle: rgba(31, 41, 55, 0.05);
+
+  --primary-green: #b8f28a;
+  --primary-green-hover: #a8ea78;
+  --primary-green-soft: rgba(184, 242, 138, 0.24);
+  --primary-green-glow: rgba(184, 242, 138, 0.42);
+  --primary-green-ink: #20291e;
+  --primary-green-border: rgba(120, 185, 72, 0.38);
+
+  --accent-pink: #d983a8;
+  --accent-pink-light: #f2a6c2;
+  --accent-pink-soft: #fff1f6;
+  --accent-pink-muted: #e9a9c1;
+  --accent-pink-glow: rgba(242, 166, 194, 0.34);
+
+  --card-border-red: #ff4d5a;
+  --card-border-red-soft: rgba(255, 77, 90, 0.2);
+  --card-border-red-glow: rgba(255, 77, 90, 0.26);
+
+  --accent-primary: var(--accent-pink);
+  --accent-hover: #c96f98;
+  --accent-light: var(--accent-pink-light);
+  --accent-subtle: var(--accent-pink-soft);
+  --accent-border: #f0bad0;
+  --accent-glow: 0 0 24px -4px var(--accent-pink-glow);
+  --border-glow: var(--primary-green-border);
+  --coral-accent: var(--primary-green);
+  --coral-hover: var(--primary-green-hover);
+  --coral-bg: var(--primary-green-soft);
+  --peri: var(--accent-pink);
+  --peri-ink: #a34d72;
+  --shadow-glow: 0 10px 28px -6px rgba(120, 185, 72, 0.24), 0 0 0 1px rgba(120, 185, 72, 0.14);
+}
+
+html.dark {
+  --primary-green: #c4f39b;
+  --primary-green-hover: #d2f8ae;
+  --primary-green-soft: rgba(184, 242, 138, 0.2);
+  --primary-green-glow: rgba(184, 242, 138, 0.35);
+  --primary-green-ink: #182018;
+  --primary-green-border: rgba(184, 242, 138, 0.42);
+  --accent-pink: #f2a6c2;
+  --accent-pink-light: #f7c6d8;
+  --accent-pink-soft: rgba(242, 166, 194, 0.14);
+  --accent-pink-muted: #e9a9c1;
+  --accent-pink-glow: rgba(242, 166, 194, 0.3);
+  --card-border-red: #ff6571;
+  --card-border-red-soft: rgba(255, 101, 113, 0.24);
+  --card-border-red-glow: rgba(255, 101, 113, 0.3);
+  --accent-primary: var(--accent-pink);
+  --accent-hover: var(--accent-pink-light);
+  --accent-light: var(--accent-pink-light);
+  --accent-subtle: var(--accent-pink-soft);
+  --accent-border: rgba(242, 166, 194, 0.4);
+  --accent-glow: 0 0 25px -4px var(--accent-pink-glow);
+  --border-glow: var(--primary-green-border);
+  --coral-accent: var(--primary-green);
+  --coral-hover: var(--primary-green-hover);
+  --coral-bg: var(--primary-green-soft);
+  --peri: var(--accent-pink);
+  --peri-ink: var(--accent-pink-light);
+  --shadow-glow: 0 0 28px rgba(184, 242, 138, 0.22);
+}
+
+.legal-ambient-mesh::before {
+  background-image:
+    radial-gradient(circle at 50% -8%, rgba(184, 242, 138, 0.2) 0%, rgba(184, 242, 138, 0.045) 34%, transparent 61%),
+    radial-gradient(circle at 91% 19%, rgba(242, 166, 194, 0.1) 0%, transparent 44%),
+    radial-gradient(circle at 8% 72%, rgba(255, 106, 0, 0.055) 0%, transparent 48%),
+    linear-gradient(to right, rgba(31, 41, 55, 0.022) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(31, 41, 55, 0.022) 1px, transparent 1px);
+}
+
+.brand > span:last-child > span,
+h1 em,
+h2 em,
+.auth-hero-content h1 em {
+  color: var(--accent-pink) !important;
+  text-shadow: 0 0 18px var(--accent-pink-glow);
+}
+
+.brand-mark {
+  background: linear-gradient(135deg, var(--primary-green) 0%, #d9f8b8 100%);
+  color: var(--primary-green-ink);
+  border-color: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 4px 14px rgba(143, 208, 87, 0.34);
+}
+.brand:hover .brand-mark {
+  box-shadow: 0 6px 20px rgba(143, 208, 87, 0.46);
+}
+
+.main-nav button.nav-active {
+  color: var(--accent-pink) !important;
+  border-color: rgba(217, 131, 168, 0.34) !important;
+  box-shadow: 0 2px 9px rgba(217, 131, 168, 0.16), 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.main-nav button.nav-active::after {
+  background: linear-gradient(90deg, transparent, var(--accent-pink-light), transparent);
+  box-shadow: 0 0 7px var(--accent-pink-glow);
+}
+
+/* Soft highlighter-green primary actions with a dark, readable ink color. */
+.button-coral,
+.button-primary,
+.button-pill-cta {
+  background: linear-gradient(135deg, #c9f6a3 0%, var(--primary-green) 56%, #abe87b 100%) !important;
+  color: var(--primary-green-ink) !important;
+  border-color: var(--primary-green-border) !important;
+  box-shadow: 0 5px 18px -4px var(--primary-green-glow), 0 2px 7px rgba(108, 162, 65, 0.18) !important;
+}
+.button-coral:hover,
+.button-primary:hover,
+.button-pill-cta:hover {
+  background: linear-gradient(135deg, #d6f9b7 0%, var(--primary-green-hover) 58%, #9fe36d 100%) !important;
+  box-shadow: 0 9px 25px -5px rgba(157, 224, 104, 0.62), 0 0 22px rgba(184, 242, 138, 0.3) !important;
+  transform: translateY(-2px);
+}
+.button-coral:active,
+.button-primary:active,
+.button-pill-cta:active {
+  box-shadow: 0 3px 10px -5px rgba(120, 185, 72, 0.42) !important;
+  transform: translateY(0) scale(0.985);
+}
+
+/* Authentication keeps the established orange brand accent. */
+.auth-login-signup-btn {
+  background: linear-gradient(135deg, #ff842d 0%, #ff6a00 58%, #f85c00 100%) !important;
+  color: #251408 !important;
+  border-color: rgba(202, 74, 0, 0.35) !important;
+  box-shadow: 0 5px 20px -4px rgba(255, 106, 0, 0.48), 0 2px 8px rgba(180, 68, 0, 0.2) !important;
+}
+.auth-login-signup-btn:hover {
+  background: linear-gradient(135deg, #ff9a51 0%, #ff7410 58%, #ff6400 100%) !important;
+  box-shadow: 0 9px 28px -4px rgba(255, 106, 0, 0.58), 0 0 20px rgba(255, 151, 66, 0.28) !important;
+}
+.auth-login-signup-btn:active {
+  box-shadow: 0 3px 12px -5px rgba(211, 80, 0, 0.55) !important;
+}
+
+.button-light:hover,
+.button-outline:hover,
+.icon-btn:hover,
+.social-button:hover {
+  border-color: var(--primary-green-border);
+  box-shadow: 0 5px 18px -5px rgba(120, 185, 72, 0.18), 0 0 14px rgba(184, 242, 138, 0.15);
+}
+
+/* Inputs and upload surfaces share the same visible, gentle green focus cue. */
+input:not([type="checkbox"]):focus,
+textarea:focus,
+select:focus,
+.input-group input:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--primary-green-border) !important;
+  box-shadow: 0 0 0 3px rgba(184, 242, 138, 0.2), 0 0 18px rgba(184, 242, 138, 0.16) !important;
+}
+.modal-panel label:has(input[type="file"]):hover {
+  border-color: rgba(120, 185, 72, 0.72) !important;
+  background: rgba(184, 242, 138, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(184, 242, 138, 0.14), 0 10px 24px -14px rgba(120, 185, 72, 0.42);
+}
+
+/* Replace utility-based purple accents without touching semantic risk colors. */
+.text-violet-200, .text-violet-300, .text-violet-400, .text-violet-600, .text-violet-700, .text-violet-900,
+.text-indigo-400, .text-indigo-500, .text-indigo-600,
+.text-purple-400 {
+  color: var(--accent-pink) !important;
+  text-shadow: 0 0 14px rgba(242, 166, 194, 0.18);
+}
+[class*="bg-violet-"], [class*="bg-indigo-"], [class*="bg-purple-"] {
+  background-color: var(--primary-green-soft) !important;
+}
+[class*="border-violet-"], [class*="border-indigo-"], [class*="border-purple-"] {
+  border-color: var(--primary-green-border) !important;
+}
+[class*="from-violet-"], [class*="from-indigo-"], [class*="from-purple-"] {
+  --tw-gradient-from: var(--primary-green) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(184, 242, 138, 0) var(--tw-gradient-to-position) !important;
+}
+[class*="to-violet-"], [class*="to-indigo-"], [class*="to-purple-"] {
+  --tw-gradient-to: #a8ea78 var(--tw-gradient-to-position) !important;
+}
+[class*="hover:border-violet-"]:hover, [class*="hover:border-indigo-"]:hover, [class*="hover:border-purple-"]:hover {
+  border-color: rgba(120, 185, 72, 0.72) !important;
+}
+[class*="hover:bg-violet-"]:hover, [class*="hover:bg-indigo-"]:hover, [class*="hover:bg-purple-"]:hover {
+  background-color: rgba(184, 242, 138, 0.28) !important;
+}
+
+/* A thicker red energy line travels around cards only while they are hovered. */
+@property --card-border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+:where(
+  .bento-step-card,
+  .stat-card,
+  .health-card,
+  .recommend-card,
+  .protection-card,
+  .concern-card,
+  .generator-card,
+  .library-card,
+  .profile-card-section,
+  .connected-account-card
+) {
+  isolation: isolate;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+:where(
+  .bento-step-card,
+  .stat-card,
+  .health-card,
+  .recommend-card,
+  .protection-card,
+  .concern-card,
+  .generator-card,
+  .library-card,
+  .profile-card-section,
+  .connected-account-card
+)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  padding: 2.5px;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--card-border-angle),
+    transparent 0deg 55deg,
+    rgba(255, 77, 90, 0.18) 76deg,
+    var(--card-border-red) 96deg 142deg,
+    rgba(255, 77, 90, 0.22) 164deg,
+    transparent 192deg 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity 0.24s ease;
+}
+
+:where(
+  .bento-step-card,
+  .stat-card,
+  .health-card,
+  .recommend-card,
+  .protection-card,
+  .concern-card,
+  .generator-card,
+  .library-card,
+  .profile-card-section,
+  .connected-account-card
+):hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(255, 77, 90, 0.58) !important;
+  box-shadow: 0 18px 36px -13px rgba(15, 23, 42, 0.2), 0 0 24px var(--card-border-red-glow) !important;
+}
+
+:where(
+  .bento-step-card,
+  .stat-card,
+  .health-card,
+  .recommend-card,
+  .protection-card,
+  .concern-card,
+  .generator-card,
+  .library-card,
+  .profile-card-section,
+  .connected-account-card
+):hover::after {
+  opacity: 1;
+  animation: card-border-orbit 3.15s linear infinite;
+}
+
+.bento-step-card::before {
+  display: none;
+}
+
+@keyframes card-border-orbit {
+  to { --card-border-angle: 360deg; }
+}
+
+/* Light-mode AI feedback is luminous, but never neon. */
+@keyframes laserGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 13px rgba(184, 242, 138, 0.58), 0 0 26px rgba(184, 242, 138, 0.26), 0 0 7px rgba(242, 166, 194, 0.34);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(184, 242, 138, 0.76), 0 0 38px rgba(184, 242, 138, 0.34), 0 0 11px rgba(242, 166, 194, 0.42);
+  }
+}
+.ocr-skeleton-shimmer {
+  background: linear-gradient(90deg, rgba(31, 41, 55, 0.03) 0%, rgba(184, 242, 138, 0.3) 50%, rgba(31, 41, 55, 0.03) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .auth-page {
+    place-items: start center;
+    padding: 16px;
+  }
+  .auth-layout {
+    grid-template-columns: minmax(0, 1fr);
+    border-radius: 20px;
+  }
+  .auth-panel {
+    padding: 28px 24px;
+  }
+  .auth-panel-brand {
+    border-right: 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .auth-hero-content {
+    margin: 22px 0;
+  }
+  .auth-brand-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 12px;
+  }
+  .auth-layout {
+    border-radius: 17px;
+  }
+  .auth-panel {
+    padding: 23px 20px;
+  }
+  .auth-panel-brand {
+    padding-bottom: 20px;
+  }
+  .auth-hero-content h1 {
+    font-size: 29px;
+  }
+  .social-auth-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

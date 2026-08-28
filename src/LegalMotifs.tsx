@@ -226,16 +226,13 @@ export const IndianContractActBadge: React.FC<{ variant?: 'compact' | 'expanded'
         <path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </div>
-    <div className="flex flex-col text-left leading-tight">
-      <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 dark:text-emerald-300">
-        Indian Contract Act 1872 Verified
-      </span>
-      {variant === 'expanded' && (
+    {variant === 'expanded' && (
+      <div className="flex flex-col text-left leading-tight">
         <span className="text-[9px] text-slate-500 dark:text-slate-400 font-mono">
           Section 73 & 74 Damages & Liability Standard
         </span>
-      )}
-    </div>
+      </div>
+    )}
   </div>
 )
 
@@ -317,4 +314,3 @@ export const IndianLegalEmptyBanner: React.FC<{
     </div>
   </div>
 )
-
