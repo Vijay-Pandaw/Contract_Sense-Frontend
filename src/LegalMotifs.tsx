@@ -196,27 +196,24 @@ export const LegalLedgerIcon: React.FC<{ className?: string }> = ({ className = 
 /**
  * 3. High-Tech Glassmorphism Legal Stamps / Badges
  */
-export const StatutoryMSMEDBadge: React.FC<{ variant?: 'compact' | 'expanded' }> = ({ variant = 'compact' }) => (
-  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/90 dark:bg-[#0e0e12]/90 border border-violet-200 dark:border-violet-500/40 text-violet-900 dark:text-violet-200 text-xs font-semibold backdrop-blur-md shadow-sm dark:shadow-[0_0_20px_rgba(124,58,237,0.25)] hover:border-violet-400 hover:shadow-md transition-all">
-    <div className="w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-600/30 border border-violet-300 dark:border-violet-400/50 flex items-center justify-center shrink-0">
-      <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-violet-700 dark:text-violet-300" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="9" strokeDasharray="3 2" />
-        <path d="M12 3v18M3 12h18" strokeWidth="1" />
-        <circle cx="12" cy="12" r="2" fill="currentColor" />
-      </svg>
-    </div>
-    <div className="flex flex-col text-left leading-tight">
-      <span className="text-[10px] font-extrabold uppercase tracking-widest text-violet-700 dark:text-violet-300">
-        Statutory MSMED Compliance Engine
+export const StatutoryMSMEDBadge: React.FC<{ variant?: 'compact' | 'expanded' }> = ({ variant = 'compact' }) => {
+  if (variant === 'compact') return null
+
+  return (
+    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/90 dark:bg-[#0e0e12]/90 border border-violet-200 dark:border-violet-500/40 text-violet-900 dark:text-violet-200 text-xs font-semibold backdrop-blur-md shadow-sm dark:shadow-[0_0_20px_rgba(124,58,237,0.25)] hover:border-violet-400 hover:shadow-md transition-all">
+      <div className="w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-600/30 border border-violet-300 dark:border-violet-400/50 flex items-center justify-center shrink-0">
+        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-violet-700 dark:text-violet-300" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="9" strokeDasharray="3 2" />
+          <path d="M12 3v18M3 12h18" strokeWidth="1" />
+          <circle cx="12" cy="12" r="2" fill="currentColor" />
+        </svg>
+      </div>
+      <span className="text-[9px] text-slate-500 dark:text-slate-400 font-mono">
+        Section 15 & 16 (45-Day Overdue Audit Active)
       </span>
-      {variant === 'expanded' && (
-        <span className="text-[9px] text-slate-500 dark:text-slate-400 font-mono">
-          Section 15 & 16 (45-Day Overdue Audit Active)
-        </span>
-      )}
     </div>
-  </div>
-)
+  )
+}
 
 export const IndianContractActBadge: React.FC<{ variant?: 'compact' | 'expanded' }> = ({ variant = 'compact' }) => (
   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/90 dark:bg-[#0d140e]/90 border border-emerald-200 dark:border-emerald-500/40 text-emerald-900 dark:text-emerald-200 text-xs font-semibold backdrop-blur-md shadow-sm dark:shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:border-emerald-400 hover:shadow-md transition-all">
@@ -236,10 +233,10 @@ export const IndianContractActBadge: React.FC<{ variant?: 'compact' | 'expanded'
   </div>
 )
 
-export const ConstitutionSealStamp: React.FC<{ title?: string; subtitle?: string }> = ({
-  title = 'CONSTITUTION OF INDIA',
-  subtitle = 'STATUTORY JURISDICTION',
-}) => (
+export const ConstitutionSealStamp: React.FC<{ title?: string; subtitle?: string }> = ({ title, subtitle }) => {
+  if (!title && !subtitle) return null
+
+  return (
   <div className="relative inline-flex items-center gap-3 p-2 px-3.5 rounded-xl bg-gradient-to-r from-amber-50/80 via-white to-amber-50/80 dark:from-violet-950/40 dark:via-[#121218]/90 dark:to-amber-950/30 border border-amber-200/80 dark:border-amber-500/30 backdrop-blur-xl shadow-sm dark:shadow-[0_0_20px_rgba(245,158,11,0.15)] group hover:border-amber-400 transition-all">
     {/* Ashoka Wheel Seal */}
     <div className="relative w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-500/10 border border-amber-400/80 flex items-center justify-center shrink-0 shadow-sm">
@@ -261,15 +258,20 @@ export const ConstitutionSealStamp: React.FC<{ title?: string; subtitle?: string
       </svg>
     </div>
     <div className="flex flex-col">
-      <span className="text-[11px] font-black tracking-wider uppercase bg-clip-text text-transparent bg-gradient-to-r from-amber-800 to-amber-600 dark:from-amber-300 dark:via-amber-200 dark:to-yellow-100 font-serif">
-        {title}
-      </span>
-      <span className="text-[8.5px] font-mono tracking-widest text-amber-700/90 dark:text-amber-400/80 uppercase">
-        {subtitle}
-      </span>
+      {title && (
+        <span className="text-[11px] font-black tracking-wider uppercase bg-clip-text text-transparent bg-gradient-to-r from-amber-800 to-amber-600 dark:from-amber-300 dark:via-amber-200 dark:to-yellow-100 font-serif">
+          {title}
+        </span>
+      )}
+      {subtitle && (
+        <span className="text-[8.5px] font-mono tracking-widest text-amber-700/90 dark:text-amber-400/80 uppercase">
+          {subtitle}
+        </span>
+      )}
     </div>
   </div>
-)
+  )
+}
 
 /**
  * 4. Artistic Indian Legal Empty State & Upload Zone Banner

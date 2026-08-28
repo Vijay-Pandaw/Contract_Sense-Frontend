@@ -3433,3 +3433,209 @@ select:focus,
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ========================================================================= */
+/* 24. EXTRACTION RISK CARDS & STATUS MINI-CARDS                             */
+/* ========================================================================= */
+/* The rainbow treatment is deliberately scoped to clause-analysis cards. */
+@property --analysis-rainbow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+:where(.analysis-risk-card, .analysis-clause-card, .analysis-scan-card) {
+  position: relative;
+  isolation: isolate;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+:where(.analysis-risk-card, .analysis-clause-card, .analysis-scan-card)::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--analysis-rainbow-angle),
+    #ff4d5a 0deg,
+    #ff8a3d 50deg,
+    #f4d64e 101deg,
+    #88d77a 153deg,
+    #58d4d7 205deg,
+    #6d9cff 257deg,
+    #b87de5 309deg,
+    #ff4d5a 360deg
+  );
+  filter: blur(15px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+
+:where(.analysis-risk-card, .analysis-clause-card, .analysis-scan-card)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  padding: 3.5px;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--analysis-rainbow-angle),
+    #ff4d5a 0deg,
+    #ff8a3d 50deg,
+    #f4d64e 101deg,
+    #88d77a 153deg,
+    #58d4d7 205deg,
+    #6d9cff 257deg,
+    #b87de5 309deg,
+    #ff4d5a 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity 0.25s ease;
+}
+
+:where(.analysis-risk-card, .analysis-clause-card, .analysis-scan-card):hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 77, 90, 0.5) !important;
+  box-shadow: 0 17px 34px -15px rgba(15, 23, 42, 0.2), 0 0 19px rgba(255, 138, 61, 0.12), 0 0 24px rgba(88, 212, 215, 0.1);
+}
+
+:where(.analysis-risk-card, .analysis-clause-card, .analysis-scan-card):hover::before,
+:where(.analysis-risk-card, .analysis-clause-card, .analysis-scan-card):hover::after {
+  opacity: 1;
+  animation: analysis-rainbow-orbit 3.8s linear infinite;
+}
+
+@keyframes analysis-rainbow-orbit {
+  to { --analysis-rainbow-angle: 360deg; }
+}
+
+/* Risk labels are compact status cards, with a restrained moving perimeter. */
+@property --risk-pill-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.risk-pill {
+  --risk-accent: #059669;
+  --risk-glow: rgba(16, 185, 129, 0.22);
+  --risk-border-width: 1.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  isolation: isolate;
+  min-height: 30px;
+  padding: 6px 11px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.risk-pill::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--risk-accent);
+  filter: blur(9px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.risk-pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: var(--risk-border-width);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--risk-pill-angle),
+    transparent 0deg 72deg,
+    color-mix(in srgb, var(--risk-accent) 35%, transparent) 96deg,
+    var(--risk-accent) 122deg 188deg,
+    color-mix(in srgb, var(--risk-accent) 38%, transparent) 212deg,
+    transparent 236deg 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity 0.2s ease;
+}
+
+.risk-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 13px -5px var(--risk-glow), 0 0 12px var(--risk-glow);
+}
+
+.risk-pill:hover::before,
+.risk-pill:hover::after {
+  opacity: 1;
+  animation: risk-pill-orbit 3.25s linear infinite;
+}
+
+.risk-pill.risk-low {
+  --risk-accent: #059669;
+  --risk-glow: rgba(16, 185, 129, 0.24);
+  color: #047857;
+  background: rgba(236, 253, 245, 0.94);
+  border: 1px solid rgba(16, 185, 129, 0.32);
+}
+
+.risk-pill.risk-medium {
+  --risk-accent: #d39112;
+  --risk-glow: rgba(211, 145, 18, 0.23);
+  color: #a16207;
+  background: rgba(255, 251, 235, 0.94);
+  border: 1px solid rgba(217, 151, 26, 0.34);
+}
+
+.risk-pill.risk-high,
+.risk-pill.risk-critical {
+  --risk-accent: #ff4d5a;
+  --risk-glow: rgba(255, 77, 90, 0.32);
+  --risk-border-width: 3.5px;
+  color: #d93645;
+  background: rgba(255, 244, 245, 0.96);
+  border: 1px solid rgba(255, 77, 90, 0.48);
+  box-shadow: 0 2px 8px rgba(255, 77, 90, 0.12);
+}
+
+.risk-pill.risk-high:hover,
+.risk-pill.risk-critical:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 17px -5px rgba(255, 77, 90, 0.42), 0 0 17px rgba(255, 77, 90, 0.27);
+}
+
+@keyframes risk-pill-orbit {
+  to { --risk-pill-angle: 360deg; }
+}
+
+html.dark .risk-pill.risk-low { color: #6ee7b7; background: rgba(16, 185, 129, 0.14); border-color: rgba(52, 211, 153, 0.38); }
+html.dark .risk-pill.risk-medium { color: #facc15; background: rgba(245, 158, 11, 0.14); border-color: rgba(250, 204, 21, 0.36); }
+html.dark .risk-pill.risk-high,
+html.dark .risk-pill.risk-critical { color: #ff9aa3; background: rgba(255, 77, 90, 0.14); border-color: rgba(255, 101, 113, 0.5); }
+
+@media (max-width: 640px) {
+  .risk-pill {
+    min-height: 28px;
+    padding: 5px 9px;
+    font-size: 12.5px;
+  }
+}

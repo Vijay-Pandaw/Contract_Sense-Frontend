@@ -1595,7 +1595,6 @@ export default function App() {
                 <p className="eyebrow m-0">
                   <FileCheck className="w-3.5 h-3.5" /> Active Contract Risk Audit
                 </p>
-                <ConstitutionSealStamp title="CONSTITUTION OF INDIA" subtitle="STATUTORY MSMED 2006 JURISDICTION" />
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 {documentName} <em className="text-violet-600 dark:text-violet-400">Score: {healthScore}/100</em>
@@ -1786,7 +1785,7 @@ export default function App() {
                 return (
                   <div
                     key={clause.id}
-                    className={`p-5 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
+                    className={`analysis-risk-card p-5 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
                       isHigh
                         ? 'bg-rose-50/40 dark:bg-[#18181f] border-rose-200 dark:border-rose-500/30 hover:border-rose-400 dark:hover:border-rose-500/60 shadow-md'
                         : 'bg-white dark:bg-[#121215] border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 shadow-sm hover:shadow-md'
@@ -1910,7 +1909,7 @@ export default function App() {
                   return (
                     <div
                       key={clause.id}
-                      className={`p-4 sm:p-5 rounded-xl border transition-all duration-200 cursor-pointer ${
+                      className={`analysis-clause-card p-4 sm:p-5 rounded-xl border transition-all duration-200 cursor-pointer ${
                         isSelected
                           ? 'bg-violet-50/40 dark:bg-[#18181f] border-violet-400 dark:border-violet-500/70 shadow-md ring-1 ring-violet-400/30'
                           : 'bg-slate-50/50 dark:bg-[#16161a] border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-[#1a1a20]'

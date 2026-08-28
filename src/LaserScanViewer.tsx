@@ -106,7 +106,7 @@ export const LaserScanViewer: React.FC<LaserScanViewerProps> = ({
         <div className="relative z-10 space-y-4 text-xs font-mono">
           {/* Clause 1: Payment Terms (MSMED Flagged) */}
           <div
-            className={`p-3.5 rounded-xl border transition-all duration-300 ${
+            className={`analysis-scan-card p-3.5 rounded-xl border transition-all duration-300 ${
               highlightedClauses.includes(1)
                 ? 'bg-rose-50/80 dark:bg-rose-950/30 border-rose-200 dark:border-rose-500/50 shadow-sm dark:shadow-[0_0_20px_rgba(244,63,94,0.15)]'
                 : 'bg-slate-50/60 dark:bg-white/5 border-slate-200/80 dark:border-white/10'
@@ -135,7 +135,7 @@ export const LaserScanViewer: React.FC<LaserScanViewerProps> = ({
 
           {/* Clause 2: Indemnity & Liabilities (Uncapped Damages Flagged) */}
           <div
-            className={`p-3.5 rounded-xl border transition-all duration-300 ${
+            className={`analysis-scan-card p-3.5 rounded-xl border transition-all duration-300 ${
               highlightedClauses.includes(2)
                 ? 'bg-amber-50/80 dark:bg-amber-950/30 border-amber-200 dark:border-amber-500/50 shadow-sm dark:shadow-[0_0_20px_rgba(245,158,11,0.15)]'
                 : 'bg-slate-50/60 dark:bg-white/5 border-slate-200/80 dark:border-white/10'
@@ -164,7 +164,7 @@ export const LaserScanViewer: React.FC<LaserScanViewerProps> = ({
 
           {/* Clause 3: Dispute Resolution & Arbitration (MSMED Council Verified) */}
           <div
-            className={`p-3.5 rounded-xl border transition-all duration-300 ${
+            className={`analysis-scan-card p-3.5 rounded-xl border transition-all duration-300 ${
               highlightedClauses.includes(3)
                 ? 'bg-emerald-50/80 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-500/40'
                 : 'bg-slate-50/60 dark:bg-white/5 border-slate-200/80 dark:border-white/10'
@@ -186,7 +186,7 @@ export const LaserScanViewer: React.FC<LaserScanViewerProps> = ({
           </div>
 
           {/* Skeleton Shimmering Clause Extraction Line */}
-          <div className="p-3 rounded-xl bg-slate-50/60 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 space-y-2">
+          <div className="analysis-scan-card p-3 rounded-xl bg-slate-50/60 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 space-y-2">
             <div className="h-3 w-3/4 ocr-skeleton-shimmer rounded" />
             <div className="h-2.5 w-full ocr-skeleton-shimmer rounded" />
             <div className="h-2.5 w-5/6 ocr-skeleton-shimmer rounded" />
@@ -220,4 +220,3 @@ export const LaserScanViewer: React.FC<LaserScanViewerProps> = ({
     </div>
   )
 }
-
