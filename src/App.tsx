@@ -240,7 +240,7 @@ const riskMeta: Record<RiskLevel, { label: string; className: string }> = {
 export default function App() {
   // Navigation & View State
   const [currentView, setCurrentView] = useState<ViewType>('welcome')
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark')
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [editorTab, setEditorTab] = useState<'clauses' | 'inspector'>('clauses')
   const [heroPreviewTab, setHeroPreviewTab] = useState<'risks' | 'redlines' | 'msmed'>('risks')
@@ -527,7 +527,7 @@ export default function App() {
   // Initialize Theme and Listen for Firebase Auth State Changes
   useEffect(() => {
     const savedTheme = localStorage.getItem('contractsense_theme') as 'light' | 'dark' | null
-    const activeTheme = savedTheme || 'dark'
+    const activeTheme = savedTheme || 'light'
     setTheme(activeTheme)
     document.documentElement.classList.toggle('dark', activeTheme === 'dark')
     document.documentElement.classList.toggle('light', activeTheme === 'light')
@@ -1184,22 +1184,21 @@ export default function App() {
             <div className="hero-copy relative z-10">
               {/* Glowing Pill / Badge */}
               <div className="flex flex-wrap items-center gap-2 mb-5">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-semibold uppercase tracking-wider backdrop-blur-md shadow-[0_0_20px_rgba(124,58,237,0.25)] animate-fade-in-up">
-                  <span className="text-violet-400">✦</span> AI-POWERED CONTRACT INTELLIGENCE
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-200 dark:border-violet-500/30 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300 text-xs font-bold uppercase tracking-wider backdrop-blur-md shadow-sm dark:shadow-[0_0_20px_rgba(124,58,237,0.25)] animate-fade-in-up">
+                  <span className="text-violet-600 dark:text-violet-400">✦</span> AI-POWERED CONTRACT INTELLIGENCE
                 </div>
-                <ConstitutionSealStamp title="INDIAN LEGAL INTELLIGENCE" subtitle="MSMED ACT 2006 & STATUTORY AUDIT" />
               </div>
 
               {/* Oversized Heavy Bold Sans-Serif Hero Title with Elegant Italic Highlighting */}
-              <h1 className="hero-title text-4xl sm:text-5xl lg:text-[58px] font-extrabold tracking-tight text-white leading-[1.08] mb-6">
+              <h1 className="hero-title text-4xl sm:text-5xl lg:text-[58px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.08] mb-6">
                 Detect risky clauses in seconds. <br className="hidden sm:inline" />
-                <em className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-300 font-normal drop-shadow-[0_0_35px_rgba(167,139,250,0.5)]">
+                <em className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-300 dark:to-indigo-300 font-normal drop-shadow-sm dark:drop-shadow-[0_0_35px_rgba(167,139,250,0.5)]">
                   Protect your business.
                 </em>
               </h1>
 
-              <p className="hero-description text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mb-6">
-                ContractSense automatically audits MSME & vendor agreements against Indian statutory payment laws, caps unlimited liabilities, flags missing safeguards, and suggests 1-click fair redlines.
+              <p className="hero-description text-slate-600 dark:text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mb-6">
+                ContractSense automatically audits MSME & vendor agreements against statutory payment laws, caps unlimited liabilities, flags missing safeguards, and suggests 1-click fair redlines.
               </p>
 
               {/* Statutory Compliance Badges */}
@@ -1211,29 +1210,29 @@ export default function App() {
               {/* Primary & Secondary CTAs */}
               <div className="hero-cta flex items-center gap-4 flex-wrap mb-8">
                 <button
-                  className="button button-coral hover:-translate-y-0.5 hover:scale-[1.02] transition-all duration-200 shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] text-base font-bold px-6 py-3.5 rounded-lg flex items-center gap-2.5"
+                  className="button button-coral hover:-translate-y-0.5 hover:scale-[1.02] transition-all duration-200 shadow-md hover:shadow-lg text-base font-bold px-6 py-3.5 rounded-xl flex items-center gap-2.5"
                   onClick={() => setUploadModalOpen(true)}
                 >
                   <FileUp className="w-5 h-5" /> Analyze a Contract Now
                 </button>
                 <button
-                  className="button button-dark rounded-lg border border-white/20 hover:border-violet-500/50 hover:bg-white/10 hover:-translate-y-0.5 text-white text-base font-bold px-6 py-3.5 transition-all duration-200 flex items-center gap-2.5"
+                  className="button button-light rounded-xl border border-slate-200 dark:border-white/20 hover:border-violet-400 dark:hover:border-violet-500/50 hover:bg-slate-50 dark:hover:bg-white/10 hover:-translate-y-0.5 text-slate-800 dark:text-white text-base font-bold px-6 py-3.5 transition-all duration-200 flex items-center gap-2.5 shadow-sm"
                   onClick={() => navigateTo('generator')}
                 >
-                  <Sparkles className="w-5 h-5 text-violet-400" /> Generate New Agreement
+                  <Sparkles className="w-5 h-5 text-violet-600 dark:text-violet-400" /> Generate New Agreement
                 </button>
               </div>
 
               {/* Trust Indicators */}
-              <div className="hero-trust flex items-center gap-6 text-xs text-slate-400 font-medium flex-wrap">
-                <span className="inline-flex items-center gap-2 text-slate-300">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" /> MSMED Act 2006 Compliant
+              <div className="hero-trust flex items-center gap-6 text-xs text-slate-500 dark:text-slate-400 font-medium flex-wrap">
+                <span className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> MSMED Act 2006 Compliant
                 </span>
-                <span className="inline-flex items-center gap-2 text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" /> SOC2 & GDPR Encrypted
+                <span className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> SOC2 & GDPR Encrypted
                 </span>
-                <span className="inline-flex items-center gap-2 text-slate-300">
-                  <LockKeyhole className="w-4 h-4 text-violet-400" /> 100% Confidential
+                <span className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                  <LockKeyhole className="w-4 h-4 text-violet-600 dark:text-violet-400" /> 100% Confidential
                 </span>
               </div>
             </div>
@@ -1243,107 +1242,107 @@ export default function App() {
               <div className="scan-halo" />
 
               {/* Modern Layered Preview Panel */}
-              <div className="hero-interactive-panel relative z-10 w-full max-w-[500px] rounded-2xl bg-[#121215]/90 border border-white/15 p-5 sm:p-6 shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-violet-500/40 hover:shadow-[0_0_40px_rgba(124,58,237,0.25)]">
+              <div className="hero-interactive-panel relative z-10 w-full max-w-[500px] rounded-2xl bg-white dark:bg-[#121215]/90 border border-slate-200/80 dark:border-white/15 p-5 sm:p-6 shadow-xl dark:shadow-2xl backdrop-blur-2xl transition-all duration-300 hover:border-violet-400 dark:hover:border-violet-500/40 hover:shadow-2xl">
                 
                 {/* Panel Top Window Bar */}
-                <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b border-white/10">
+                <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b border-slate-200 dark:border-white/10">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
-                    <span className="ml-2 font-mono text-[11px] text-slate-400 truncate max-w-[180px]">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+                    <span className="ml-2 font-mono text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[180px]">
                       MSA_Vendor_Agreement.pdf
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Audit
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live Audit
                     </span>
                   </div>
                 </div>
 
                 {/* Interactive Sub-Tabs */}
-                <div className="flex items-center gap-1 p-1 bg-white/5 rounded-xl border border-white/10 mb-4">
+                <div className="flex items-center gap-1 p-1 bg-slate-100/80 dark:bg-white/5 rounded-xl border border-slate-200/80 dark:border-white/10 mb-4">
                   <button
                     type="button"
                     onClick={() => setHeroPreviewTab('risks')}
                     className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 ${
                       heroPreviewTab === 'risks'
-                        ? 'bg-violet-600/30 text-white border border-violet-500/50 shadow-md shadow-violet-950/50'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                        ? 'bg-white dark:bg-violet-600/30 text-slate-900 dark:text-white border border-slate-200 dark:border-violet-500/50 shadow-sm dark:shadow-md'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
-                    <ShieldAlert className="w-3.5 h-3.5 text-rose-400" /> 3 High Risks
+                    <ShieldAlert className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" /> 3 High Risks
                   </button>
                   <button
                     type="button"
                     onClick={() => setHeroPreviewTab('redlines')}
                     className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 ${
                       heroPreviewTab === 'redlines'
-                        ? 'bg-violet-600/30 text-white border border-violet-500/50 shadow-md shadow-violet-950/50'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                        ? 'bg-white dark:bg-violet-600/30 text-slate-900 dark:text-white border border-slate-200 dark:border-violet-500/50 shadow-sm dark:shadow-md'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-violet-400" /> Smart Redline
+                    <Sparkles className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" /> Smart Redline
                   </button>
                   <button
                     type="button"
                     onClick={() => setHeroPreviewTab('msmed')}
                     className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 ${
                       heroPreviewTab === 'msmed'
-                        ? 'bg-violet-600/30 text-white border border-violet-500/50 shadow-md shadow-violet-950/50'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                        ? 'bg-white dark:bg-violet-600/30 text-slate-900 dark:text-white border border-slate-200 dark:border-violet-500/50 shadow-sm dark:shadow-md'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
-                    <Scale className="w-3.5 h-3.5 text-amber-400" /> MSMED Audit
+                    <Scale className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" /> MSMED Audit
                   </button>
                 </div>
 
                 {/* Tab 1: Risks Content */}
                 {heroPreviewTab === 'risks' && (
                   <div className="space-y-2.5 animate-fade-in-up">
-                    <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 flex items-start gap-3">
-                      <div className="p-1.5 rounded-lg bg-rose-500/20 text-rose-400 mt-0.5 shrink-0">
+                    <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/25 flex items-start gap-3">
+                      <div className="p-1.5 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 mt-0.5 shrink-0">
                         <AlertTriangle className="w-4 h-4" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-rose-300">Clause 8.2 — Net 90-Day Payment Term</span>
-                          <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                          <span className="text-xs font-bold text-rose-900 dark:text-rose-300">Clause 8.2 — Net 90-Day Payment Term</span>
+                          <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30">
                             Critical
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                        <p className="text-[11px] text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">
                           Violates Section 15 of MSMED Act 2006 (Maximum statutory payment term is 45 days).
                         </p>
                       </div>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
-                      <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400 mt-0.5 shrink-0">
+                    <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/25 flex items-start gap-3">
+                      <div className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 mt-0.5 shrink-0">
                         <ShieldAlert className="w-4 h-4" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-amber-300">Clause 14.1 — Unlimited Consequential Liability</span>
-                          <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                          <span className="text-xs font-bold text-amber-900 dark:text-amber-300">Clause 14.1 — Unlimited Consequential Liability</span>
+                          <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30">
                             High
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                        <p className="text-[11px] text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">
                           Exposes vendor to uncapped damages. Recommended cap: 100% of contract fee.
                         </p>
                       </div>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
+                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Scale className="w-4 h-4 text-violet-400" />
-                        <span className="text-xs font-medium text-slate-300">Overall Contract Health Score</span>
+                        <Scale className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+                        <span className="text-xs font-medium text-slate-700 dark:text-slate-300">Overall Contract Health Score</span>
                       </div>
-                      <div className="flex items-center gap-1.5 font-bold text-rose-400 text-sm">
+                      <div className="flex items-center gap-1.5 font-bold text-rose-600 dark:text-rose-400 text-sm">
                         <span>54 / 100</span>
-                        <span className="text-[10px] text-slate-400 font-normal">(Needs Revision)</span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">(Needs Revision)</span>
                       </div>
                     </div>
                   </div>
@@ -1352,24 +1351,24 @@ export default function App() {
                 {/* Tab 2: Redline Content */}
                 {heroPreviewTab === 'redlines' && (
                   <div className="space-y-3 animate-fade-in-up">
-                    <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                      <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block mb-2 font-bold">
+                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                      <span className="text-[11px] font-mono text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-2 font-bold">
                         Draft Redline Proposed by ContractSense AI:
                       </span>
                       <div className="space-y-2 text-xs font-mono leading-relaxed">
-                        <div className="p-2 rounded bg-rose-500/15 text-rose-300 border-l-2 border-rose-500 line-through">
+                        <div className="p-2 rounded bg-rose-50 dark:bg-rose-500/15 text-rose-700 dark:text-rose-300 border-l-2 border-rose-500 line-through">
                           "Buyer shall settle all undisputed invoices within ninety (90) calendar days from receipt..."
                         </div>
-                        <div className="p-2 rounded bg-emerald-500/15 text-emerald-300 border-l-2 border-emerald-500">
+                        <div className="p-2 rounded bg-emerald-50 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-l-2 border-emerald-500">
                           "Buyer shall settle all undisputed invoices within forty-five (45) days in strict compliance with MSMED Act 2006 Section 15..."
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between text-xs text-slate-400 px-1">
-                      <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+                    <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
+                      <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
                         <Check className="w-3.5 h-3.5" /> Legally enforceable statutory override
                       </span>
-                      <span className="text-violet-400 font-semibold cursor-pointer hover:underline" onClick={() => setUploadModalOpen(true)}>
+                      <span className="text-violet-600 dark:text-violet-400 font-semibold cursor-pointer hover:underline" onClick={() => setUploadModalOpen(true)}>
                         Accept redline →
                       </span>
                     </div>
@@ -1379,50 +1378,50 @@ export default function App() {
                 {/* Tab 3: MSMED Audit */}
                 {heroPreviewTab === 'msmed' && (
                   <div className="space-y-2.5 animate-fade-in-up">
-                    <div className="p-3 rounded-xl bg-violet-500/10 border border-violet-500/25">
+                    <div className="p-3 rounded-xl bg-violet-50 dark:bg-violet-500/10 border border-violet-200 dark:border-violet-500/25">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-violet-300">Section 16 Statutory Interest Mandate</span>
-                        <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-violet-500/20 text-violet-300">
+                        <span className="text-xs font-bold text-violet-900 dark:text-violet-300">Section 16 Statutory Interest Mandate</span>
+                        <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300">
                           Mandatory Law
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                      <p className="text-[11px] text-slate-700 dark:text-slate-300 leading-relaxed">
                         Buyer is liable to pay compound interest at 3× the RBI bank rate with monthly rests for delayed payments exceeding 45 days.
                       </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center">
-                        <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-mono">Max Term Allowed</span>
-                        <b className="text-sm font-bold text-white mt-0.5 block">45 Days</b>
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-center">
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider block font-mono">Max Term Allowed</span>
+                        <b className="text-sm font-bold text-slate-900 dark:text-white mt-0.5 block">45 Days</b>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center">
-                        <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-mono">Compound Penalty</span>
-                        <b className="text-sm font-bold text-emerald-400 mt-0.5 block">3× RBI Rate</b>
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-center">
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider block font-mono">Compound Penalty</span>
+                        <b className="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 block">3× RBI Rate</b>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {/* Floating Badge 1 (Top-Right): 96% Audit Confidence */}
-                <div className="absolute -top-4 -right-3 sm:-right-6 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#18181b]/95 border border-violet-500/40 shadow-xl shadow-purple-950/60 backdrop-blur-xl animate-float-slow">
-                  <div className="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                <div className="absolute -top-4 -right-3 sm:-right-6 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/95 dark:bg-[#18181b]/95 border border-violet-200 dark:border-violet-500/40 shadow-lg dark:shadow-xl backdrop-blur-xl animate-float-slow">
+                  <div className="w-6 h-6 rounded-lg bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                     <ShieldCheck className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <b className="text-[11px] text-white block leading-tight">96% Audit Confidence</b>
-                    <small className="text-[9px] text-slate-400 font-mono block">Statutory Legal Engine</small>
+                    <b className="text-[11px] text-slate-900 dark:text-white block leading-tight">96% Audit Confidence</b>
+                    <small className="text-[9px] text-slate-500 dark:text-slate-400 font-mono block">Statutory Legal Engine</small>
                   </div>
                 </div>
 
                 {/* Floating Badge 2 (Bottom-Left): MSMED Violation Detected */}
-                <div className="absolute -bottom-4 -left-3 sm:-left-6 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#18181b]/95 border border-rose-500/40 shadow-xl shadow-black/80 backdrop-blur-xl animate-float-slow [animation-delay:2s]">
-                  <div className="w-6 h-6 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">
+                <div className="absolute -bottom-4 -left-3 sm:-left-6 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/95 dark:bg-[#18181b]/95 border border-rose-200 dark:border-rose-500/40 shadow-lg dark:shadow-xl backdrop-blur-xl animate-float-slow [animation-delay:2s]">
+                  <div className="w-6 h-6 rounded-lg bg-rose-50 dark:bg-rose-500/20 border border-rose-200 dark:border-rose-500/40 flex items-center justify-center text-rose-600 dark:text-rose-400">
                     <AlertTriangle className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <b className="text-[11px] text-rose-300 block leading-tight">MSMED Violation Detected</b>
-                    <small className="text-[9px] text-slate-400 font-mono block">Section 15 — Term exceeds 45 days</small>
+                    <b className="text-[11px] text-rose-700 dark:text-rose-300 block leading-tight">MSMED Violation Detected</b>
+                    <small className="text-[9px] text-slate-500 dark:text-slate-400 font-mono block">Section 15 — Term exceeds 45 days</small>
                   </div>
                 </div>
 
@@ -1431,24 +1430,24 @@ export default function App() {
           </section>
 
           {/* Process Section (wearedirect.co Bento Card Layout) */}
-          <section className="section bg-transparent py-20 px-4 sm:px-6 lg:px-8 border-t border-white/10">
+          <section className="section bg-transparent py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-200/80 dark:border-white/10">
             <div className="max-w-6xl mx-auto">
               {/* Center Subtitle Badge */}
               <div className="flex justify-center mb-4">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-semibold uppercase tracking-wider backdrop-blur-md shadow-[0_0_15px_rgba(124,58,237,0.2)]">
-                  <span className="text-violet-400">✦</span> HOW IT WORKS
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-200 dark:border-violet-500/30 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300 text-xs font-bold uppercase tracking-wider backdrop-blur-md shadow-sm dark:shadow-[0_0_15px_rgba(124,58,237,0.2)]">
+                  <span className="text-violet-600 dark:text-violet-400">✦</span> HOW IT WORKS
                 </div>
               </div>
 
               {/* Oversized Headline with Dynamic Gradient Text */}
-              <h2 className="text-center text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+              <h2 className="text-center text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-4">
                 From risky PDF to{' '}
-                <span className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-300 font-normal drop-shadow-[0_0_30px_rgba(167,139,250,0.4)]">
+                <span className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-300 dark:to-indigo-300 font-normal drop-shadow-sm dark:drop-shadow-[0_0_30px_rgba(167,139,250,0.4)]">
                   protected agreement
                 </span>{' '}
                 in three steps.
               </h2>
-              <p className="text-center text-slate-400 text-sm sm:text-base max-w-2xl mx-auto mb-14 leading-relaxed">
+              <p className="text-center text-slate-600 dark:text-slate-400 text-sm sm:text-base max-w-2xl mx-auto mb-14 leading-relaxed">
                 Our OCR, clause chunker, and statutory legal engine streamline the entire contract review and negotiation workflow in seconds.
               </p>
 
@@ -1460,32 +1459,32 @@ export default function App() {
                   <div>
                     {/* Top Step Badge & Icon */}
                     <div className="flex items-center justify-between mb-6">
-                      <span className="step-badge-pill bg-violet-500/15 border border-violet-500/30 text-violet-300">
+                      <span className="step-badge-pill bg-violet-50 dark:bg-violet-500/15 border border-violet-200 dark:border-violet-500/30 text-violet-700 dark:text-violet-300">
                         STEP 01
                       </span>
-                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-violet-400 group-hover:scale-110 group-hover:bg-violet-600/20 group-hover:border-violet-500/40 transition-all duration-300">
+                      <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-violet-600 dark:text-violet-400 group-hover:scale-110 group-hover:bg-violet-50 dark:group-hover:bg-violet-600/20 group-hover:border-violet-300 dark:group-hover:border-violet-500/40 transition-all duration-300">
                         <Upload className="w-5 h-5" />
                       </div>
                     </div>
 
-                    <h3 className="text-xl font-bold text-white mb-2.5 group-hover:text-violet-300 transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2.5 group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors">
                       Upload Contract
                     </h3>
-                    <p className="text-xs sm:text-[13px] text-slate-400 leading-relaxed mb-6">
+                    <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
                       Upload any PDF, DOCX, scanned agreement, or paste raw covenants. Our OCR extracts every clause with semantic precision.
                     </p>
                   </div>
 
                   {/* Visual Bento Mini-Panel */}
-                  <div className="p-3.5 rounded-xl bg-white/5 border border-white/5 space-y-2 group-hover:border-white/10 transition-colors">
-                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
-                      <span className="truncate max-w-[140px] text-white font-semibold">Vendor_Agreement.pdf</span>
-                      <span className="text-emerald-400 font-bold">● Parsed</span>
+                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/5 space-y-2 group-hover:border-slate-300 dark:group-hover:border-white/10 transition-colors">
+                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                      <span className="truncate max-w-[140px] text-slate-900 dark:text-white font-semibold">Vendor_Agreement.pdf</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">● Parsed</span>
                     </div>
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-slate-300 border border-white/10">PDF</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-slate-300 border border-white/10">DOCX</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-500/20 text-violet-300 border border-violet-500/30">18 Clauses</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10">PDF</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10">DOCX</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-50 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30">18 Clauses</span>
                     </div>
                   </div>
                 </div>
@@ -1495,33 +1494,33 @@ export default function App() {
                   <div>
                     {/* Top Step Badge & Icon */}
                     <div className="flex items-center justify-between mb-6">
-                      <span className="step-badge-pill bg-amber-500/15 border border-amber-500/30 text-amber-300">
+                      <span className="step-badge-pill bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-500/30 text-amber-800 dark:text-amber-300">
                         STEP 02
                       </span>
-                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-amber-400 group-hover:scale-110 group-hover:bg-amber-500/20 group-hover:border-amber-500/40 transition-all duration-300">
+                      <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-amber-600 dark:text-amber-400 group-hover:scale-110 group-hover:bg-amber-50 dark:group-hover:bg-amber-500/20 group-hover:border-amber-300 dark:group-hover:border-amber-500/40 transition-all duration-300">
                         <ShieldAlert className="w-5 h-5" />
                       </div>
                     </div>
 
-                    <h3 className="text-xl font-bold text-white mb-2.5 group-hover:text-amber-300 transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2.5 group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors">
                       Instant Risk Audit
                     </h3>
-                    <p className="text-xs sm:text-[13px] text-slate-400 leading-relaxed mb-6">
+                    <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
                       AI audits covenants against MSMED Act Section 15/16, Arbitration rules, and Commercial benchmarks to flag critical traps.
                     </p>
                   </div>
 
                   {/* Visual Bento Mini-Panel */}
-                  <div className="p-3.5 rounded-xl bg-white/5 border border-white/5 space-y-2 group-hover:border-white/10 transition-colors">
+                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/5 space-y-2 group-hover:border-slate-300 dark:group-hover:border-white/10 transition-colors">
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-rose-400 font-bold flex items-center gap-1">
+                      <span className="text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" /> MSMED 45-Day Violation
                       </span>
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-500/20 text-rose-300">High Risk</span>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300">High Risk</span>
                     </div>
-                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
                       <span>Unlimited Consequential Damages</span>
-                      <span className="text-amber-400 font-semibold">Flagged</span>
+                      <span className="text-amber-600 dark:text-amber-400 font-semibold">Flagged</span>
                     </div>
                   </div>
                 </div>
@@ -1531,31 +1530,31 @@ export default function App() {
                   <div>
                     {/* Top Step Badge & Icon */}
                     <div className="flex items-center justify-between mb-6">
-                      <span className="step-badge-pill bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">
+                      <span className="step-badge-pill bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300">
                         STEP 03
                       </span>
-                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/20 group-hover:border-emerald-500/40 transition-all duration-300">
+                      <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-50 dark:group-hover:bg-emerald-500/20 group-hover:border-emerald-300 dark:group-hover:border-emerald-500/40 transition-all duration-300">
                         <CheckCircle2 className="w-5 h-5" />
                       </div>
                     </div>
 
-                    <h3 className="text-xl font-bold text-white mb-2.5 group-hover:text-emerald-300 transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors">
                       Accept Redlines & Sign
                     </h3>
-                    <p className="text-xs sm:text-[13px] text-slate-400 leading-relaxed mb-6">
+                    <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
                       Review side-by-side redlines, accept statutory revisions in the editor, and export an execution-ready protected PDF.
                     </p>
                   </div>
 
                   {/* Visual Bento Mini-Panel */}
-                  <div className="p-3.5 rounded-xl bg-white/5 border border-white/5 space-y-2 group-hover:border-white/10 transition-colors">
+                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/5 space-y-2 group-hover:border-slate-300 dark:group-hover:border-white/10 transition-colors">
                     <div className="text-[11px] font-mono leading-tight">
-                      <span className="text-rose-400 line-through block">Net 90-Day Payment</span>
-                      <span className="text-emerald-400 font-bold block mt-0.5">→ Net 45-Day Statutory Override</span>
+                      <span className="text-rose-600 dark:text-rose-400 line-through block">Net 90-Day Payment</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold block mt-0.5">→ Net 45-Day Statutory Override</span>
                     </div>
-                    <div className="flex items-center justify-between pt-1 border-t border-white/10 text-[10px] text-slate-400">
-                      <span className="text-emerald-400 font-semibold">✓ 1-Click Redline Applied</span>
-                      <span className="text-violet-400 font-bold">Export PDF</span>
+                    <div className="flex items-center justify-between pt-1 border-t border-slate-200 dark:border-white/10 text-[10px] text-slate-500 dark:text-slate-400">
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold">✓ 1-Click Redline Applied</span>
+                      <span className="text-violet-600 dark:text-violet-400 font-bold">Export PDF</span>
                     </div>
                   </div>
                 </div>
@@ -1598,10 +1597,10 @@ export default function App() {
                 </p>
                 <ConstitutionSealStamp title="CONSTITUTION OF INDIA" subtitle="STATUTORY MSMED 2006 JURISDICTION" />
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                {documentName} <em className="text-violet-400">Score: {healthScore}/100</em>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                {documentName} <em className="text-violet-600 dark:text-violet-400">Score: {healthScore}/100</em>
               </h1>
-              <p className="dashboard-subtitle text-slate-400 mt-1 max-w-2xl text-xs sm:text-sm">
+              <p className="dashboard-subtitle text-slate-600 dark:text-slate-400 mt-1 max-w-2xl text-xs sm:text-sm">
                 Comprehensive statutory risk breakdown, Section 15 payment compliance, and renegotiation recommendations.
               </p>
               
@@ -1613,13 +1612,13 @@ export default function App() {
             </div>
 
             <div className="dashboard-actions relative z-10 flex flex-wrap gap-2.5 items-center">
-              <button className="button button-coral px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all" onClick={() => navigateTo('editor')}>
+              <button className="button button-coral px-6 py-3.5 text-base font-bold rounded-xl flex items-center gap-2.5 shadow-md hover:shadow-lg transition-all" onClick={() => navigateTo('editor')}>
                 <FileEdit className="w-5 h-5" /> Open In Contract Editor
               </button>
-              <button className="button button-outline px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 border border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all" onClick={() => exportReportApi(documentId, 'pdf')}>
+              <button className="button button-outline px-6 py-3.5 text-base font-bold rounded-xl flex items-center gap-2.5 border border-slate-300 dark:border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all" onClick={() => exportReportApi(documentId, 'pdf')}>
                 <Download className="w-5 h-5" /> Export Report (PDF)
               </button>
-              <button className="button button-light px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 border border-white/15 hover:border-white/30 hover:-translate-y-0.5 transition-all" onClick={() => setShareModalOpen(true)}>
+              <button className="button button-light px-6 py-3.5 text-base font-bold rounded-xl flex items-center gap-2.5 border border-slate-200 dark:border-white/15 hover:border-slate-300 dark:hover:border-white/30 hover:-translate-y-0.5 transition-all" onClick={() => setShareModalOpen(true)}>
                 <Share2 className="w-5 h-5" /> Share with Team
               </button>
             </div>
@@ -1669,18 +1668,18 @@ export default function App() {
 
           {/* Health Score Gauge & Recommendations Row */}
           <div className="health-layout">
-            <div className="health-card bg-[#121215] border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden">
-              <div className="card-heading flex justify-between items-center pb-3 mb-4 border-b border-white/10">
-                <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-400">Contract Health Score</span>
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Statutory Engine Active
+            <div className="health-card bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-6 shadow-lg dark:shadow-2xl backdrop-blur-xl relative overflow-hidden">
+              <div className="card-heading flex justify-between items-center pb-3 mb-4 border-b border-slate-200 dark:border-white/10">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Contract Health Score</span>
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Statutory Engine Active
                 </span>
               </div>
               <div className="health-content flex items-center gap-5">
                 {/* Circular Neon Meter */}
                 <div className="relative w-28 h-28 min-w-[112px] grid place-items-center">
                   <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
-                    <circle cx="80" cy="80" r="70" className="stroke-white/10 fill-none stroke-[12]" />
+                    <circle cx="80" cy="80" r="70" className="stroke-slate-200 dark:stroke-white/10 fill-none stroke-[12]" />
                     <circle
                       cx="80"
                       cy="80"
@@ -1689,15 +1688,15 @@ export default function App() {
                       style={{
                         strokeDasharray: 452,
                         strokeDashoffset: 452 - (452 * healthScore) / 100,
-                        stroke: healthScore > 75 ? '#34d399' : healthScore > 50 ? '#fbbf24' : '#f87171',
-                        filter: healthScore > 75 ? 'drop-shadow(0 0 10px rgba(52,211,153,0.6))' : 'drop-shadow(0 0 10px rgba(248,113,113,0.6))',
+                        stroke: healthScore > 75 ? '#10b981' : healthScore > 50 ? '#f59e0b' : '#f43f5e',
+                        filter: healthScore > 75 ? 'drop-shadow(0 0 10px rgba(16,185,129,0.5))' : 'drop-shadow(0 0 10px rgba(244,63,94,0.5))',
                         strokeLinecap: 'round',
                       }}
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <b className="text-3xl font-extrabold text-white leading-none">{healthScore}</b>
-                    <span className="text-[10px] text-slate-400 font-mono mt-0.5">/ 100</span>
+                    <b className="text-3xl font-extrabold text-slate-900 dark:text-white leading-none">{healthScore}</b>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">/ 100</span>
                   </div>
                 </div>
                 <div className="health-text space-y-2">
@@ -1710,7 +1709,7 @@ export default function App() {
                       ? 'HIGH RISK PROFILE'
                       : 'BALANCED PROFILE'}
                   </span>
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                     {summary?.protectionDetail ||
                       (healthScore < 60
                         ? 'Contains critical payment and liability terms under MSMED Act 2006. Prompt renegotiation advised.'
@@ -1718,28 +1717,28 @@ export default function App() {
                   </p>
                 </div>
               </div>
-              <div className="health-footer flex flex-wrap justify-between items-center pt-4 mt-4 border-t border-white/10 text-xs text-slate-400 font-mono gap-2">
-                <span>Confidence: <b className="text-white">96% Statutory</b></span>
-                <span>Jurisdiction: <b className="text-white">India / MSMED 2006</b></span>
+              <div className="health-footer flex flex-wrap justify-between items-center pt-4 mt-4 border-t border-slate-200 dark:border-white/10 text-xs text-slate-500 dark:text-slate-400 font-mono gap-2">
+                <span>Confidence: <b className="text-slate-900 dark:text-white">96% Statutory</b></span>
+                <span>Jurisdiction: <b className="text-slate-900 dark:text-white">India / MSMED 2006</b></span>
               </div>
             </div>
 
-            <div className="recommend-card bg-[#18181f] border border-violet-500/30 rounded-2xl p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+            <div className="recommend-card bg-gradient-to-br from-white to-violet-50/50 dark:from-[#18181f] dark:to-[#121215] border border-violet-200 dark:border-violet-500/30 rounded-2xl p-6 shadow-lg dark:shadow-2xl backdrop-blur-xl relative overflow-hidden">
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <p className="eyebrow text-violet-400 flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs">
+                  <p className="eyebrow text-violet-700 dark:text-violet-400 flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs">
                     <Sparkles className="w-3.5 h-3.5" /> Priority Recommendation
                   </p>
                   <IndianContractActBadge variant="compact" />
                 </div>
-                <h2 className="text-lg font-bold text-white my-2">{summary?.recommendation || (topConcern ? `Fix: ${topConcern.title}` : 'Review Contract Terms')}</h2>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white my-2">{summary?.recommendation || (topConcern ? `Fix: ${topConcern.title}` : 'Review Contract Terms')}</h2>
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                   {summary?.recommendationDetail || topConcern?.explanation || 'Inspect flagged clauses and apply suggested statutory redlines before execution.'}
                 </p>
               </div>
               {topConcern && (
                 <button
-                  className="button button-coral button-small mt-4 w-fit hover:scale-105 transition-all shadow-[0_0_15px_rgba(124,58,237,0.4)]"
+                  className="button button-coral button-small mt-4 w-fit hover:scale-105 transition-all shadow-sm"
                   onClick={() => {
                     setSelectedClause(topConcern)
                     navigateTo('editor')
@@ -1750,13 +1749,13 @@ export default function App() {
               )}
             </div>
 
-            <div className="protection-card bg-[#121215] border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
+            <div className="protection-card bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-6 shadow-lg dark:shadow-2xl backdrop-blur-xl">
               <div>
-                <p className="eyebrow text-emerald-400 flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs">
+                <p className="eyebrow text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs">
                   <ShieldAlert className="w-3.5 h-3.5" /> Missing Protection
                 </p>
-                <h3 className="text-lg font-bold text-white my-2">{missingProtections[0]?.title || 'Standard Protections Applied'}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white my-2">{missingProtections[0]?.title || 'Standard Protections Applied'}</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                   {missingProtections[0]?.text || 'No critical statutory safeguards missing from this agreement.'}
                 </p>
               </div>
@@ -1773,10 +1772,10 @@ export default function App() {
           <div className="mt-8">
             <div className="flex justify-between items-center mb-4">
               <div>
-                <h3 className="text-xl font-bold text-white">Top Clause Concerns & Risk Audit</h3>
-                <p className="text-xs text-slate-400">Click any risk card to inspect statutory explanation & apply side-by-side redlines</p>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Top Clause Concerns & Risk Audit</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Click any risk card to inspect statutory explanation & apply side-by-side redlines</p>
               </div>
-              <button className="button button-ghost button-small text-violet-400 hover:text-violet-300 font-bold" onClick={() => navigateTo('editor')}>
+              <button className="button button-ghost button-small text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 font-bold" onClick={() => navigateTo('editor')}>
                 Open Split-Pane Editor ({clausesList.length} Clauses) <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </button>
             </div>
@@ -1789,8 +1788,8 @@ export default function App() {
                     key={clause.id}
                     className={`p-5 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
                       isHigh
-                        ? 'bg-[#18181f] border-rose-500/30 hover:border-rose-500/60 shadow-lg shadow-rose-950/20'
-                        : 'bg-[#121215] border-white/10 hover:border-white/20'
+                        ? 'bg-rose-50/40 dark:bg-[#18181f] border-rose-200 dark:border-rose-500/30 hover:border-rose-400 dark:hover:border-rose-500/60 shadow-md'
+                        : 'bg-white dark:bg-[#121215] border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 shadow-sm hover:shadow-md'
                     }`}
                     onClick={() => {
                       setSelectedClause(clause)
@@ -1799,7 +1798,7 @@ export default function App() {
                   >
                     <div>
                       <div className="flex justify-between items-center mb-3">
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2 py-0.5 rounded bg-white/5 border border-white/5">
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
                           {clause.category}
                         </span>
                         <span className={`risk-pill risk-${clause.riskLevel}`}>
@@ -1809,17 +1808,17 @@ export default function App() {
 
                       {isHigh && (
                         <div className="crimson-glass-badge p-2 rounded-lg text-[11px] font-bold flex items-center gap-1.5 mb-2.5">
-                          <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                          <AlertTriangle className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400 shrink-0" />
                           <span>CRITICAL RISK DETECTED</span>
                         </div>
                       )}
 
-                      <h4 className="text-base font-bold text-white mb-1.5">{clause.title}</h4>
-                      <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">{clause.explanation}</p>
+                      <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">{clause.title}</h4>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4">{clause.explanation}</p>
                     </div>
 
-                    <div className="flex justify-between items-center text-xs font-semibold text-violet-400 pt-3 border-t border-white/10">
-                      <span>Risk Score: <b className={isHigh ? 'text-rose-400' : 'text-emerald-400'}>{clause.riskScore}/100</b></span>
+                    <div className="flex justify-between items-center text-xs font-semibold text-violet-600 dark:text-violet-400 pt-3 border-t border-slate-100 dark:border-white/10">
+                      <span>Risk Score: <b className={isHigh ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}>{clause.riskScore}/100</b></span>
                       <span className="flex items-center gap-0.5 text-xs font-bold hover:underline">
                         Inspect & Redline <ChevronRight className="w-3.5 h-3.5" />
                       </span>
@@ -1840,39 +1839,39 @@ export default function App() {
           {/* Top Header & Actions */}
           <div className="dashboard-top">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-semibold uppercase tracking-wider mb-2.5 backdrop-blur-md">
-                <span className="text-violet-400">✦</span> CONTRACT INTELLIGENCE WORKBENCH
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-200 dark:border-violet-500/30 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300 text-xs font-bold uppercase tracking-wider mb-2.5 backdrop-blur-md">
+                <span className="text-violet-600 dark:text-violet-400">✦</span> CONTRACT INTELLIGENCE WORKBENCH
               </div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
-                {documentName} <em className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-300 font-normal">(Live Analysis & Redlines)</em>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                {documentName} <em className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-300 dark:to-indigo-300 font-normal">(Live Analysis & Redlines)</em>
               </h1>
-              <p className="dashboard-subtitle text-slate-400 text-xs sm:text-sm mt-1">
+              <p className="dashboard-subtitle text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-1">
                 Inspect AI statutory audits, view high-contrast side-by-side redlines, and execute 1-click statutory protections.
               </p>
             </div>
             <div className="dashboard-actions">
-              <button className="button button-outline px-5 py-3 text-sm sm:text-base font-bold rounded-lg flex items-center gap-2 border border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all" onClick={() => setVersionSnapshotModalOpen(true)}>
+              <button className="button button-outline px-5 py-3 text-sm sm:text-base font-bold rounded-xl flex items-center gap-2 border border-slate-300 dark:border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all" onClick={() => setVersionSnapshotModalOpen(true)}>
                 <History className="w-5 h-5" /> Save Snapshot
               </button>
-              <button className="button button-light px-5 py-3 text-sm sm:text-base font-bold rounded-lg flex items-center gap-2 border border-white/15 hover:border-white/30 hover:-translate-y-0.5 transition-all" onClick={() => setShareModalOpen(true)}>
+              <button className="button button-light px-5 py-3 text-sm sm:text-base font-bold rounded-xl flex items-center gap-2 border border-slate-200 dark:border-white/15 hover:border-slate-300 dark:hover:border-white/30 hover:-translate-y-0.5 transition-all" onClick={() => setShareModalOpen(true)}>
                 <Share2 className="w-5 h-5" /> Invite Collaborator
               </button>
-              <button className="button button-coral px-5 py-3 text-sm sm:text-base font-bold rounded-lg flex items-center gap-2 shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all" onClick={() => exportReportApi(documentId, 'pdf')}>
+              <button className="button button-coral px-5 py-3 text-sm sm:text-base font-bold rounded-xl flex items-center gap-2 shadow-md hover:shadow-lg transition-all" onClick={() => exportReportApi(documentId, 'pdf')}>
                 <Download className="w-5 h-5" /> Export Final Contract
               </button>
             </div>
           </div>
 
           {/* Mobile Tab Switcher for Editor */}
-          <div className="flex lg:hidden bg-[#121215] p-1 rounded-xl mb-4 border border-white/10">
+          <div className="flex lg:hidden bg-slate-100 dark:bg-[#121215] p-1 rounded-xl mb-4 border border-slate-200 dark:border-white/10">
             <button
-              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${editorTab === 'clauses' ? 'bg-violet-600/30 border border-violet-500/40 text-white shadow-md' : 'text-slate-400'}`}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${editorTab === 'clauses' ? 'bg-white dark:bg-violet-600/30 border border-slate-200 dark:border-violet-500/40 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400'}`}
               onClick={() => setEditorTab('clauses')}
             >
               Document Clauses ({clausesList.length})
             </button>
             <button
-              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${editorTab === 'inspector' ? 'bg-violet-600/30 border border-violet-500/40 text-white shadow-md' : 'text-slate-400'}`}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${editorTab === 'inspector' ? 'bg-white dark:bg-violet-600/30 border border-slate-200 dark:border-violet-500/40 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400'}`}
               onClick={() => setEditorTab('inspector')}
             >
               AI Redline Inspector
@@ -1883,20 +1882,20 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             {/* Left Pane: Document Viewer & Clause List (7 Columns) */}
-            <div className={`lg:col-span-7 bg-[#121215] border border-white/10 rounded-2xl p-5 sm:p-6 shadow-2xl backdrop-blur-xl ${editorTab === 'inspector' ? 'hidden lg:block' : 'block'}`}>
+            <div className={`lg:col-span-7 bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-5 sm:p-6 shadow-lg dark:shadow-2xl backdrop-blur-xl ${editorTab === 'inspector' ? 'hidden lg:block' : 'block'}`}>
               
               {/* Document Status Banner */}
-              <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/10 flex-wrap gap-2">
+              <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-200 dark:border-white/10 flex-wrap gap-2">
                 <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-violet-400" />
-                  <span className="font-mono text-xs font-bold text-white uppercase tracking-wider">{documentName}</span>
-                  <span className="text-slate-400 text-xs">({clausesList.length} Clauses)</span>
+                  <FileText className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+                  <span className="font-mono text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">{documentName}</span>
+                  <span className="text-slate-500 dark:text-slate-400 text-xs">({clausesList.length} Clauses)</span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Auto-Saving Active
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Auto-Saving Active
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-violet-500/15 text-violet-300 border border-violet-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-violet-50 dark:bg-violet-500/15 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30">
                     Health Score: {healthScore}/100
                   </span>
                 </div>
@@ -1913,8 +1912,8 @@ export default function App() {
                       key={clause.id}
                       className={`p-4 sm:p-5 rounded-xl border transition-all duration-200 cursor-pointer ${
                         isSelected
-                          ? 'bg-[#18181f] border-violet-500/70 shadow-[0_0_30px_rgba(124,58,237,0.2)] ring-1 ring-violet-500/40'
-                          : 'bg-[#16161a] border-white/10 hover:border-white/20 hover:bg-[#1a1a20]'
+                          ? 'bg-violet-50/40 dark:bg-[#18181f] border-violet-400 dark:border-violet-500/70 shadow-md ring-1 ring-violet-400/30'
+                          : 'bg-slate-50/50 dark:bg-[#16161a] border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-[#1a1a20]'
                       }`}
                       onClick={() => {
                         setSelectedClause(clause)
@@ -1924,10 +1923,10 @@ export default function App() {
                       {/* Clause Top Bar */}
                       <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-[10px] font-bold uppercase text-slate-400 px-2 py-0.5 rounded bg-white/5 border border-white/5">
+                          <span className="font-mono text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/5">
                             {clause.category}
                           </span>
-                          <b className="text-sm font-bold text-white">{clause.title}</b>
+                          <b className="text-sm font-bold text-slate-900 dark:text-white">{clause.title}</b>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className={`risk-pill risk-${clause.riskLevel}`}>
@@ -1939,11 +1938,11 @@ export default function App() {
                       {/* High Risk Callout Badge */}
                       {isHighRisk && !clause.acceptedRedline && (
                         <div className="crimson-glass-badge p-2.5 rounded-lg text-xs flex items-center justify-between gap-2 mb-3">
-                          <div className="flex items-center gap-2 font-bold text-rose-300">
-                            <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                          <div className="flex items-center gap-2 font-bold text-rose-700 dark:text-rose-300">
+                            <AlertTriangle className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400 shrink-0" />
                             <span>CRITICAL RISK: {clause.title.toUpperCase()} (MSMED VIOLATION)</span>
                           </div>
-                          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30">
                             Action Required
                           </span>
                         </div>
@@ -1952,11 +1951,11 @@ export default function App() {
                       {/* Accepted Redline Badge */}
                       {clause.acceptedRedline && (
                         <div className="emerald-glass-badge p-2.5 rounded-lg text-xs flex items-center justify-between gap-2 mb-3">
-                          <div className="flex items-center gap-2 font-bold text-emerald-300">
-                            <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <div className="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-300">
+                            <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                             <span>STATUTORY REDLINE APPLIED (Net 45-Days Cap Enforced)</span>
                           </div>
-                          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30">
                             Enforced
                           </span>
                         </div>
@@ -1964,7 +1963,7 @@ export default function App() {
 
                       {/* High-Contrast Clause Textarea */}
                       <textarea
-                        className="w-full bg-[#0e0e11] text-white font-mono text-xs leading-relaxed p-3.5 rounded-lg border border-white/10 focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/40 outline-none resize-y min-h-[85px] transition-all"
+                        className="w-full bg-white dark:bg-[#0e0e11] text-slate-900 dark:text-white font-mono text-xs leading-relaxed p-3.5 rounded-lg border border-slate-200 dark:border-white/10 focus:border-violet-500 focus:ring-1 focus:ring-violet-500/40 outline-none resize-y min-h-[85px] transition-all"
                         value={clause.text}
                         onChange={(e) => handleClauseTextChange(clause.id, e.target.value)}
                         rows={3}
@@ -1972,15 +1971,15 @@ export default function App() {
                       />
 
                       {/* Clause Bottom Footer */}
-                      <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-white/5 text-[11px] text-slate-400">
-                        <span>Risk Score: <b className={isHighRisk ? 'text-rose-400' : 'text-emerald-400'}>{clause.riskScore}/100</b></span>
+                      <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-slate-100 dark:border-white/5 text-[11px] text-slate-500 dark:text-slate-400">
+                        <span>Risk Score: <b className={isHighRisk ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}>{clause.riskScore}/100</b></span>
                         <div className="flex items-center gap-3">
                           {clause.comments && clause.comments.length > 0 && (
-                            <span className="flex items-center gap-1 text-slate-400">
+                            <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
                               <MessageCircle className="w-3 h-3" /> {clause.comments.length}
                             </span>
                           )}
-                          <span className="text-violet-400 font-semibold flex items-center gap-0.5 hover:underline">
+                          <span className="text-violet-600 dark:text-violet-400 font-semibold flex items-center gap-0.5 hover:underline">
                             Inspect Analytics <ChevronRight className="w-3 h-3" />
                           </span>
                         </div>
@@ -1996,13 +1995,13 @@ export default function App() {
               <div className={`lg:col-span-5 sticky top-20 space-y-4 max-h-[85vh] overflow-y-auto pr-1.5 custom-scrollbar ${editorTab === 'clauses' ? 'hidden lg:block' : 'block'}`}>
                 
                 {/* Modular Card 1: Health Score & Real-Time Risk Progress Meter */}
-                <div className="bg-[#121215] border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-xl">
-                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
-                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-400">
+                <div className="bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-5 shadow-lg dark:shadow-2xl backdrop-blur-xl">
+                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-white/10">
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                       CONTRACT HEALTH METER
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Analysis
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live Analysis
                     </span>
                   </div>
 
@@ -2010,7 +2009,7 @@ export default function App() {
                     {/* Circular Neon Meter */}
                     <div className="relative w-24 h-24 min-w-[96px] grid place-items-center">
                       <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
-                        <circle cx="80" cy="80" r="70" className="stroke-white/10 fill-none stroke-[12]" />
+                        <circle cx="80" cy="80" r="70" className="stroke-slate-200 dark:stroke-white/10 fill-none stroke-[12]" />
                         <circle
                           cx="80"
                           cy="80"
@@ -2019,15 +2018,15 @@ export default function App() {
                           style={{
                             strokeDasharray: 452,
                             strokeDashoffset: 452 - (452 * healthScore) / 100,
-                            stroke: healthScore > 75 ? '#34d399' : healthScore > 50 ? '#fbbf24' : '#f87171',
-                            filter: healthScore > 75 ? 'drop-shadow(0 0 8px rgba(52,211,153,0.5))' : 'drop-shadow(0 0 8px rgba(248,113,113,0.5))',
+                            stroke: healthScore > 75 ? '#10b981' : healthScore > 50 ? '#f59e0b' : '#f43f5e',
+                            filter: healthScore > 75 ? 'drop-shadow(0 0 8px rgba(16,185,129,0.5))' : 'drop-shadow(0 0 8px rgba(244,63,94,0.5))',
                             strokeLinecap: 'round',
                           }}
                         />
                       </svg>
                       <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <b className="text-2xl font-extrabold text-white leading-none">{healthScore}</b>
-                        <span className="text-[9px] text-slate-400 font-mono mt-0.5">/ 100</span>
+                        <b className="text-2xl font-extrabold text-slate-900 dark:text-white leading-none">{healthScore}</b>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">/ 100</span>
                       </div>
                     </div>
 
@@ -2037,46 +2036,46 @@ export default function App() {
                       }`}>
                         {healthScore < 60 ? 'HIGH RISK PROFILE' : 'BALANCED PROFILE'}
                       </span>
-                      <p className="text-xs text-slate-300 leading-relaxed">
+                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                         {healthScore < 60 ? 'Contains critical payment terms violating statutory caps. Accept redlines to normalize.' : 'All clauses compliant with MSMED statutory safeguards.'}
                       </p>
                     </div>
                   </div>
 
                   {/* Statutory Sub-Progress Bars */}
-                  <div className="mt-4 pt-3.5 border-t border-white/10 space-y-2.5">
+                  <div className="mt-4 pt-3.5 border-t border-slate-200 dark:border-white/10 space-y-2.5">
                     <div>
-                      <div className="flex justify-between text-[10px] font-mono text-slate-400 mb-1">
+                      <div className="flex justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400 mb-1">
                         <span>MSMED 45-Day Statutory Compliance</span>
-                        <span className="text-white font-bold">{selectedClause.acceptedRedline ? '100%' : '35%'}</span>
+                        <span className="text-slate-900 dark:text-white font-bold">{selectedClause.acceptedRedline ? '100%' : '35%'}</span>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
+                      <div className="w-full h-1.5 rounded-full bg-slate-100 dark:bg-white/5 overflow-hidden">
                         <div
-                          className={`h-full rounded-full transition-all duration-500 ${selectedClause.acceptedRedline ? 'w-full bg-emerald-500 shadow-[0_0_8px_#34d399]' : 'w-[35%] bg-rose-500 shadow-[0_0_8px_#f87171]'}`}
+                          className={`h-full rounded-full transition-all duration-500 ${selectedClause.acceptedRedline ? 'w-full bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'w-[35%] bg-rose-500 shadow-[0_0_8px_#f43f5e]'}`}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <div className="flex justify-between text-[10px] font-mono text-slate-400 mb-1">
+                      <div className="flex justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400 mb-1">
                         <span>Liability Protection Ratio</span>
-                        <span className="text-white font-bold">85%</span>
+                        <span className="text-slate-900 dark:text-white font-bold">85%</span>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
-                        <div className="h-full rounded-full w-[85%] bg-amber-500 shadow-[0_0_8px_#fbbf24]" />
+                      <div className="w-full h-1.5 rounded-full bg-slate-100 dark:bg-white/5 overflow-hidden">
+                        <div className="h-full rounded-full w-[85%] bg-amber-500 shadow-[0_0_8px_#f59e0b]" />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Modular Card 2: Selected Clause Statutory Violation Breakdown */}
-                <div className="bg-[#121215] border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-3.5">
+                <div className="bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-5 shadow-lg dark:shadow-2xl backdrop-blur-xl space-y-3.5">
                   <div className="flex items-start justify-between">
                     <div>
-                      <span className="font-mono text-[10px] font-bold text-violet-400 uppercase tracking-wider block">
+                      <span className="font-mono text-[10px] font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wider block">
                         {selectedClause.category}
                       </span>
-                      <h3 className="text-base font-bold text-white mt-0.5">{selectedClause.title}</h3>
+                      <h3 className="text-base font-bold text-slate-900 dark:text-white mt-0.5">{selectedClause.title}</h3>
                     </div>
                     <span className={`risk-pill risk-${selectedClause.riskLevel}`}>
                       Score: {selectedClause.riskScore}/100
@@ -2086,10 +2085,10 @@ export default function App() {
                   {/* High Risk Banner */}
                   {(selectedClause.riskLevel === 'critical' || selectedClause.riskLevel === 'high') && (
                     <div className="crimson-glass-badge p-3 rounded-xl text-xs flex items-start gap-2.5">
-                      <AlertTriangle className="w-4 h-4 text-rose-400 mt-0.5 shrink-0" />
+                      <AlertTriangle className="w-4 h-4 text-rose-500 dark:text-rose-400 mt-0.5 shrink-0" />
                       <div>
-                        <b className="text-rose-200 block text-xs">CRITICAL STATUTORY RISK DETECTED</b>
-                        <p className="text-rose-300/90 text-[11px] mt-0.5 leading-relaxed">
+                        <b className="text-rose-800 dark:text-rose-200 block text-xs">CRITICAL STATUTORY RISK DETECTED</b>
+                        <p className="text-rose-700/90 dark:text-rose-300/90 text-[11px] mt-0.5 leading-relaxed">
                           Violates Section 15 of MSMED Act 2006. Standard business risk requires capping buyer payment to 45 calendar days.
                         </p>
                       </div>
@@ -2098,28 +2097,28 @@ export default function App() {
 
                   {/* Plain English Explanation */}
                   <div>
-                    <span className="text-[11px] font-mono uppercase text-slate-400 font-bold block mb-1.5">
+                    <span className="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold block mb-1.5">
                       Plain English Explanation
                     </span>
-                    <div className="p-3 rounded-xl bg-[#0e0e11] border border-white/10 text-xs text-slate-300 leading-relaxed">
+                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0e0e11] border border-slate-200/80 dark:border-white/10 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                       {selectedClause.explanation}
                     </div>
                   </div>
 
                   {/* Business Consequences */}
                   <div>
-                    <span className="text-[11px] font-mono uppercase text-slate-400 font-bold block mb-1.5">
+                    <span className="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold block mb-1.5">
                       Business Hazard
                     </span>
-                    <div className="p-3 rounded-xl bg-[#0e0e11] border border-white/10 text-xs text-slate-300 leading-relaxed">
+                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0e0e11] border border-slate-200/80 dark:border-white/10 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                       {selectedClause.consequences}
                     </div>
                   </div>
 
                   {/* Statutory Reference Pill */}
                   {selectedClause.actReference && (
-                    <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-300 flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/25 text-xs text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                       <div>
                         <b className="block text-[11px] uppercase font-mono">Statutory Authority</b>
                         <span>{selectedClause.actReference}</span>
@@ -2129,44 +2128,44 @@ export default function App() {
                 </div>
 
                 {/* Modular Card 3: AI Redline Recommendation & 1-Click Execution */}
-                <div className="bg-[#121215] border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-3.5">
+                <div className="bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-5 shadow-lg dark:shadow-2xl backdrop-blur-xl space-y-3.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-violet-300 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-violet-400" /> AI STATUTORY REDLINE
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" /> AI STATUTORY REDLINE
                     </span>
-                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
                       Pre-Approved Redline
                     </span>
                   </div>
 
                   {/* High-Contrast Diff Box */}
                   <div className="space-y-2.5">
-                    <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25">
-                      <span className="text-[10px] font-mono font-bold uppercase text-rose-400 block mb-1">
+                    <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/25">
+                      <span className="text-[10px] font-mono font-bold uppercase text-rose-700 dark:text-rose-400 block mb-1">
                         Original Covenant (High Risk)
                       </span>
-                      <p className="text-xs font-mono text-rose-300/90 line-through leading-relaxed">
+                      <p className="text-xs font-mono text-rose-800 dark:text-rose-300/90 line-through leading-relaxed">
                         {selectedClause.redline.original}
                       </p>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25">
-                      <span className="text-[10px] font-mono font-bold uppercase text-emerald-400 block mb-1">
+                    <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/25">
+                      <span className="text-[10px] font-mono font-bold uppercase text-emerald-700 dark:text-emerald-400 block mb-1">
                         Suggested Statutory Redline (Safe)
                       </span>
-                      <p className="text-xs font-mono text-emerald-300 font-semibold leading-relaxed">
+                      <p className="text-xs font-mono text-emerald-800 dark:text-emerald-300 font-semibold leading-relaxed">
                         {selectedClause.redline.suggested}
                       </p>
                     </div>
                   </div>
 
-                  <p className="text-[11px] text-slate-400 italic">
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 italic">
                     Rationale: {selectedClause.redline.rationale}
                   </p>
 
                   {/* 1-Click Execution Trigger */}
                   <button
-                    className="button button-coral w-full py-3.5 px-6 rounded-lg text-base font-bold flex items-center justify-center gap-2.5 shadow-[0_0_25px_rgba(124,58,237,0.5)] hover:-translate-y-0.5 hover:shadow-[0_0_35px_rgba(124,58,237,0.7)] transition-all cursor-pointer"
+                    className="button button-coral w-full py-3.5 px-6 rounded-xl text-base font-bold flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg transition-all cursor-pointer"
                     onClick={() => handleAcceptRedline(selectedClause.id)}
                   >
                     <Check className="w-5 h-5" /> Accept & Apply Redline (1-Click)
@@ -2174,26 +2173,26 @@ export default function App() {
                 </div>
 
                 {/* Modular Card 4: Clause Comments Thread */}
-                <div className="bg-[#121215] border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-3">
-                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                <div className="bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-5 shadow-lg dark:shadow-2xl backdrop-blur-xl space-y-3">
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                     <MessageCircle className="w-3.5 h-3.5" /> Collaborative Annotations
                   </span>
 
                   <div className="space-y-2 max-h-36 overflow-y-auto">
                     {selectedClause.comments && selectedClause.comments.length > 0 ? (
                       selectedClause.comments.map((cmt) => (
-                        <div key={cmt.id} className="p-2.5 bg-[#0e0e11] rounded-xl border border-white/10">
-                          <div className="flex justify-between font-bold text-[11px] text-slate-300">
+                        <div key={cmt.id} className="p-2.5 bg-slate-50 dark:bg-[#0e0e11] rounded-xl border border-slate-200 dark:border-white/10">
+                          <div className="flex justify-between font-bold text-[11px] text-slate-700 dark:text-slate-300">
                             <span>{cmt.authorName}</span>
-                            <span className="font-mono text-[9px] text-slate-500">
+                            <span className="font-mono text-[9px] text-slate-400 dark:text-slate-500">
                               {new Date(cmt.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                           </div>
-                          <p className="mt-1 text-xs text-slate-400">{cmt.content}</p>
+                          <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">{cmt.content}</p>
                         </div>
                       ))
                     ) : (
-                      <div className="text-[11px] text-slate-500 italic py-1">No comments on this clause yet.</div>
+                      <div className="text-[11px] text-slate-400 dark:text-slate-500 italic py-1">No comments on this clause yet.</div>
                     )}
                   </div>
 
@@ -2201,7 +2200,7 @@ export default function App() {
                     <input
                       type="text"
                       placeholder="Add comment..."
-                      className="flex-1 bg-[#0e0e11] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30"
+                      className="flex-1 bg-slate-50 dark:bg-[#0e0e11] border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30"
                       value={newCommentText}
                       onChange={(e) => setNewCommentText(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleAddComment(selectedClause.id)}
@@ -2484,22 +2483,22 @@ export default function App() {
                     </p>
                     <ConstitutionSealStamp title="LEGAL LEDGER" subtitle="SECTION 15 COMPLIANCE" />
                   </div>
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-1">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
                     My Contracts <em>& Audit History</em>
                   </h1>
                 </div>
               </div>
-              <p className="dashboard-subtitle text-slate-400 max-w-2xl text-xs sm:text-sm">
+              <p className="dashboard-subtitle text-slate-600 dark:text-slate-400 max-w-2xl text-xs sm:text-sm">
                 Manage, filter, compare, and organize all uploaded and drafted agreements under Indian Commercial & MSMED Law.
               </p>
             </div>
 
             <div className="dashboard-actions relative z-10 flex flex-wrap gap-2.5 items-center">
-              <button className="button button-coral px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all" onClick={() => setUploadModalOpen(true)}>
+              <button className="button button-coral px-6 py-3.5 text-base font-bold rounded-xl flex items-center gap-2.5 shadow-md hover:shadow-lg transition-all" onClick={() => setUploadModalOpen(true)}>
                 <FileUp className="w-5 h-5" /> Upload New Contract
               </button>
-              <button className="button button-outline px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 border border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all" onClick={() => navigateTo('generator')}>
-                <Sparkles className="w-5 h-5 text-violet-400" /> Generate Agreement
+              <button className="button button-outline px-6 py-3.5 text-base font-bold rounded-xl flex items-center gap-2.5 border border-slate-300 dark:border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all" onClick={() => navigateTo('generator')}>
+                <Sparkles className="w-5 h-5 text-violet-600 dark:text-violet-400" /> Generate Agreement
               </button>
             </div>
           </div>
@@ -2556,7 +2555,7 @@ export default function App() {
                 subtitle="Your repository is ready for Indian Contract Act & MSMED compliance auditing. Upload a contract to begin automated clause extraction and risk scoring."
                 actionButton={
                   <button
-                    className="button button-coral px-6 py-3.5 text-base font-bold rounded-lg flex items-center gap-2.5 shadow-[0_0_20px_rgba(124,58,237,0.5)] hover:-translate-y-0.5 transition-all"
+                    className="button button-coral px-6 py-3.5 text-base font-bold rounded-xl flex items-center gap-2.5 shadow-md hover:shadow-lg transition-all"
                     onClick={() => setUploadModalOpen(true)}
                   >
                     <FileUp className="w-5 h-5" /> Upload Contract Now
@@ -2564,7 +2563,7 @@ export default function App() {
                 }
               />
             ) : (
-              <div className="table-responsive-container max-h-[65vh] overflow-y-auto overflow-x-auto custom-scrollbar rounded-xl border border-white/10 bg-[#0e0e12]/60">
+              <div className="table-responsive-container max-h-[65vh] overflow-y-auto overflow-x-auto custom-scrollbar rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white dark:bg-[#0e0e12]/60 shadow-md">
                 <table className="contracts-table">
                   <thead>
                     <tr>
@@ -2600,8 +2599,8 @@ export default function App() {
                           />
                         </td>
                         <td>
-                          <b className="block font-bold">{c.fileName}</b>
-                          <small className="text-slate-400 font-mono">{c.folder || 'General'}</small>
+                          <b className="block font-bold text-slate-900 dark:text-white">{c.fileName}</b>
+                          <small className="text-slate-500 dark:text-slate-400 font-mono">{c.folder || 'General'}</small>
                         </td>
                         <td>{c.contractType || 'Commercial'}</td>
                         <td>
@@ -2617,13 +2616,13 @@ export default function App() {
                             {c.criticalRisksCount || 0} critical
                           </span>
                         </td>
-                        <td className="font-mono text-xs text-slate-400">
+                        <td className="font-mono text-xs text-slate-500 dark:text-slate-400">
                           {new Date(c.uploadedAt).toLocaleDateString()}
                         </td>
                         <td style={{ textAlign: 'right' }}>
                           <div className="flex gap-2 justify-end">
                             <button
-                              className="px-4 py-2 text-sm font-semibold rounded-md bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-violet-500/50 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-1.5"
+                              className="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-800 dark:text-white border border-slate-200 dark:border-white/20 hover:border-violet-400 dark:hover:border-violet-500/50 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-1.5"
                               onClick={async () => {
                                 setDocumentId(c.id)
                                 setDocumentName(c.fileName)
@@ -2641,10 +2640,10 @@ export default function App() {
                                 navigateTo('editor')
                               }}
                             >
-                              <FileText className="w-4 h-4 text-violet-400" /> Editor
+                              <FileText className="w-4 h-4 text-violet-600 dark:text-violet-400" /> Editor
                             </button>
                             <button
-                              className="px-3 py-2 text-sm font-semibold rounded-md bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 hover:border-rose-500/60 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-1.5"
+                              className="px-3 py-2 text-sm font-semibold rounded-lg bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/25 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30 hover:border-rose-400 dark:hover:border-rose-500/60 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-1.5"
                               onClick={async () => {
                                 await deleteContractApi(c.id)
                                 showToast('Contract deleted')
@@ -3090,15 +3089,14 @@ export default function App() {
             <button className="close-modal relative z-10" onClick={() => setUploadModalOpen(false)}>
               <X className="w-4 h-4" />
             </button>
-
             <div className="relative z-10">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-700 text-white flex items-center justify-center shadow-[0_0_15px_rgba(124,58,237,0.4)]">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-700 text-white flex items-center justify-center shadow-md">
                   <FileUp className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-white">Upload & Audit Agreement</h2>
-                  <p className="text-[11px] text-slate-400">Statutory Indian Contract Act & MSMED 2006 compliance scanner</p>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">Upload & Audit Agreement</h2>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Statutory Indian Contract Act & MSMED 2006 compliance scanner</p>
                 </div>
               </div>
 
@@ -3109,13 +3107,13 @@ export default function App() {
 
               <div className="flex gap-2 mb-4">
                 <button
-                  className={`button button-small flex-1 rounded-md ${uploadMode === 'pdf' ? 'button-coral' : 'button-light'}`}
+                  className={`button button-small flex-1 rounded-lg ${uploadMode === 'pdf' ? 'button-coral' : 'button-light'}`}
                   onClick={() => setUploadMode('pdf')}
                 >
                   Upload PDF / DOCX
                 </button>
                 <button
-                  className={`button button-small flex-1 rounded-md ${uploadMode === 'text' ? 'button-coral' : 'button-light'}`}
+                  className={`button button-small flex-1 rounded-lg ${uploadMode === 'text' ? 'button-coral' : 'button-light'}`}
                   onClick={() => setUploadMode('text')}
                 >
                   Paste Contract Text
@@ -3123,12 +3121,12 @@ export default function App() {
               </div>
 
               {uploadMode === 'pdf' ? (
-                <label className="border-2 border-dashed border-white/20 bg-black/40 hover:bg-white/5 hover:border-violet-500/60 p-6 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200 group">
-                  <div className="w-12 h-12 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400 group-hover:scale-110 group-hover:text-violet-300 transition-all mb-2.5 shadow-[0_0_15px_rgba(124,58,237,0.25)]">
+                <label className="border-2 border-dashed border-slate-300 dark:border-white/20 bg-slate-50/60 dark:bg-black/40 hover:bg-slate-100/80 dark:hover:bg-white/5 hover:border-violet-400 dark:hover:border-violet-500/60 p-6 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200 group">
+                  <div className="w-12 h-12 rounded-xl bg-violet-50 dark:bg-violet-600/20 border border-violet-200 dark:border-violet-500/30 flex items-center justify-center text-violet-600 dark:text-violet-400 group-hover:scale-110 group-hover:text-violet-700 dark:group-hover:text-violet-300 transition-all mb-2.5 shadow-sm">
                     <Upload className="w-6 h-6" />
                   </div>
-                  <b className="text-sm font-bold text-white">{selectedFile ? selectedFile.name : 'Select or drop contract file'}</b>
-                  <span className="text-xs text-slate-400 mt-1">PDF, DOCX, or text file up to 50MB</span>
+                  <b className="text-sm font-bold text-slate-900 dark:text-white">{selectedFile ? selectedFile.name : 'Select or drop contract file'}</b>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 mt-1">PDF, DOCX, or text file up to 50MB</span>
                   <input
                     type="file"
                     accept=".pdf,.docx,.txt"
@@ -3140,14 +3138,14 @@ export default function App() {
                 <textarea
                   rows={6}
                   placeholder="Paste contract clauses or agreement text here for instant statutory evaluation..."
-                  className="w-full bg-black/50 border border-white/15 rounded-lg p-3 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500 transition-colors font-mono leading-relaxed"
+                  className="w-full bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/15 rounded-xl p-3 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none focus:border-violet-500 transition-colors font-mono leading-relaxed"
                   value={pastedText}
                   onChange={(e) => setPastedText(e.target.value)}
                 />
               )}
 
               <button
-                className="button button-coral w-full py-3.5 mt-4 text-base font-bold rounded-lg shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+                className="button button-coral w-full py-3.5 mt-4 text-base font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2.5 cursor-pointer"
                 onClick={handleUploadAndAnalyze}
               >
                 <Sparkles className="w-5 h-5 text-white" /> Start AI Statutory Risk Audit
@@ -3171,7 +3169,7 @@ export default function App() {
               <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center">
                 <Share2 className="w-4 h-4 text-indigo-400" />
               </div>
-              <h2 className="text-lg font-bold">Invite Collaborator</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Invite Collaborator</h2>
             </div>
 
             <form onSubmit={handleShareContract} className="space-y-3">
@@ -3222,7 +3220,7 @@ export default function App() {
               <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center">
                 <History className="w-4 h-4 text-indigo-400" />
               </div>
-              <h2 className="text-lg font-bold">Record Version Snapshot</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Record Version Snapshot</h2>
             </div>
 
             <form onSubmit={handleCreateVersionSnapshot} className="space-y-3">
@@ -3260,7 +3258,7 @@ export default function App() {
               <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center">
                 <KeyRound className="w-4 h-4 text-indigo-400" />
               </div>
-              <h2 className="text-lg font-bold">Change Account Password</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Change Account Password</h2>
             </div>
 
             {passwordFeedback.error && (
@@ -3298,7 +3296,7 @@ export default function App() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold mb-1">New Password</label>
+                <label className="block text-xs font-bold mb-1">New Password (min 8 chars)</label>
                 <div className="relative">
                   <input
                     type={showNewPass ? 'text' : 'password'}
@@ -3361,7 +3359,7 @@ export default function App() {
               <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center">
                 <Mail className="w-4 h-4 text-indigo-400" />
               </div>
-              <h2 className="text-lg font-bold">Update Account Email</h2>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Update Email Address</h2>
             </div>
 
             {emailFeedback.error && (
@@ -3409,25 +3407,25 @@ export default function App() {
         </div>
       )}
 
-      {/* Floating AI Chat Assistant (wearedirect.co Popover Style) */}
+      {/* Floating AI Chat Assistant */}
       <div className="chat-widget">
         {chatOpen && (
           <div className="chat-window">
             <header>
               <div className="flex items-center gap-2.5">
-                <div className="relative flex items-center justify-center text-violet-400">
-                  <Sparkles className="w-4 h-4 text-violet-400" />
-                  <span className="absolute inset-0 blur-[5px] bg-violet-500/40 rounded-full" />
+                <div className="relative flex items-center justify-center text-violet-600 dark:text-violet-400">
+                  <Sparkles className="w-4 h-4" />
+                  <span className="absolute inset-0 blur-[5px] bg-violet-500/30 rounded-full" />
                 </div>
                 <div>
-                  <b className="text-xs font-bold text-white block leading-tight">Contract AI Intelligence</b>
-                  <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> MSMED Legal Engine Active
+                  <b className="text-xs font-bold text-slate-900 dark:text-white block leading-tight">Contract AI Intelligence</b>
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> MSMED Legal Engine Active
                   </span>
                 </div>
               </div>
               <button
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
                 onClick={() => setChatOpen(false)}
                 title="Close Chat"
               >
@@ -3436,24 +3434,24 @@ export default function App() {
             </header>
 
             {/* Quick Prompt Suggestions */}
-            <div className="px-3.5 py-2 bg-[#18181b]/60 border-b border-white/5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            <div className="px-3.5 py-2 bg-slate-50 dark:bg-[#18181b]/60 border-b border-slate-200 dark:border-white/5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
               <button
                 type="button"
-                className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-white/5 hover:bg-violet-600/20 text-slate-300 hover:text-white border border-white/10 hover:border-violet-500/40 whitespace-nowrap transition-all"
+                className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-white dark:bg-white/5 hover:bg-violet-50 dark:hover:bg-violet-600/20 text-slate-700 dark:text-slate-300 hover:text-violet-700 dark:hover:text-white border border-slate-200 dark:border-white/10 hover:border-violet-300 dark:hover:border-violet-500/40 whitespace-nowrap transition-all shadow-sm"
                 onClick={() => setChatInput('Check Clause 8 for MSMED Act Section 15 payment violations')}
               >
                 MSMED 45-Day Check
               </button>
               <button
                 type="button"
-                className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-white/5 hover:bg-violet-600/20 text-slate-300 hover:text-white border border-white/10 hover:border-violet-500/40 whitespace-nowrap transition-all"
+                className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-white dark:bg-white/5 hover:bg-violet-50 dark:hover:bg-violet-600/20 text-slate-700 dark:text-slate-300 hover:text-violet-700 dark:hover:text-white border border-slate-200 dark:border-white/10 hover:border-violet-300 dark:hover:border-violet-500/40 whitespace-nowrap transition-all shadow-sm"
                 onClick={() => setChatInput('Explain uncapped consequential liability risks in plain English')}
               >
                 Explain Liabilities
               </button>
               <button
                 type="button"
-                className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-white/5 hover:bg-violet-600/20 text-slate-300 hover:text-white border border-white/10 hover:border-violet-500/40 whitespace-nowrap transition-all"
+                className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-white dark:bg-white/5 hover:bg-violet-50 dark:hover:bg-violet-600/20 text-slate-700 dark:text-slate-300 hover:text-violet-700 dark:hover:text-white border border-slate-200 dark:border-white/10 hover:border-violet-300 dark:hover:border-violet-500/40 whitespace-nowrap transition-all shadow-sm"
                 onClick={() => setChatInput('Suggest a fair redline for the indemnity clause')}
               >
                 Suggest Redline
@@ -3466,15 +3464,15 @@ export default function App() {
                 <div key={msg.id} className={`chat-msg ${msg.role}`}>
                   <p className="leading-relaxed">{msg.content}</p>
                   {msg.sources && msg.sources.length > 0 && (
-                    <div className="mt-2 pt-1.5 border-t border-white/10 text-[10px] text-violet-300/80 font-mono">
+                    <div className="mt-2 pt-1.5 border-t border-slate-200 dark:border-white/10 text-[10px] text-violet-700 dark:text-violet-300/80 font-mono">
                       Authority: {msg.sources.join(', ')}
                     </div>
                   )}
                 </div>
               ))}
               {chatTyping && (
-                <div className="chat-msg assistant text-xs text-slate-400 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                <div className="chat-msg assistant text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-600 dark:bg-violet-400 animate-pulse" />
                   Analyzing contract clauses against statutory rules...
                 </div>
               )}
@@ -3488,7 +3486,7 @@ export default function App() {
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
               />
-              <button type="submit" className="button button-coral rounded-lg px-4 py-3 hover:-translate-y-0.5 transition-all shadow-[0_0_15px_rgba(124,58,237,0.4)] flex items-center justify-center cursor-pointer">
+              <button type="submit" className="button button-coral rounded-xl px-4 py-3 hover:-translate-y-0.5 transition-all shadow-md flex items-center justify-center cursor-pointer">
                 <Send className="w-5 h-5" />
               </button>
             </form>
@@ -3497,14 +3495,14 @@ export default function App() {
 
         {/* Floating Trigger Button */}
         <button
-          className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2.5 px-5 py-3 rounded-lg bg-black/85 hover:bg-black backdrop-blur-md border border-white/20 hover:border-violet-500/60 shadow-2xl hover:shadow-[0_0_25px_rgba(124,58,237,0.45)] transition-all duration-300 hover:-translate-y-0.5 text-white cursor-pointer group font-bold text-sm"
+          className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2.5 px-5 py-3 rounded-full bg-white/95 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-900 backdrop-blur-md border border-slate-200 dark:border-white/20 hover:border-violet-400 dark:hover:border-violet-500/60 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 text-slate-900 dark:text-white cursor-pointer group font-bold text-sm"
           onClick={() => setChatOpen(!chatOpen)}
         >
-          <div className="relative flex items-center justify-center text-violet-400">
-            <Sparkles className="w-5 h-5 text-violet-400 group-hover:rotate-12 transition-transform" />
-            <span className="absolute inset-0 blur-[6px] bg-violet-500/50 rounded-lg animate-pulse" />
+          <div className="relative flex items-center justify-center text-violet-600 dark:text-violet-400">
+            <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+            <span className="absolute inset-0 blur-[6px] bg-violet-500/30 rounded-lg animate-pulse" />
           </div>
-          <span className="text-sm font-bold tracking-tight text-white">Ask Contract AI</span>
+          <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">Ask Contract AI</span>
         </button>
       </div>
 

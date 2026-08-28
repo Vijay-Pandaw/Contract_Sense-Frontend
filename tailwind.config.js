@@ -18,8 +18,18 @@ export default {
           600: '#7c3aed', // Neon Violet / Electric Purple
           700: '#6d28d9',
           800: '#5b21b6',
-          900: '#121215', // Obsidian Glass Surface
-          950: '#09090b', // Deep Matte Black Background
+          900: '#121215',
+          950: '#09090b',
+        },
+        orange: {
+          50: '#fff7ed',
+          100: '#ffedd5',
+          200: '#fed7aa',
+          300: '#fdba74',
+          400: '#fb923c',
+          500: '#f97316',
+          600: '#ea580c',
+          700: '#c2410c',
         },
         obsidian: {
           bg: '#09090b',
@@ -30,55 +40,65 @@ export default {
           'border-subtle': 'rgba(255, 255, 255, 0.06)',
           'border-highlight': 'rgba(124, 58, 237, 0.4)',
         },
+        light: {
+          bg: '#f8fafc',
+          subtle: '#f1f5f9',
+          card: '#ffffff',
+          panel: '#f8fafc',
+          border: 'rgba(15, 23, 42, 0.08)',
+          'border-subtle': 'rgba(15, 23, 42, 0.04)',
+          'border-highlight': 'rgba(124, 58, 237, 0.25)',
+        },
         accent: {
-          DEFAULT: '#7c3aed', // Electric Neon Violet
+          DEFAULT: '#7c3aed',
           hover: '#6d28d9',
           light: '#8b5cf6',
-          subtle: 'rgba(124, 58, 237, 0.15)',
+          subtle: 'rgba(124, 58, 237, 0.12)',
           dark: '#5b21b6',
-          glow: 'rgba(124, 58, 237, 0.4)',
+          glow: 'rgba(124, 58, 237, 0.35)',
         },
         risk: {
           critical: {
-            DEFAULT: '#ef4444', // Red-500
-            bg: 'rgba(239, 68, 68, 0.12)',
-            border: 'rgba(239, 68, 68, 0.28)',
-            text: '#f87171',
+            DEFAULT: '#ef4444',
+            bg: 'rgba(239, 68, 68, 0.08)',
+            border: 'rgba(239, 68, 68, 0.24)',
+            text: '#dc2626',
             darkBg: 'rgba(239, 68, 68, 0.16)',
             darkText: '#f87171',
           },
           high: {
-            DEFAULT: '#f59e0b', // Amber-500
-            bg: 'rgba(245, 158, 11, 0.12)',
-            border: 'rgba(245, 158, 11, 0.28)',
-            text: '#fbbf24',
+            DEFAULT: '#f59e0b',
+            bg: 'rgba(245, 158, 11, 0.08)',
+            border: 'rgba(245, 158, 11, 0.24)',
+            text: '#d97706',
             darkBg: 'rgba(245, 158, 11, 0.16)',
             darkText: '#fbbf24',
           },
           medium: {
-            DEFAULT: '#eab308', // Yellow-500
-            bg: 'rgba(234, 179, 8, 0.12)',
-            border: 'rgba(234, 179, 8, 0.28)',
-            text: '#facc15',
+            DEFAULT: '#eab308',
+            bg: 'rgba(234, 179, 8, 0.08)',
+            border: 'rgba(234, 179, 8, 0.24)',
+            text: '#ca8a04',
             darkBg: 'rgba(234, 179, 8, 0.16)',
             darkText: '#facc15',
           },
           low: {
-            DEFAULT: '#10b981', // Emerald-500
-            bg: 'rgba(16, 185, 129, 0.12)',
-            border: 'rgba(16, 185, 129, 0.28)',
-            text: '#34d399',
+            DEFAULT: '#10b981',
+            bg: 'rgba(16, 185, 129, 0.08)',
+            border: 'rgba(16, 185, 129, 0.24)',
+            text: '#059669',
             darkBg: 'rgba(16, 185, 129, 0.16)',
             darkText: '#34d399',
           },
         },
       },
       boxShadow: {
-        'cs-sm': '0 1px 3px rgba(0, 0, 0, 0.4)',
-        'cs-md': '0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -2px rgba(0, 0, 0, 0.3)',
-        'cs-lg': '0 16px 40px -4px rgba(0, 0, 0, 0.7), 0 6px 18px -2px rgba(0, 0, 0, 0.4)',
-        'cs-glow': '0 0 25px -3px rgba(124, 58, 237, 0.35)',
-        'cs-glow-lg': '0 0 45px -4px rgba(124, 58, 237, 0.5)',
+        'cs-sm': '0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03)',
+        'cs-md': '0 4px 16px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04)',
+        'cs-lg': '0 16px 36px -4px rgba(15, 23, 42, 0.1), 0 6px 16px -2px rgba(15, 23, 42, 0.05)',
+        'cs-glow': '0 0 25px -3px rgba(124, 58, 237, 0.22)',
+        'cs-glow-lg': '0 0 45px -4px rgba(124, 58, 237, 0.35)',
+        'cs-glow-orange': '0 0 25px -3px rgba(249, 115, 22, 0.25)',
       },
       fontFamily: {
         sans: ['"DM Sans"', 'system-ui', '-apple-system', 'sans-serif'],
@@ -96,7 +116,7 @@ export default {
         },
         sheenSweep: {
           '0%': { transform: 'translateX(-100%) rotate(25deg)' },
-          '100%': { transform: 'translateX(220%) rotate(25deg)' },
+          '100%': { transform: 'translateX(240%) rotate(25deg)' },
         },
         pulseGlow: {
           '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
