@@ -92,10 +92,8 @@ import AuthPage from './AuthPage'
 import { auth, onAuthStateChanged, logoutUser } from './firebase'
 import {
   ScalesOfJusticeWatermark,
-  LegalLedgerIcon,
   StatutoryMSMEDBadge,
   IndianContractActBadge,
-  ConstitutionSealStamp,
   IndianLegalEmptyBanner,
 } from './LegalMotifs'
 import { LaserScanViewer } from './LaserScanViewer'
@@ -1667,7 +1665,7 @@ export default function App() {
 
           {/* Health Score Gauge & Recommendations Row */}
           <div className="health-layout">
-            <div className="health-card bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-6 shadow-lg dark:shadow-2xl backdrop-blur-xl relative overflow-hidden">
+            <div className={`health-card health-score-card health-score-card--${healthScore > 75 ? 'healthy' : healthScore > 50 ? 'medium' : 'low'} bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-6 shadow-lg dark:shadow-2xl backdrop-blur-xl relative overflow-hidden`}>
               <div className="card-heading flex justify-between items-center pb-3 mb-4 border-b border-slate-200 dark:border-white/10">
                 <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Contract Health Score</span>
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
@@ -1675,27 +1673,27 @@ export default function App() {
                 </span>
               </div>
               <div className="health-content flex items-center gap-5">
-                {/* Circular Neon Meter */}
-                <div className="relative w-28 h-28 min-w-[112px] grid place-items-center">
-                  <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
-                    <circle cx="80" cy="80" r="70" className="stroke-slate-200 dark:stroke-white/10 fill-none stroke-[12]" />
+                {/* Circular health score meter */}
+                <div
+                  key={`dashboard-health-${healthScore}`}
+                  className="health-score-orb relative w-28 h-28 min-w-[112px] grid place-items-center"
+                  style={{ '--health-score-offset': 452 - (452 * healthScore) / 100 } as React.CSSProperties}
+                >
+                  <svg viewBox="0 0 160 160" className="health-score-ring w-full h-full -rotate-90" aria-hidden="true">
+                    <circle cx="80" cy="80" r="70" className="health-score-track stroke-slate-200 dark:stroke-white/10 fill-none stroke-[12]" />
                     <circle
                       cx="80"
                       cy="80"
                       r="70"
-                      className="fill-none stroke-[12] transition-all duration-700"
+                      className="health-score-progress fill-none stroke-[12]"
                       style={{
-                        strokeDasharray: 452,
-                        strokeDashoffset: 452 - (452 * healthScore) / 100,
-                        stroke: healthScore > 75 ? '#10b981' : healthScore > 50 ? '#f59e0b' : '#f43f5e',
-                        filter: healthScore > 75 ? 'drop-shadow(0 0 10px rgba(16,185,129,0.5))' : 'drop-shadow(0 0 10px rgba(244,63,94,0.5))',
                         strokeLinecap: 'round',
                       }}
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <b className="text-3xl font-extrabold text-slate-900 dark:text-white leading-none">{healthScore}</b>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">/ 100</span>
+                    <b className="health-score-number text-3xl font-extrabold text-slate-900 dark:text-white leading-none">{healthScore}</b>
+                    <span className="health-score-denominator text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">/ 100</span>
                   </div>
                 </div>
                 <div className="health-text space-y-2">
@@ -1787,8 +1785,8 @@ export default function App() {
                     key={clause.id}
                     className={`analysis-risk-card p-5 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
                       isHigh
-                        ? 'bg-rose-50/40 dark:bg-[#18181f] border-rose-200 dark:border-rose-500/30 hover:border-rose-400 dark:hover:border-rose-500/60 shadow-md'
-                        : 'bg-white dark:bg-[#121215] border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 shadow-sm hover:shadow-md'
+                        ? 'bg-rose-50/40 dark:bg-[#18181f] border-rose-200 dark:border-rose-500/30 shadow-md'
+                        : 'bg-white dark:bg-[#121215] border-slate-200/80 dark:border-white/10 shadow-sm'
                     }`}
                     onClick={() => {
                       setSelectedClause(clause)
@@ -1912,7 +1910,7 @@ export default function App() {
                       className={`analysis-clause-card p-4 sm:p-5 rounded-xl border transition-all duration-200 cursor-pointer ${
                         isSelected
                           ? 'bg-violet-50/40 dark:bg-[#18181f] border-violet-400 dark:border-violet-500/70 shadow-md ring-1 ring-violet-400/30'
-                          : 'bg-slate-50/50 dark:bg-[#16161a] border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-[#1a1a20]'
+                          : 'bg-slate-50/50 dark:bg-[#16161a] border-slate-200/80 dark:border-white/10'
                       }`}
                       onClick={() => {
                         setSelectedClause(clause)
@@ -1994,7 +1992,7 @@ export default function App() {
               <div className={`lg:col-span-5 sticky top-20 space-y-4 max-h-[85vh] overflow-y-auto pr-1.5 custom-scrollbar ${editorTab === 'clauses' ? 'hidden lg:block' : 'block'}`}>
                 
                 {/* Modular Card 1: Health Score & Real-Time Risk Progress Meter */}
-                <div className="bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-5 shadow-lg dark:shadow-2xl backdrop-blur-xl">
+                <div className={`health-score-card health-score-card--${healthScore > 75 ? 'healthy' : healthScore > 50 ? 'medium' : 'low'} bg-white dark:bg-[#121215] border border-slate-200/80 dark:border-white/10 rounded-2xl p-5 shadow-lg dark:shadow-2xl backdrop-blur-xl`}>
                   <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-white/10">
                     <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                       CONTRACT HEALTH METER
@@ -2005,27 +2003,27 @@ export default function App() {
                   </div>
 
                   <div className="flex items-center gap-5">
-                    {/* Circular Neon Meter */}
-                    <div className="relative w-24 h-24 min-w-[96px] grid place-items-center">
-                      <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
-                        <circle cx="80" cy="80" r="70" className="stroke-slate-200 dark:stroke-white/10 fill-none stroke-[12]" />
+                    {/* Circular health score meter */}
+                    <div
+                      key={`editor-health-${healthScore}`}
+                      className="health-score-orb relative w-24 h-24 min-w-[96px] grid place-items-center"
+                      style={{ '--health-score-offset': 452 - (452 * healthScore) / 100 } as React.CSSProperties}
+                    >
+                      <svg viewBox="0 0 160 160" className="health-score-ring w-full h-full -rotate-90" aria-hidden="true">
+                        <circle cx="80" cy="80" r="70" className="health-score-track stroke-slate-200 dark:stroke-white/10 fill-none stroke-[12]" />
                         <circle
                           cx="80"
                           cy="80"
                           r="70"
-                          className="fill-none stroke-[12] transition-all duration-700"
+                          className="health-score-progress fill-none stroke-[12]"
                           style={{
-                            strokeDasharray: 452,
-                            strokeDashoffset: 452 - (452 * healthScore) / 100,
-                            stroke: healthScore > 75 ? '#10b981' : healthScore > 50 ? '#f59e0b' : '#f43f5e',
-                            filter: healthScore > 75 ? 'drop-shadow(0 0 8px rgba(16,185,129,0.5))' : 'drop-shadow(0 0 8px rgba(244,63,94,0.5))',
                             strokeLinecap: 'round',
                           }}
                         />
                       </svg>
                       <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <b className="text-2xl font-extrabold text-slate-900 dark:text-white leading-none">{healthScore}</b>
-                        <span className="text-[9px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">/ 100</span>
+                        <b className="health-score-number text-2xl font-extrabold text-slate-900 dark:text-white leading-none">{healthScore}</b>
+                        <span className="health-score-denominator text-[9px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">/ 100</span>
                       </div>
                     </div>
 
@@ -2473,19 +2471,10 @@ export default function App() {
             <ScalesOfJusticeWatermark className="w-[450px] h-[450px] -right-10 -top-14 opacity-20" />
 
             <div className="relative z-10">
-              <div className="flex items-center gap-3.5 mb-2">
-                <LegalLedgerIcon className="w-12 h-12" />
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="eyebrow m-0">
-                      <BookOpen className="w-3.5 h-3.5" /> Indian Legal Repository & CLM
-                    </p>
-                    <ConstitutionSealStamp title="LEGAL LEDGER" subtitle="SECTION 15 COMPLIANCE" />
-                  </div>
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">
-                    My Contracts <em>& Audit History</em>
-                  </h1>
-                </div>
+              <div className="mb-2">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                  My Contracts <em>& Audit History</em>
+                </h1>
               </div>
               <p className="dashboard-subtitle text-slate-600 dark:text-slate-400 max-w-2xl text-xs sm:text-sm">
                 Manage, filter, compare, and organize all uploaded and drafted agreements under Indian Commercial & MSMED Law.

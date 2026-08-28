@@ -139,62 +139,7 @@ export const ScalesOfJusticeWatermark: React.FC<{ className?: string }> = ({ cla
 )
 
 /**
- * 2. Legal Ledger / Constitution Book Illustration Icon
- */
-export const LegalLedgerIcon: React.FC<{ className?: string }> = ({ className = 'w-9 h-9' }) => (
-  <div className={`relative inline-flex items-center justify-center shrink-0 ${className}`}>
-    <svg viewBox="0 0 48 48" className="w-full h-full drop-shadow-[0_2px_8px_rgba(124,58,237,0.3)] dark:drop-shadow-[0_0_12px_rgba(124,58,237,0.5)]" fill="none">
-      <defs>
-        <linearGradient id="ledgerCover" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#6d28d9" />
-          <stop offset="50%" stopColor="#4338ca" />
-          <stop offset="100%" stopColor="#1e1b4b" />
-        </linearGradient>
-        <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#fde047" />
-          <stop offset="50%" stopColor="#f59e0b" />
-          <stop offset="100%" stopColor="#b45309" />
-        </linearGradient>
-      </defs>
-
-      {/* Book Back / Pages Shadow */}
-      <rect x="7" y="5" width="34" height="38" rx="4" fill="#1e293b" stroke="#64748b" strokeWidth="1.5" />
-      <path d="M41 9 L44 11 L44 39 L41 41 Z" fill="#e2e8f0" opacity="0.4" />
-      <line x1="41" y1="13" x2="43" y2="14" stroke="#94a3b8" strokeWidth="0.8" />
-      <line x1="41" y1="18" x2="43" y2="19" stroke="#94a3b8" strokeWidth="0.8" />
-      <line x1="41" y1="23" x2="43" y2="24" stroke="#94a3b8" strokeWidth="0.8" />
-      <line x1="41" y1="28" x2="43" y2="29" stroke="#94a3b8" strokeWidth="0.8" />
-      <line x1="41" y1="33" x2="43" y2="34" stroke="#94a3b8" strokeWidth="0.8" />
-
-      {/* Ledger Main Front Cover */}
-      <rect x="5" y="5" width="35" height="38" rx="4" fill="url(#ledgerCover)" stroke="url(#goldTrim)" strokeWidth="1.5" />
-
-      {/* Spine Binding */}
-      <rect x="5" y="5" width="7" height="38" rx="2" fill="#311042" stroke="url(#goldTrim)" strokeWidth="1" />
-      <line x1="6" y1="11" x2="11" y2="11" stroke="url(#goldTrim)" strokeWidth="1.2" />
-      <line x1="6" y1="24" x2="11" y2="24" stroke="url(#goldTrim)" strokeWidth="1.2" />
-      <line x1="6" y1="37" x2="11" y2="37" stroke="url(#goldTrim)" strokeWidth="1.2" />
-
-      {/* Gold Ornamental Filigree Corners */}
-      <path d="M16 9 L21 9 M16 9 L16 14" stroke="url(#goldTrim)" strokeWidth="1.2" strokeLinecap="round" />
-      <path d="M36 9 L31 9 M36 9 L36 14" stroke="url(#goldTrim)" strokeWidth="1.2" strokeLinecap="round" />
-      <path d="M16 39 L21 39 M16 39 L16 34" stroke="url(#goldTrim)" strokeWidth="1.2" strokeLinecap="round" />
-      <path d="M36 39 L31 39 M36 39 L36 34" stroke="url(#goldTrim)" strokeWidth="1.2" strokeLinecap="round" />
-
-      {/* Central Ashoka / Scales of Justice Emblem Seal */}
-      <circle cx="26" cy="24" r="7.5" fill="none" stroke="url(#goldTrim)" strokeWidth="1.2" />
-      <circle cx="26" cy="24" r="5" fill="#f59e0b" fillOpacity="0.15" stroke="url(#goldTrim)" strokeWidth="0.8" strokeDasharray="2 1.5" />
-      <path d="M26 19 L26 29 M22.5 22 L29.5 22" stroke="url(#goldTrim)" strokeWidth="1" strokeLinecap="round" />
-      <path d="M21.5 24 Q 23.5 26 25.5 24 Z M26.5 24 Q 28.5 26 30.5 24 Z" fill="url(#goldTrim)" />
-
-      {/* Bookmark Ribbon */}
-      <path d="M22 5 L22 14 L24.5 12 L27 14 L27 5 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="0.5" />
-    </svg>
-  </div>
-)
-
-/**
- * 3. High-Tech Glassmorphism Legal Stamps / Badges
+ * 2. High-Tech Glassmorphism Legal Stamps / Badges
  */
 export const StatutoryMSMEDBadge: React.FC<{ variant?: 'compact' | 'expanded' }> = ({ variant = 'compact' }) => {
   if (variant === 'compact') return null
@@ -237,44 +182,43 @@ export const ConstitutionSealStamp: React.FC<{ title?: string; subtitle?: string
   if (!title && !subtitle) return null
 
   return (
-  <div className="relative inline-flex items-center gap-3 p-2 px-3.5 rounded-xl bg-gradient-to-r from-amber-50/80 via-white to-amber-50/80 dark:from-violet-950/40 dark:via-[#121218]/90 dark:to-amber-950/30 border border-amber-200/80 dark:border-amber-500/30 backdrop-blur-xl shadow-sm dark:shadow-[0_0_20px_rgba(245,158,11,0.15)] group hover:border-amber-400 transition-all">
-    {/* Ashoka Wheel Seal */}
-    <div className="relative w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-500/10 border border-amber-400/80 flex items-center justify-center shrink-0 shadow-sm">
-      <svg viewBox="0 0 24 24" className="w-4 h-4 text-amber-700 dark:text-amber-300 animate-[spin_30s_linear_infinite]" fill="none" stroke="currentColor">
-        <circle cx="12" cy="12" r="10" strokeWidth="1.5" />
-        <circle cx="12" cy="12" r="3" fill="currentColor" />
-        {Array.from({ length: 12 }).map((_, i) => (
-          <line
-            key={i}
-            x1="12"
-            y1="12"
-            x2="12"
-            y2="2"
-            stroke="currentColor"
-            strokeWidth="1"
-            transform={`rotate(${i * 30} 12 12)`}
-          />
-        ))}
-      </svg>
+    <div className="relative inline-flex items-center gap-3 p-2 px-3.5 rounded-xl bg-gradient-to-r from-amber-50/80 via-white to-amber-50/80 dark:from-violet-950/40 dark:via-[#121218]/90 dark:to-amber-950/30 border border-amber-200/80 dark:border-amber-500/30 backdrop-blur-xl shadow-sm dark:shadow-[0_0_20px_rgba(245,158,11,0.15)] group hover:border-amber-400 transition-all">
+      <div className="relative w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-500/10 border border-amber-400/80 flex items-center justify-center shrink-0 shadow-sm">
+        <svg viewBox="0 0 24 24" className="w-4 h-4 text-amber-700 dark:text-amber-300 animate-[spin_30s_linear_infinite]" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="10" strokeWidth="1.5" />
+          <circle cx="12" cy="12" r="3" fill="currentColor" />
+          {Array.from({ length: 12 }).map((_, i) => (
+            <line
+              key={i}
+              x1="12"
+              y1="12"
+              x2="12"
+              y2="2"
+              stroke="currentColor"
+              strokeWidth="1"
+              transform={`rotate(${i * 30} 12 12)`}
+            />
+          ))}
+        </svg>
+      </div>
+      <div className="flex flex-col">
+        {title && (
+          <span className="text-[11px] font-black tracking-wider uppercase bg-clip-text text-transparent bg-gradient-to-r from-amber-800 to-amber-600 dark:from-amber-300 dark:via-amber-200 dark:to-yellow-100 font-serif">
+            {title}
+          </span>
+        )}
+        {subtitle && (
+          <span className="text-[8.5px] font-mono tracking-widest text-amber-700/90 dark:text-amber-400/80 uppercase">
+            {subtitle}
+          </span>
+        )}
+      </div>
     </div>
-    <div className="flex flex-col">
-      {title && (
-        <span className="text-[11px] font-black tracking-wider uppercase bg-clip-text text-transparent bg-gradient-to-r from-amber-800 to-amber-600 dark:from-amber-300 dark:via-amber-200 dark:to-yellow-100 font-serif">
-          {title}
-        </span>
-      )}
-      {subtitle && (
-        <span className="text-[8.5px] font-mono tracking-widest text-amber-700/90 dark:text-amber-400/80 uppercase">
-          {subtitle}
-        </span>
-      )}
-    </div>
-  </div>
   )
 }
 
 /**
- * 4. Artistic Indian Legal Empty State & Upload Zone Banner
+ * 3. Artistic Indian Legal Empty State & Upload Zone Banner
  */
 export const IndianLegalEmptyBanner: React.FC<{
   title?: string
@@ -282,7 +226,7 @@ export const IndianLegalEmptyBanner: React.FC<{
   actionButton?: React.ReactNode
 }> = ({
   title = 'No Contracts Found in Legal Repository',
-  subtitle = 'Upload commercial, vendor, or MSMED agreements to begin automated statutory risk auditing and Section 15 compliance checks.',
+  subtitle,
   actionButton,
 }) => (
   <div className="relative overflow-hidden rounded-2xl p-8 sm:p-12 text-center bg-gradient-to-b from-white via-slate-50/80 to-white dark:from-[#14141c]/90 dark:via-[#0e0e13]/95 dark:to-[#09090b] border border-slate-200/80 dark:border-white/10 shadow-lg dark:shadow-2xl backdrop-blur-2xl my-4">
@@ -290,11 +234,6 @@ export const IndianLegalEmptyBanner: React.FC<{
     <ScalesOfJusticeWatermark className="w-[360px] h-[360px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20" />
 
     <div className="relative z-10 max-w-lg mx-auto flex flex-col items-center">
-      {/* Ornate Badge / Emblem */}
-      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-100 via-indigo-50 to-amber-50 dark:from-violet-600/30 dark:via-indigo-600/20 dark:to-amber-500/20 border border-violet-200 dark:border-violet-400/40 flex items-center justify-center mb-5 shadow-md dark:shadow-[0_0_35px_rgba(124,58,237,0.4)]">
-        <LegalLedgerIcon className="w-10 h-10" />
-      </div>
-
       <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-700 dark:text-amber-300 text-[10px] font-extrabold uppercase tracking-widest mb-3">
         <span>✦</span> STATUTORY AUDIT READY
       </div>
@@ -302,9 +241,11 @@ export const IndianLegalEmptyBanner: React.FC<{
       <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2 font-serif">
         {title}
       </h3>
-      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-        {subtitle}
-      </p>
+      {subtitle && (
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+          {subtitle}
+        </p>
+      )}
 
       {/* Compliance Pillars Badges */}
       <div className="flex flex-wrap items-center justify-center gap-2.5 mb-6">
