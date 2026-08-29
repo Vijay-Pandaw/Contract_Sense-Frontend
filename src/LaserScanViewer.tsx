@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FileText, ShieldAlert, Sparkles, Scale, Cpu, Search, ShieldCheck } from 'lucide-react'
-import { ScalesOfJusticeWatermark, StatutoryMSMEDBadge, ConstitutionSealStamp } from './LegalMotifs'
+import { StatutoryMSMEDBadge, ConstitutionSealStamp } from './LegalMotifs'
 
 interface LaserScanViewerProps {
   documentName?: string
@@ -69,9 +69,6 @@ export const LaserScanViewer: React.FC<LaserScanViewerProps> = ({
 
       {/* Main Document Preview Window with Laser Scanning Line */}
       <div className="laser-preview-frame relative p-5 sm:p-7 rounded-2xl bg-white dark:bg-[#0e0e12]/95 border border-slate-200/80 dark:border-white/15 backdrop-blur-2xl shadow-lg dark:shadow-2xl overflow-hidden">
-        {/* Background Watermark */}
-        <ScalesOfJusticeWatermark className="w-[450px] h-[450px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 dark:opacity-15" />
-
         {/* Dynamic Continuous Laser Scan Line */}
         <div className="absolute inset-x-0 z-30 pointer-events-none animate-laser-scan">
           {/* Laser Glow Beam */}

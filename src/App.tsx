@@ -91,7 +91,6 @@ import {
 import AuthPage from './AuthPage'
 import { auth, onAuthStateChanged, logoutUser } from './firebase'
 import {
-  ScalesOfJusticeWatermark,
   StatutoryMSMEDBadge,
   IndianContractActBadge,
   IndianLegalEmptyBanner,
@@ -1176,9 +1175,6 @@ export default function App() {
       {currentView === 'welcome' && (
         <main className="w-full">
           <section className="hero relative overflow-hidden">
-            {/* Background Watermark: Scales of Justice */}
-            <ScalesOfJusticeWatermark className="w-[600px] h-[600px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20" />
-
             <div className="hero-copy relative z-10">
               {/* Glowing Pill / Badge */}
               <div className="flex flex-wrap items-center gap-2 mb-5">
@@ -1568,7 +1564,6 @@ export default function App() {
       {/* ========================================================================= */}
       {currentView === 'processing' && (
         <div className="processing-screen py-10 px-4 min-h-[85vh] flex items-center justify-center relative overflow-hidden">
-          <ScalesOfJusticeWatermark className="w-[650px] h-[650px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20" />
           <div className="relative z-10 w-full max-w-3xl mx-auto">
             <LaserScanViewer
               documentName={selectedFile?.name || documentName || 'Commercial_Vendor_Agreement.pdf'}
@@ -1585,9 +1580,6 @@ export default function App() {
         <div className="dashboard">
           {/* Top Active Contract Banner */}
           <div className="dashboard-top relative overflow-hidden">
-            {/* Background Watermark: Scales of Justice */}
-            <ScalesOfJusticeWatermark className="w-[450px] h-[450px] -right-10 -top-14 opacity-20" />
-
             <div className="relative z-10">
               <div className="flex flex-wrap items-center gap-3 mb-2">
                 <p className="eyebrow m-0">
@@ -2467,9 +2459,6 @@ export default function App() {
       {currentView === 'contracts' && (
         <div className="dashboard">
           <div className="dashboard-top relative overflow-hidden">
-            {/* Background Watermark: Scales of Justice */}
-            <ScalesOfJusticeWatermark className="w-[450px] h-[450px] -right-10 -top-14 opacity-20" />
-
             <div className="relative z-10">
               <div className="mb-2">
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -3071,9 +3060,6 @@ export default function App() {
       {uploadModalOpen && (
         <div className="modal-backdrop" onClick={() => setUploadModalOpen(false)}>
           <div className="modal-panel relative overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            {/* Background Watermark: Scales of Justice */}
-            <ScalesOfJusticeWatermark className="w-[360px] h-[360px] -right-16 -top-16 opacity-15" />
-
             <button className="close-modal relative z-10" onClick={() => setUploadModalOpen(false)}>
               <X className="w-4 h-4" />
             </button>
